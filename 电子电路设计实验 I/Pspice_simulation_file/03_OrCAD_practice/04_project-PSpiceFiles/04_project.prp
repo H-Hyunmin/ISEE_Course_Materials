@@ -1,0 +1,30 @@
+("q2sc1815"
+    ("Creator"	"Device property file created by Property Controller")
+    ("device_info"
+        ("SYMBOL_NAME"	"npn")
+        ("MODEL_TYPE"	"4")
+    )
+    ("model_params"
+        ("level_0"
+        )
+    )
+    ("device_pre_smoke"
+        ("TERM_IC"	"C")
+        ("TERM_IB"	"B")
+        ("NODE_VC"	"C")
+        ("NODE_VB"	"B")
+        ("NODE_VE"	"E")
+        ("DERATE_TYPE"	"NPN")
+    )
+    ("device_max_ops"
+        ("IB"	"50m")
+        ("IC"	"150m")
+        ("VCB"	"60")
+        ("VCE"	"50")
+        ("VEB"	"5")
+        ("PDM"	"400m")
+        ("TJ"	"125")
+        ("RJC"	"250")
+        ("RCA"	"0")
+    )
+)

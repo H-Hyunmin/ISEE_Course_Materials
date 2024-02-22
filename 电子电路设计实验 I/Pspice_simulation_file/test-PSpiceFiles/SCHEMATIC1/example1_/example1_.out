@@ -1,0 +1,84 @@
+
+**** 11/27/23 19:52:09 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example1_"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example1_.si
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "example1_.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.DC LIN V_V1 0v 5v 1v 
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source TEST
+R_R1         N00106 N00113  1k TC=0,0 
+V_V1         N00106 0 0Vdc
+D_D1         0 N00113 D1N5225 
+
+**** RESUMING example1_.cir ****
+.END
+
+**** 11/27/23 19:52:09 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example1_"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example1_.si
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               D1N5225         
+          IS   36.641740E-06 
+           N    4.43382      
+         ISR    9.398687E-06 
+          NR    4.44845      
+         IKF     .020112     
+          BV    3.0207       
+         IBV     .044593     
+          RS   13.186000E-06 
+          TT  289.000000E-09 
+         CJO  200.000000E-12 
+          VJ     .75         
+           M     .43071      
+
+
+
+          JOB CONCLUDED
+
+**** 11/27/23 19:52:09 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example1_"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example1_.si
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =         .02
+

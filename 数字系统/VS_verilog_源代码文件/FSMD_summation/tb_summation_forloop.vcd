@@ -1,0 +1,33 @@
+$date
+	Sat May 13 18:05:14 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_summation_forloop $end
+$var wire 8 ! out [7:0] $end
+$var reg 1 " reset $end
+$scope module u_summation_forloop $end
+$var wire 1 " reset $end
+$var reg 4 # i [3:0] $end
+$var reg 8 $ out [7:0] $end
+$var reg 8 % sum [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b110111 %
+b110111 $
+b1011 #
+0"
+b110111 !
+$end
+#10000
+b1011 #
+b110111 %
+1"
+#1010000

@@ -1,0 +1,179 @@
+
+**** 12/24/23 00:06:23 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-bias"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\06_project-pspicefiles\sche
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "bias.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.AC DEC 100 1 1G
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source 06_PROJECT
+.EXTERNAL OUTPUT Vo
+V_V1         N14643 0  
++SIN 0 400mV 1k 0 0 0
+V_V2         N14650 0 2.06V
+R_R1         0 N14492  7.5k TC=0,0 
+R_R2         N14650 N14496  3k TC=0,0 
+R_R3         N14643 N14492  3k TC=0,0 
+R_R4         N14496 N14527  7.5k TC=0,0 
+E_U1         N14527 0 VALUE {LIMIT(V(N14492,N14496)*1E6,-15V,+15V)} _U1 N14492
++  N14496 1G
+
+R_R5         0 N15915  7.5k TC=0,0 
+R_R8         N15941 VO  1000k TC=0,0 
+V_V3         N15993 0  AC 50mV
++SIN 0 50mV 1k 0 0 0
+R_R7         N15993 N15941  10k TC=0,0 
+X_U3         N15915 N15941 V+ V- VO uA741
+
+**** RESUMING bias.cir ****
+.END
+
+**** 12/24/23 00:06:23 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-bias"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\06_project-pspicefiles\sche
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U3.dx         X_U3.dy         
+          IS  800.000000E-18  800.000000E-18 
+          RS    1               1.000000E-03 
+         CJO                   10.000000E-12 
+
+
+**** 12/24/23 00:06:23 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-bias"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\06_project-pspicefiles\sche
+
+
+ ****     BJT MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               X_U3.qx         
+               NPN             
+       LEVEL    1            
+          IS  800.000000E-18 
+          BF   93.75         
+          NF    1            
+          BR    1            
+          NR    1            
+         ISS    0            
+          RE    0            
+          RC    0            
+         CJE    0            
+         VJE     .75         
+         CJC    0            
+         VJC     .75         
+         MJC     .33         
+        XCJC    1            
+         CJS    0            
+         VJS     .75         
+          KF    0            
+          AF    1            
+          CN    2.42         
+           D     .87         
+
+
+**** 12/24/23 00:06:23 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-bias"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\06_project-pspicefiles\sche
+
+
+ ****     SMALL SIGNAL BIAS SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(   V+)     .3764  (   V-)    -.3335  (   VO)     .0214  (N14492)    0.0000     
+
+(N14496) 5.150E-06 (N14527)   -5.1500 (N14643)    0.0000 (N14650)    2.0600     
+
+(N15915)-598.0E-06 (N15941)-577.9E-06 (N15993)    0.0000 (X_U3.6) 1.960E-06     
+
+(X_U3.7)     .0214 (X_U3.8)     .0214 (X_U3.9)    0.0000 (X_U3.10)    -.6083    
+
+(X_U3.11)     .3368                   (X_U3.12)     .3368                       
+
+(X_U3.13)    -.5944                   (X_U3.14)    -.5944                       
+
+(X_U3.53)    -.6236                   (X_U3.54)     .6665                       
+
+(X_U3.90)-185.3E-06                   (X_U3.91)   40.0000                       
+
+(X_U3.92)  -40.0000                   (X_U3.99)     .0214                   
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V1         0.000E+00
+    V_V2        -6.867E-04
+    V_V3        -5.779E-08
+    X_U3.vb      1.960E-11
+    X_U3.vc     -5.405E-05
+    X_U3.ve     -5.426E-05
+    X_U3.vlim   -1.853E-07
+    X_U3.vlp    -4.000E-11
+    X_U3.vln    -4.000E-11
+
+    TOTAL POWER DISSIPATION   1.52E-03  WATTS
+
+
+
+          JOB CONCLUDED
+
+**** 12/24/23 00:06:23 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-bias"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\06_project-pspicefiles\sche
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =         .13
+

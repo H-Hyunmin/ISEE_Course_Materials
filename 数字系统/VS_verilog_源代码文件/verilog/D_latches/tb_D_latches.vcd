@@ -1,0 +1,37 @@
+$date
+	Tue May 02 14:52:08 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_D_latches $end
+$var wire 1 ! Q $end
+$var reg 1 " D $end
+$var reg 1 # E $end
+$scope module u_D_latches $end
+$var wire 1 " D $end
+$var wire 1 # E $end
+$var reg 1 ! Q $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0#
+1"
+x!
+$end
+#10000
+1!
+1#
+#20000
+0#
+#30000
+0"
+#40000
+0!
+1#
+#50000

@@ -1,0 +1,8 @@
+* PSpice Model Editor - Version 16.5.0
+*$
+.model Q2sc1815 NPN(Is=639.5E-18 Xti=3 Eg=1.11 Vaf=172.5 Bf=160.0 Ise=750.1E-18
++               Ne=1.47 Ikf=.8587 Nk=.5413 Xtb=1.5 Var=100 Br=6.575 Isc=4.653f
++               Nc=1.185 Ikr=.4534 Rc=.7972 Cjc=4.858p Mjc=.3333 Vjc=.75 Fc=.5
++               Cje=5p Mje=.3333 Vje=.75 Tr=10n Tf=314.3p Itf=13.01 Xtf=0
++               Vtf=10)
+*$

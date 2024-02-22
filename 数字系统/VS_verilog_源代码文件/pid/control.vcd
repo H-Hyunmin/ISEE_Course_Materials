@@ -1,0 +1,167 @@
+$date
+	Thu Jun 01 23:59:10 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_control $end
+$var wire 16 ! Motor [15:0] $end
+$var reg 16 " Sensor [15:0] $end
+$var reg 1 # clk $end
+$var reg 16 $ kd [15:0] $end
+$var reg 16 % kp [15:0] $end
+$var reg 16 & posi_Sensor [15:0] $end
+$var reg 16 ' posi_kd [15:0] $end
+$var reg 16 ( posi_kp [15:0] $end
+$var reg 16 ) positon_target [15:0] $end
+$var reg 16 * zhongzhi [15:0] $end
+$scope module u_control $end
+$var wire 16 + Sensor [15:0] $end
+$var wire 1 # clk $end
+$var wire 16 , kd [15:0] $end
+$var wire 16 - kp [15:0] $end
+$var wire 16 . posi_Sensor [15:0] $end
+$var wire 16 / posi_kd [15:0] $end
+$var wire 16 0 posi_kp [15:0] $end
+$var wire 16 1 positon_target [15:0] $end
+$var wire 16 2 zhongzhi [15:0] $end
+$var wire 16 3 Position_pwm [15:0] $end
+$var wire 16 4 Motor [15:0] $end
+$var wire 16 5 Blance_pwm [15:0] $end
+$scope module u1 $end
+$var wire 16 6 Sensor [15:0] $end
+$var wire 1 # clk $end
+$var wire 16 7 kd [15:0] $end
+$var wire 16 8 kp [15:0] $end
+$var wire 16 9 zhongzhi [15:0] $end
+$var reg 16 : Bias [15:0] $end
+$var reg 16 ; Blance_pwm [15:0] $end
+$var reg 16 < D_Bias [15:0] $end
+$var reg 16 = Last_Bias [15:0] $end
+$var reg 16 > rkd [15:0] $end
+$var reg 16 ? rkp [15:0] $end
+$upscope $end
+$scope module u2 $end
+$var wire 1 # clk $end
+$var wire 16 @ posi_Sensor [15:0] $end
+$var wire 16 A posi_kd [15:0] $end
+$var wire 16 B posi_kp [15:0] $end
+$var wire 16 C positon_target [15:0] $end
+$var reg 16 D D_posi_Bias [15:0] $end
+$var reg 16 E Last_posi_Bias [15:0] $end
+$var reg 16 F Position_pwm [15:0] $end
+$var reg 16 G posi_Bias [15:0] $end
+$var reg 16 H posi_least [15:0] $end
+$var reg 16 I rkd [15:0] $end
+$var reg 16 J rkp [15:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b1 J
+b1 I
+b1111111000001100 H
+b1111111000001100 G
+bx F
+bx E
+bx D
+b11111010000 C
+b1 B
+b1 A
+b10111011100 @
+b1 ?
+b1 >
+bx =
+bx <
+bx ;
+b1111111011010100 :
+b1111101000 9
+b1 8
+b1 7
+b1010111100 6
+bx 5
+bx 4
+bx 3
+b1111101000 2
+b11111010000 1
+b1 0
+b1 /
+b10111011100 .
+b1 -
+b1 ,
+b1010111100 +
+b1111101000 *
+b11111010000 )
+b1 (
+b1 '
+b10111011100 &
+b1 %
+b1 $
+0#
+b1010111100 "
+bx !
+$end
+#5000
+b1111111011010100 =
+b1111111000001100 E
+1#
+#10000
+0#
+#15000
+b11001000 !
+b11001000 4
+b1111111000001100 3
+b1111111000001100 F
+b1111111011010100 5
+b1111111011010100 ;
+b0 D
+b0 <
+1#
+#20000
+0#
+#25000
+1#
+#30000
+0#
+#35000
+1#
+#40000
+0#
+#45000
+1#
+#50000
+0#
+#55000
+1#
+#60000
+0#
+#65000
+1#
+#70000
+0#
+#75000
+1#
+#80000
+0#
+#85000
+1#
+#90000
+0#
+#95000
+1#
+#100000
+b1111111011010100 G
+b1111111011010100 H
+b1111111100111000 :
+0#
+b11010100100 &
+b11010100100 .
+b11010100100 @
+b1100100000 "
+b1100100000 +
+b1100100000 6

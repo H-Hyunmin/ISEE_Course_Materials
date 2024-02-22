@@ -1,0 +1,15 @@
+* source 04_PROJECT
+V_V1         N16517 0  AC 10mV
++SIN 0 10mV 1k 0 0 0
+R_R1         N14564 N14803  72k TC=0,0 
+R_Rc         N14618 N14803  3.3k TC=0,0 
+R_R2         0 N14564  24k TC=0,0 
+R_Re1         N14680 N14676  56 TC=0,0 
+R_Re2         0 N14680  1.8k TC=0,0 
+C_C1         N14877 N14564  22uF  TC=0,0 
+C_C2         N14618 N14702  22uF  TC=0,0 
+C_C3         0 N14680  100uF  TC=0,0 
+V_V2         N14803 0 10Vdc
+Q_Q3         N14618 N14564 N14676 Q2sc1815
+R_Rs         N16517 N14877  600 TC=0,0 
+R_RL         0 N14702  5.1k TC=0,0 

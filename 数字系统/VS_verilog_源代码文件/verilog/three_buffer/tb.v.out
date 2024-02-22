@@ -1,0 +1,66 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 12;
+:vpi_module "D:\iverilog\lib\ivl\system.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "D:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "D:\iverilog\lib\ivl\va_math.vpi";
+S_000001f3d3d4be50 .scope module, "tb_three_buffer" "tb_three_buffer" 2 5;
+ .timescale -9 -12;
+P_000001f3d3d47240 .param/l "PERIOD" 0 2 8, +C4<00000000000000000000000000001010>;
+P_000001f3d3d47278 .param/l "n" 0 2 9, +C4<00000000000000000000000000000100>;
+v000001f3d3d46c10_0 .var "A", 3 0;
+v000001f3d3d46cb0_0 .var "E", 0 0;
+v000001f3d3d46d50_0 .net "Y", 3 0, L_000001f3d3d46df0;  1 drivers
+S_000001f3d3d84580 .scope module, "u_three_buffer" "three_buffer" 2 21, 3 1 0, S_000001f3d3d4be50;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "E";
+    .port_info 1 /INPUT 4 "A";
+    .port_info 2 /OUTPUT 4 "Y";
+P_000001f3d3d4a290 .param/l "n" 0 3 2, +C4<00000000000000000000000000000100>;
+v000001f3d3d4b3e0_0 .net "A", 3 0, v000001f3d3d46c10_0;  1 drivers
+v000001f3d3d47440_0 .net "E", 0 0, v000001f3d3d46cb0_0;  1 drivers
+v000001f3d3d95b20_0 .net "Y", 3 0, L_000001f3d3d46df0;  alias, 1 drivers
+o000001f3d3d97068 .functor BUFZ 4, C4<zzzz>; HiZ drive
+; Elide local net with no drivers, v000001f3d3d84710_0 name=_ivl_0
+L_000001f3d3d46df0 .functor MUXZ 4, o000001f3d3d97068, v000001f3d3d46c10_0, v000001f3d3d46cb0_0, C4<>;
+    .scope S_000001f3d3d4be50;
+T_0 ;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f3d3d46cb0_0, 0, 1;
+    %pushi/vec4 0, 0, 4;
+    %store/vec4 v000001f3d3d46c10_0, 0, 4;
+    %end;
+    .thread T_0;
+    .scope S_000001f3d3d4be50;
+T_1 ;
+    %vpi_call 2 30 "$dumpfile", "tb_three_buffer.vcd" {0 0 0};
+    %vpi_call 2 31 "$dumpvars", 32'sb00000000000000000000000000000000, S_000001f3d3d4be50 {0 0 0};
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f3d3d46cb0_0, 0, 1;
+    %pushi/vec4 0, 0, 4;
+    %store/vec4 v000001f3d3d46c10_0, 0, 4;
+    %delay 10000, 0;
+    %pushi/vec4 12, 0, 4;
+    %store/vec4 v000001f3d3d46c10_0, 0, 4;
+    %delay 10000, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v000001f3d3d46cb0_0, 0, 1;
+    %delay 10000, 0;
+    %pushi/vec4 10, 0, 4;
+    %store/vec4 v000001f3d3d46c10_0, 0, 4;
+    %delay 10000, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v000001f3d3d46cb0_0, 0, 1;
+    %delay 10000, 0;
+    %vpi_call 2 43 "$finish" {0 0 0};
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "tb.v";
+    "./three_buffer.v";

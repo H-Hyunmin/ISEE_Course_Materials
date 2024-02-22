@@ -1,0 +1,107 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 12;
+:vpi_module "D:\iverilog\lib\ivl\system.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "D:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "D:\iverilog\lib\ivl\va_math.vpi";
+S_00000212c2c3af80 .scope module, "tb_rom" "tb_rom" 2 5;
+ .timescale -9 -12;
+P_00000212c2c53330 .param/l "PERIOD" 0 2 8, +C4<00000000000000000000000000001010>;
+P_00000212c2c53368 .param/l "size" 0 2 9, +C4<00000000000000000000000000000100>;
+v00000212c2c3cf70_0 .var "E", 0 0;
+v00000212c2c843b0_0 .var "addr", 3 0;
+v00000212c2c84450_0 .net "data", 7 0, L_00000212c2d1bd10;  1 drivers
+S_00000212c2c3cb60 .scope module, "u_rom" "rom" 2 21, 3 1 0, S_00000212c2c3af80;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "E";
+    .port_info 1 /INPUT 4 "addr";
+    .port_info 2 /OUTPUT 8 "data";
+P_00000212c2c39f80 .param/l "size" 0 3 2, +C4<00000000000000000000000000000100>;
+v00000212c2c53530_0 .net "E", 0 0, v00000212c2c3cf70_0;  1 drivers
+v00000212c2c53120_0 .net *"_ivl_0", 7 0, L_00000212c2c844f0;  1 drivers
+v00000212c2c3b9f0_0 .net *"_ivl_2", 5 0, L_00000212c2c84590;  1 drivers
+L_00000212c2cd3858 .functor BUFT 1, C4<00>, C4<0>, C4<0>, C4<0>;
+v00000212c2c3ba90_0 .net *"_ivl_5", 1 0, L_00000212c2cd3858;  1 drivers
+o00000212c2c89098 .functor BUFZ 8, C4<zzzzzzzz>; HiZ drive
+; Elide local net with no drivers, v00000212c2c3ccf0_0 name=_ivl_6
+v00000212c2c3cd90_0 .net "addr", 3 0, v00000212c2c843b0_0;  1 drivers
+v00000212c2c3ce30_0 .net "data", 7 0, L_00000212c2d1bd10;  alias, 1 drivers
+v00000212c2c3ced0 .array "mem", 15 0, 7 0;
+L_00000212c2c844f0 .array/port v00000212c2c3ced0, L_00000212c2c84590;
+L_00000212c2c84590 .concat [ 4 2 0 0], v00000212c2c843b0_0, L_00000212c2cd3858;
+L_00000212c2d1bd10 .functor MUXZ 8, o00000212c2c89098, L_00000212c2c844f0, v00000212c2c3cf70_0, C4<>;
+    .scope S_00000212c2c3cb60;
+T_0 ;
+    %pushi/vec4 96, 0, 8;
+    %ix/load 3, 0, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000212c2c3ced0, 0, 4;
+    %pushi/vec4 128, 0, 8;
+    %ix/load 3, 1, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000212c2c3ced0, 0, 4;
+    %pushi/vec4 160, 0, 8;
+    %ix/load 3, 2, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000212c2c3ced0, 0, 4;
+    %pushi/vec4 193, 0, 8;
+    %ix/load 3, 3, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000212c2c3ced0, 0, 4;
+    %pushi/vec4 255, 0, 8;
+    %ix/load 3, 4, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000212c2c3ced0, 0, 4;
+    %end;
+    .thread T_0;
+    .scope S_00000212c2c3af80;
+T_1 ;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v00000212c2c3cf70_0, 0, 1;
+    %pushi/vec4 0, 0, 4;
+    %store/vec4 v00000212c2c843b0_0, 0, 4;
+    %end;
+    .thread T_1;
+    .scope S_00000212c2c3af80;
+T_2 ;
+    %vpi_call 2 30 "$dumpfile", "tb_rom.vcd" {0 0 0};
+    %vpi_call 2 31 "$dumpvars", 32'sb00000000000000000000000000000000, S_00000212c2c3af80 {0 0 0};
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v00000212c2c3cf70_0, 0, 1;
+    %pushi/vec4 0, 0, 4;
+    %store/vec4 v00000212c2c843b0_0, 0, 4;
+    %delay 10000, 0;
+    %pushi/vec4 1, 0, 4;
+    %store/vec4 v00000212c2c843b0_0, 0, 4;
+    %delay 10000, 0;
+    %pushi/vec4 2, 0, 4;
+    %store/vec4 v00000212c2c843b0_0, 0, 4;
+    %delay 10000, 0;
+    %pushi/vec4 3, 0, 4;
+    %store/vec4 v00000212c2c843b0_0, 0, 4;
+    %delay 10000, 0;
+    %pushi/vec4 4, 0, 4;
+    %store/vec4 v00000212c2c843b0_0, 0, 4;
+    %delay 10000, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v00000212c2c3cf70_0, 0, 1;
+    %pushi/vec4 0, 0, 4;
+    %store/vec4 v00000212c2c843b0_0, 0, 4;
+    %delay 10000, 0;
+    %vpi_call 2 46 "$finish" {0 0 0};
+    %end;
+    .thread T_2;
+# The file index is used to find the file name in the following table.
+:file_names 4;
+    "N/A";
+    "<interactive>";
+    "tb.v";
+    "./rom.v";

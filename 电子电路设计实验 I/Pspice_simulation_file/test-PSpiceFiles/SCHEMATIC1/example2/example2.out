@@ -1,0 +1,165 @@
+
+**** 11/27/23 20:09:10 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example2"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example2.sim 
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "example2.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.DC LIN V_V1 0v 5v 1v 
+.TEMP 20 100 200
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source TEST
+.EXTERNAL OUTPUT OUT
+R_R1         N00106 N00113  100 TC=0,0 
+V_V1         N00106 0 0Vdc
+D_D1         0 N00113 D1N5225 
+V_V2         N00293 0 DC 0Vdc AC 1Vac 
+R_R2         N00293 OUT  1k TC=0,0 
+R_R3         0 OUT  1k TC=0,0 
+C_C1         0 OUT  0.47u  TC=0,0 
+
+**** RESUMING example2.cir ****
+.END
+
+**** 11/27/23 20:09:10 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example2"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example2.sim 
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               D1N5225         
+          IS   36.641740E-06 
+           N    4.43382      
+         ISR    9.398687E-06 
+          NR    4.44845      
+         IKF     .020112     
+          BV    3.0207       
+         IBV     .044593     
+          RS   13.186000E-06 
+          TT  289.000000E-09 
+         CJO  200.000000E-12 
+          VJ     .75         
+           M     .43071      
+
+
+**** 11/27/23 20:09:10 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example2"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example2.sim 
+
+
+ ****     TEMPERATURE-ADJUSTED VALUES      TEMPERATURE =   20.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+ **** DIODE MODEL PARAMETERS
+
+                   D1N5225    
+
+         IS        2.862E-05  
+         VJ        7.622E-01  
+        CJO        1.984E-10  
+         RS        1.319E-05  
+        IKF        2.011E-02  
+         BV        3.021E+00  
+
+
+**** 11/27/23 20:09:10 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example2"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example2.sim 
+
+
+ ****     TEMPERATURE-ADJUSTED VALUES      TEMPERATURE =  100.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+ **** DIODE MODEL PARAMETERS
+
+                   D1N5225    
+
+         IS        2.820E-04  
+         VJ        6.191E-01  
+        CJO        2.175E-10  
+         RS        1.319E-05  
+        IKF        2.011E-02  
+         BV        3.021E+00  
+
+
+**** 11/27/23 20:09:10 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example2"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example2.sim 
+
+
+ ****     TEMPERATURE-ADJUSTED VALUES      TEMPERATURE =  200.000 DEG C
+
+
+******************************************************************************
+
+
+
+
+ **** DIODE MODEL PARAMETERS
+
+                   D1N5225    
+
+         IS        1.717E-03  
+         VJ        4.294E-01  
+        CJO        2.428E-10  
+         RS        1.319E-05  
+        IKF        2.011E-02  
+         BV        3.021E+00  
+
+
+
+          JOB CONCLUDED
+
+**** 11/27/23 20:09:10 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-example2"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example2.sim 
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =         .03
+

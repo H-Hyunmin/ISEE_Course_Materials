@@ -1,0 +1,99 @@
+$date
+	Wed May 03 01:34:07 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_regfile $end
+$var wire 8 ! portB [7:0] $end
+$var wire 8 " portA [7:0] $end
+$var reg 8 # D [7:0] $end
+$var reg 2 $ RAA [1:0] $end
+$var reg 1 % RAE $end
+$var reg 2 & RBA [1:0] $end
+$var reg 1 ' RBE $end
+$var reg 2 ( WA [1:0] $end
+$var reg 1 ) WE $end
+$var reg 1 * clk $end
+$scope module u_regfile $end
+$var wire 8 + D [7:0] $end
+$var wire 2 , RAA [1:0] $end
+$var wire 1 % RAE $end
+$var wire 2 - RBA [1:0] $end
+$var wire 1 ' RBE $end
+$var wire 2 . WA [1:0] $end
+$var wire 1 ) WE $end
+$var wire 1 * clk $end
+$var reg 8 / portA [7:0] $end
+$var reg 8 0 portB [7:0] $end
+$var reg 8 1 reg1 [7:0] $end
+$var reg 8 2 reg2 [7:0] $end
+$var reg 8 3 reg3 [7:0] $end
+$var reg 8 4 reg4 [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx 4
+bx 3
+bx 2
+bx 1
+bx 0
+bx /
+b11 .
+b0 -
+b0 ,
+b10111 +
+0*
+1)
+b11 (
+1'
+b0 &
+1%
+b0 $
+b10111 #
+bx "
+bx !
+$end
+#5000
+b10111 4
+1*
+#10000
+b10111 "
+b10111 /
+0*
+b1 &
+b1 -
+b11 $
+b11 ,
+b1 (
+b1 .
+b101101 #
+b101101 +
+#15000
+b101101 2
+1*
+#20000
+0*
+b10 (
+b10 .
+b1000011 #
+b1000011 +
+#25000
+b1000011 3
+1*
+#30000
+0*
+b0 (
+b0 .
+b1011001 #
+b1011001 +
+#35000
+b1011001 1
+1*
+#40000
+0*

@@ -1,0 +1,45 @@
+$date
+	Tue May 02 14:21:21 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_three_buffer $end
+$var wire 4 ! Y [3:0] $end
+$var reg 4 " A [3:0] $end
+$var reg 1 # E $end
+$scope module u_three_buffer $end
+$var wire 4 $ A [3:0] $end
+$var wire 1 # E $end
+$var wire 4 % Y [3:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bz %
+b0 $
+0#
+b0 "
+bz !
+$end
+#10000
+b1100 "
+b1100 $
+#20000
+b1100 !
+b1100 %
+1#
+#30000
+b1010 !
+b1010 %
+b1010 "
+b1010 $
+#40000
+bz !
+bz %
+0#
+#50000

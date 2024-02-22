@@ -1,0 +1,43 @@
+$date
+	Tue May 02 14:42:52 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_shift $end
+$var wire 8 ! outdate [7:0] $end
+$var reg 8 " date [7:0] $end
+$var reg 2 # s [1:0] $end
+$scope module u_shift $end
+$var wire 8 $ date [7:0] $end
+$var wire 2 % s [1:0] $end
+$var reg 8 & outdate [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b10110010 &
+b0 %
+b10110010 $
+b0 #
+b10110010 "
+b10110010 !
+$end
+#10000
+b1100100 !
+b1100100 &
+b1 #
+b1 %
+#20000
+b1011001 !
+b1011001 &
+b10 #
+b10 %
+#30000
+b11 #
+b11 %
+#40000
