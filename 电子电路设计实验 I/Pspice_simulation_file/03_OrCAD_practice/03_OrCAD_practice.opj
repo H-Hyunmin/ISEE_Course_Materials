@@ -1,0 +1,95 @@
+(ExpressProject "03_OrCAD_practice"
+  (ProjectVersion "19981106")
+  (ProjectType "Analog or A/D Mixed Mode")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (NoModify)
+    (File ".\03_orcad_practice.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (PSPICE_Regenerate_Netlist_Flag "FALSE"))
+  (Folder "Outputs"
+    (File ".\03_orcad_practice-pspicefiles\schematic1\schematic1.net"
+      (Type "Report")))
+  (Folder "PSpice Resources"
+    (Folder "Simulation Profiles"
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\03_orcad_practice-pspicefiles\schematic1\page1_simulation.sim"
+        (DisplayName "SCHEMATIC1-PAGE1_Simulation")
+        (Type "PSpice Profile"))
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\03_orcad_practice-pspicefiles\schematic1\page2_simulation.sim"
+        (DisplayName "SCHEMATIC1-PAGE2_simulation")
+        (Type "PSpice Profile"))
+      (ActiveProfile
+         ".\03_orcad_practice-pspicefiles\schematic1\page3_simulation.sim")
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\03_orcad_practice-pspicefiles\schematic1\page3_simulation.sim"
+        (DisplayName "SCHEMATIC1-PAGE3_simulation")
+        (Type "PSpice Profile")))
+    (Folder "Model Libraries"
+      (Sort User))
+    (Folder "Stimulus Files"
+      (Sort User))
+    (Folder "Include Files"
+      (Sort User)))
+  (DefaultLibraryBrowseDirectory "library\PSpice")
+  (PartMRUSelector
+    (0
+      (LibraryName "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (D1N750
+      (FullPartName "D1N750.Normal")
+      (LibraryName "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\DIODE.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName
+         "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    (VSIN
+      (FullPartName "VSIN.Normal")
+      (LibraryName
+         "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0"))
+    (D1N4148
+      (FullPartName "D1N4148.Normal")
+      (LibraryName "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\DIODE.OLB")
+      (DeviceIndex "0"))
+    (VSRC
+      (FullPartName "VSRC.Normal")
+      (LibraryName
+         "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0")))
+  (LastUsedLibraryBrowseDirectory
+     "D:\Cadence\SPB_16.5\tools\capture\library\pspice")
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources"
+         "C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_orcad_practice.dsn")
+      (Path "Design Resources"
+         "C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_orcad_practice.dsn"
+         "SCHEMATIC1")
+      (Path "Outputs")
+      (Select "Design Resources"
+         "C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_orcad_practice.dsn"
+         "SCHEMATIC1" "PAGE3"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 0 252 0 553"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 256 1336 1 564")
+        (Scroll "514 176")
+        (Zoom "200")
+        (Occurrence "/"))
+      (Path
+         "C:\USERS\HUANG XIANMIN\DESKTOP\PSPICE_SIMULATION_FILE\03_ORCAD_PRACTICE\03_ORCAD_PRACTICE.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE3"))))

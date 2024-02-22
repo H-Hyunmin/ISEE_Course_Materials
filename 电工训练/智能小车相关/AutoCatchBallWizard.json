@@ -1,0 +1,406 @@
+{
+    "BASEMOTION_CFG": [
+        {
+            "Delay": 1000,
+            "Dir": 0,
+            "Speak": ""
+        },
+        {
+            "Delay": 200,
+            "Dir": 4,
+            "Speak": ""
+        },
+        {
+            "Delay": 1000,
+            "Dir": 1,
+            "Speak": ""
+        },
+        {
+            "Delay": 0,
+            "Dir": 4,
+            "Speak": ""
+        },
+        {
+            "Delay": 1000,
+            "Dir": 2,
+            "Speak": ""
+        },
+        {
+            "Delay": 0,
+            "Dir": 4,
+            "Speak": ""
+        },
+        {
+            "Delay": 1000,
+            "Dir": 3,
+            "Speak": ""
+        }
+    ],
+    "BackArm": false,
+    "BallColor": 2293700,
+    "CATCHBALL_CFG": [
+        {
+            "ANG": 90,
+            "Delay": 200,
+            "ID": -2,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 200,
+            "ID": -2,
+            "Speak": ""
+        }
+    ],
+    "Debug": false,
+    "FINDBALL_CFG": [
+        {
+            "SIZE": 0,
+            "SPEAK": "大范围查找",
+            "ballX": -1,
+            "ballY": -1,
+            "servoH": -1,
+            "servoV": -1,
+            "spdTurnFwd": 60
+        },
+        {
+            "SIZE": 0,
+            "SPEAK": "中范围查找",
+            "ballX": -1,
+            "ballY": -1,
+            "servoH": -1,
+            "servoV": -1,
+            "spdTurnFwd": 40
+        },
+        {
+            "SIZE": 0,
+            "SPEAK": "近距离查找",
+            "ballX": -1,
+            "ballY": -1,
+            "servoH": -1,
+            "servoV": -1,
+            "spdTurnFwd": 20
+        },
+        {
+            "SIZE": 0,
+            "SPEAK": "最终定位",
+            "ballX": -1,
+            "ballY": -1,
+            "servoH": -1,
+            "servoV": -1,
+            "spdTurnFwd": 0
+        }
+    ],
+    "INTI_CFG": [
+        106,
+        90,
+        90,
+        139,
+        90,
+        90,
+        64,
+        90
+    ],
+    "NODECAM_CFG": [
+        {
+            "ANG": -1,
+            "Delay": 200,
+            "ID": 8,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 8,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 8,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 8,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 8,
+            "Speak": ""
+        },
+        {
+            "ANG": -1,
+            "Delay": 2000,
+            "ID": 8,
+            "Speak": ""
+        }
+    ],
+    "SHAKECAM_CFG": [
+        {
+            "ANG": -1,
+            "Delay": 200,
+            "ID": 7,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 7,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 7,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 7,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 7,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 7,
+            "Speak": ""
+        },
+        {
+            "ANG": -1,
+            "Delay": 2000,
+            "ID": 7,
+            "Speak": ""
+        }
+    ],
+    "SHAKEHAND_CFG": [
+        {
+            "ANG": 90,
+            "Delay": 200,
+            "ID": -2,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 2000,
+            "ID": 3,
+            "Speak": ""
+        },
+        {
+            "ANG": 90,
+            "Delay": 200,
+            "ID": -2,
+            "Speak": ""
+        }
+    ],
+    "VR_CFG": [
+        "ji ben dong zuo",
+        "yao tou huang nao",
+        "dian tou shi yi",
+        "you hao wo zhua",
+        "lan xiang fu ti",
+        "ren wu zhong jie",
+        "dan bu suo ding",
+        "xia yi bu"
+    ],
+    "maxBallSize": 65,
+    "minBallSize": 3,
+    "minSolid": 40,
+    "minSqure": 40
+}

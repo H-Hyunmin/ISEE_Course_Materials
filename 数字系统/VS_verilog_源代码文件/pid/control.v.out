@@ -1,0 +1,186 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "D:\iverilog\lib\ivl\system.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "D:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "D:\iverilog\lib\ivl\va_math.vpi";
+S_000001b0ec59cd50 .scope module, "control" "control" 2 4;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 16 "kp";
+    .port_info 2 /INPUT 16 "kd";
+    .port_info 3 /INPUT 16 "zhongzhi";
+    .port_info 4 /INPUT 16 "positon_target";
+    .port_info 5 /INPUT 16 "posi_kp";
+    .port_info 6 /INPUT 16 "posi_kd";
+    .port_info 7 /INPUT 16 "posi_Sensor";
+    .port_info 8 /INPUT 16 "Sensor";
+    .port_info 9 /OUTPUT 16 "Motor";
+v000001b0ec5f1f70_0 .net "Blance_pwm", 15 0, v000001b0ec563780_0;  1 drivers
+v000001b0ec5f2150_0 .net "Motor", 15 0, L_000001b0ec5f2f80;  1 drivers
+v000001b0ec5f1930_0 .net "Position_pwm", 15 0, v000001b0ec5f25b0_0;  1 drivers
+o000001b0ec5a5098 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v000001b0ec5f19d0_0 .net "Sensor", 15 0, o000001b0ec5a5098;  0 drivers
+o000001b0ec5a50c8 .functor BUFZ 1, C4<z>; HiZ drive
+v000001b0ec5f2010_0 .net "clk", 0 0, o000001b0ec5a50c8;  0 drivers
+o000001b0ec5a50f8 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v000001b0ec5f1c50_0 .net "kd", 15 0, o000001b0ec5a50f8;  0 drivers
+o000001b0ec5a5128 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v000001b0ec5f1cf0_0 .net "kp", 15 0, o000001b0ec5a5128;  0 drivers
+o000001b0ec5a53c8 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v000001b0ec5f1d90_0 .net "posi_Sensor", 15 0, o000001b0ec5a53c8;  0 drivers
+o000001b0ec5a53f8 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v000001b0ec5f2470_0 .net "posi_kd", 15 0, o000001b0ec5a53f8;  0 drivers
+o000001b0ec5a5428 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v000001b0ec5f2ee0_0 .net "posi_kp", 15 0, o000001b0ec5a5428;  0 drivers
+o000001b0ec5a5488 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v000001b0ec5f3d40_0 .net "positon_target", 15 0, o000001b0ec5a5488;  0 drivers
+o000001b0ec5a51b8 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v000001b0ec5f3200_0 .net "zhongzhi", 15 0, o000001b0ec5a51b8;  0 drivers
+L_000001b0ec5f2f80 .arith/sub 16, v000001b0ec563780_0, v000001b0ec5f25b0_0;
+S_000001b0ec54dbf0 .scope module, "u1" "Balance_Control" 2 17, 3 1 0, S_000001b0ec59cd50;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 16 "Sensor";
+    .port_info 2 /INPUT 16 "zhongzhi";
+    .port_info 3 /INPUT 16 "kp";
+    .port_info 4 /INPUT 16 "kd";
+    .port_info 5 /OUTPUT 16 "Blance_pwm";
+v000001b0ec589c50_0 .var "Bias", 15 0;
+v000001b0ec563780_0 .var "Blance_pwm", 15 0;
+v000001b0ec5633f0_0 .var "D_Bias", 15 0;
+v000001b0ec563120_0 .var "Last_Bias", 15 0;
+v000001b0ec59cf90_0 .net "Sensor", 15 0, o000001b0ec5a5098;  alias, 0 drivers
+v000001b0ec59d030_0 .net "clk", 0 0, o000001b0ec5a50c8;  alias, 0 drivers
+v000001b0ec54dd80_0 .net "kd", 15 0, o000001b0ec5a50f8;  alias, 0 drivers
+v000001b0ec5f2510_0 .net "kp", 15 0, o000001b0ec5a5128;  alias, 0 drivers
+v000001b0ec5f2290_0 .var "rkd", 15 0;
+v000001b0ec5f1e30_0 .var "rkp", 15 0;
+v000001b0ec5f26f0_0 .net "zhongzhi", 15 0, o000001b0ec5a51b8;  alias, 0 drivers
+E_000001b0ec5896f0 .event anyedge, v000001b0ec5633f0_0;
+E_000001b0ec589370 .event posedge, v000001b0ec59d030_0;
+E_000001b0ec5895b0 .event anyedge, v000001b0ec54dd80_0, v000001b0ec5f2510_0, v000001b0ec59cf90_0;
+S_000001b0ec54de20 .scope module, "u2" "Position_Control" 2 26, 4 1 0, S_000001b0ec59cd50;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 16 "posi_Sensor";
+    .port_info 2 /INPUT 16 "positon_target";
+    .port_info 3 /INPUT 16 "posi_kp";
+    .port_info 4 /INPUT 16 "posi_kd";
+    .port_info 5 /OUTPUT 16 "Position_pwm";
+v000001b0ec5f20b0_0 .var "D_posi_Bias", 15 0;
+v000001b0ec5f1ed0_0 .var "Last_posi_Bias", 15 0;
+v000001b0ec5f25b0_0 .var "Position_pwm", 15 0;
+v000001b0ec5f2650_0 .net "clk", 0 0, o000001b0ec5a50c8;  alias, 0 drivers
+v000001b0ec5f2790_0 .var "posi_Bias", 15 0;
+v000001b0ec5f1890_0 .net "posi_Sensor", 15 0, o000001b0ec5a53c8;  alias, 0 drivers
+v000001b0ec5f1a70_0 .net "posi_kd", 15 0, o000001b0ec5a53f8;  alias, 0 drivers
+v000001b0ec5f21f0_0 .net "posi_kp", 15 0, o000001b0ec5a5428;  alias, 0 drivers
+v000001b0ec5f2330_0 .var "posi_least", 15 0;
+v000001b0ec5f1b10_0 .net "positon_target", 15 0, o000001b0ec5a5488;  alias, 0 drivers
+v000001b0ec5f1bb0_0 .var "rkd", 15 0;
+v000001b0ec5f23d0_0 .var "rkp", 15 0;
+E_000001b0ec588bb0 .event anyedge, v000001b0ec5f20b0_0;
+E_000001b0ec588b70 .event anyedge, v000001b0ec5f1a70_0, v000001b0ec5f21f0_0, v000001b0ec5f1890_0;
+    .scope S_000001b0ec54dbf0;
+T_0 ;
+    %wait E_000001b0ec5895b0;
+    %load/vec4 v000001b0ec59cf90_0;
+    %load/vec4 v000001b0ec5f26f0_0;
+    %sub;
+    %store/vec4 v000001b0ec589c50_0, 0, 16;
+    %load/vec4 v000001b0ec5f2510_0;
+    %store/vec4 v000001b0ec5f1e30_0, 0, 16;
+    %load/vec4 v000001b0ec54dd80_0;
+    %store/vec4 v000001b0ec5f2290_0, 0, 16;
+    %jmp T_0;
+    .thread T_0, $push;
+    .scope S_000001b0ec54dbf0;
+T_1 ;
+    %wait E_000001b0ec589370;
+    %load/vec4 v000001b0ec589c50_0;
+    %load/vec4 v000001b0ec563120_0;
+    %sub;
+    %assign/vec4 v000001b0ec5633f0_0, 0;
+    %load/vec4 v000001b0ec589c50_0;
+    %assign/vec4 v000001b0ec563120_0, 0;
+    %jmp T_1;
+    .thread T_1;
+    .scope S_000001b0ec54dbf0;
+T_2 ;
+    %wait E_000001b0ec5896f0;
+    %load/vec4 v000001b0ec5f1e30_0;
+    %load/vec4 v000001b0ec589c50_0;
+    %mul;
+    %load/vec4 v000001b0ec5f2290_0;
+    %load/vec4 v000001b0ec5633f0_0;
+    %mul;
+    %add;
+    %store/vec4 v000001b0ec563780_0, 0, 16;
+    %jmp T_2;
+    .thread T_2, $push;
+    .scope S_000001b0ec54de20;
+T_3 ;
+    %pushi/vec4 0, 0, 16;
+    %store/vec4 v000001b0ec5f2790_0, 0, 16;
+    %end;
+    .thread T_3;
+    .scope S_000001b0ec54de20;
+T_4 ;
+    %wait E_000001b0ec588b70;
+    %load/vec4 v000001b0ec5f1890_0;
+    %load/vec4 v000001b0ec5f1b10_0;
+    %sub;
+    %store/vec4 v000001b0ec5f2330_0, 0, 16;
+    %load/vec4 v000001b0ec5f2330_0;
+    %pad/u 32;
+    %pushi/vec4 5, 0, 32;
+    %div;
+    %load/vec4 v000001b0ec5f2790_0;
+    %pad/u 32;
+    %muli 4, 0, 32;
+    %pushi/vec4 5, 0, 32;
+    %div;
+    %add;
+    %pad/u 16;
+    %store/vec4 v000001b0ec5f2790_0, 0, 16;
+    %load/vec4 v000001b0ec5f21f0_0;
+    %store/vec4 v000001b0ec5f23d0_0, 0, 16;
+    %load/vec4 v000001b0ec5f1a70_0;
+    %store/vec4 v000001b0ec5f1bb0_0, 0, 16;
+    %jmp T_4;
+    .thread T_4, $push;
+    .scope S_000001b0ec54de20;
+T_5 ;
+    %wait E_000001b0ec589370;
+    %load/vec4 v000001b0ec5f2790_0;
+    %load/vec4 v000001b0ec5f1ed0_0;
+    %sub;
+    %assign/vec4 v000001b0ec5f20b0_0, 0;
+    %load/vec4 v000001b0ec5f2790_0;
+    %assign/vec4 v000001b0ec5f1ed0_0, 0;
+    %jmp T_5;
+    .thread T_5;
+    .scope S_000001b0ec54de20;
+T_6 ;
+    %wait E_000001b0ec588bb0;
+    %load/vec4 v000001b0ec5f23d0_0;
+    %load/vec4 v000001b0ec5f2790_0;
+    %mul;
+    %load/vec4 v000001b0ec5f1bb0_0;
+    %load/vec4 v000001b0ec5f20b0_0;
+    %mul;
+    %add;
+    %store/vec4 v000001b0ec5f25b0_0, 0, 16;
+    %jmp T_6;
+    .thread T_6, $push;
+# The file index is used to find the file name in the following table.
+:file_names 5;
+    "N/A";
+    "<interactive>";
+    "control.v";
+    "./Balance_Control.v";
+    "./Position_Control.v";

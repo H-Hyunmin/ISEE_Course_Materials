@@ -1,0 +1,112 @@
+
+**** 11/28/23 17:17:30 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-PAGE1_Simulation"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_OrCAD_practi
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "PAGE1_Simulation.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 2ms  0 0.01ms 
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source 03_ORCAD_PRACTICE
+R_R1         VIN VOUT  1k TC=0,0 
+D_D1         VOUT 0 D1N4148 
+V_Vs         VIN 0  AC 0
++SIN 0 10 1k 0 0 0
+
+**** RESUMING PAGE1_Simulation.cir ****
+.END
+
+**** 11/28/23 17:17:30 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-PAGE1_Simulation"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_OrCAD_practi
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               D1N4148         
+          IS    2.682000E-09 
+           N    1.836        
+         ISR    1.565000E-09 
+         IKF     .04417      
+          BV  100            
+         IBV  100.000000E-06 
+          RS     .5664       
+          TT   11.540000E-09 
+         CJO    4.000000E-12 
+          VJ     .5          
+           M     .3333       
+
+
+**** 11/28/23 17:17:30 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-PAGE1_Simulation"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_OrCAD_practi
+
+
+ ****     INITIAL TRANSIENT SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(  VIN)    0.0000  ( VOUT)-26.12E-24  
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_Vs        -2.612E-26
+
+    TOTAL POWER DISSIPATION   0.00E+00  WATTS
+
+
+
+          JOB CONCLUDED
+
+**** 11/28/23 17:17:30 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-PAGE1_Simulation"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_OrCAD_practi
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =         .02
+

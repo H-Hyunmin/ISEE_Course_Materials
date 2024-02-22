@@ -1,0 +1,18 @@
+** Profile: "SCHEMATIC1-example1_"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test-PSpiceFiles\SCHEMATIC1\example1_.sim ] 
+
+** Creating circuit file "example1_.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.DC LIN V_V1 0v 5v 1v 
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+.END

@@ -1,0 +1,55 @@
+
+**** 12/23/23 23:58:59 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-bias"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\06_project-pspicefiles\sche
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "bias.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.AC DEC 10 1 1000M
+-------------$
+ERROR(ORPSIM-16103): Invalid value
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source 06_PROJECT
+.EXTERNAL OUTPUT Vo
+V_V1         N14643 0  
++SIN 0 400mV 1k 0 0 0
+V_V2         N14650 0 2.06V
+R_R1         0 N14492  7.5k TC=0,0 
+R_R2         N14650 N14496  3k TC=0,0 
+R_R3         N14643 N14492  3k TC=0,0 
+R_R4         N14496 N14527  7.5k TC=0,0 
+E_U1         N14527 0 VALUE {LIMIT(V(N14492,N14496)*1E6,-15V,+15V)} _U1 N14492
++  N14496 1G
+
+R_R5         0 N15915  7.5k TC=0,0 
+R_R8         N15941 VO  10k TC=0,0 
+V_V3         N15993 0  AC 50mV
++SIN 0 50mV 1k 0 0 0
+R_R7         N15993 N15941  10k TC=0,0 
+X_U2         N15941 N15915 V+ V- VO uA741
+
+**** RESUMING bias.cir ****
+.END
+

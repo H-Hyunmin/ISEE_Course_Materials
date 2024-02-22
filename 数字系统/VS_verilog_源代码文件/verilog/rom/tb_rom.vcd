@@ -1,0 +1,55 @@
+$date
+	Wed May 03 01:57:53 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_rom $end
+$var wire 8 ! data [7:0] $end
+$var reg 1 " E $end
+$var reg 4 # addr [3:0] $end
+$scope module u_rom $end
+$var wire 1 " E $end
+$var wire 4 $ addr [3:0] $end
+$var wire 8 % data [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b1100000 %
+b0 $
+b0 #
+1"
+b1100000 !
+$end
+#10000
+b10000000 !
+b10000000 %
+b1 #
+b1 $
+#20000
+b10100000 !
+b10100000 %
+b10 #
+b10 $
+#30000
+b11000001 !
+b11000001 %
+b11 #
+b11 $
+#40000
+b11111111 !
+b11111111 %
+b100 #
+b100 $
+#50000
+bz !
+bz %
+b0 #
+b0 $
+0"
+#60000

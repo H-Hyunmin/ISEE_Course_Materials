@@ -1,0 +1,159 @@
+$date
+	Tue May 30 16:30:38 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_uart_tx $end
+$var wire 1 ! txd $end
+$var wire 1 " tx_busy $end
+$var reg 1 # clk $end
+$var reg 8 $ tx_data [7:0] $end
+$var reg 1 % tx_start $end
+$scope module u_uart_tx $end
+$var wire 1 # clk $end
+$var wire 8 & tx_data [7:0] $end
+$var wire 1 % tx_start $end
+$var wire 1 " tx_busy $end
+$var reg 3 ' count [2:0] $end
+$var reg 3 ( next_state [2:0] $end
+$var reg 3 ) state [2:0] $end
+$var reg 1 ! txd $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 )
+b1 (
+bx '
+b100000 &
+1%
+b100000 $
+0#
+0"
+x!
+$end
+#5000
+b10 (
+b1 )
+b0 '
+1!
+1#
+#10000
+0#
+#15000
+0!
+1"
+b10 )
+1#
+#20000
+0#
+#25000
+b1 '
+1#
+#30000
+0#
+#35000
+b10 '
+1#
+#40000
+0#
+0%
+#45000
+b11 '
+1#
+#50000
+0#
+#55000
+b100 '
+1#
+#60000
+0#
+#65000
+b101 '
+1#
+#70000
+0#
+#75000
+1!
+b110 '
+1#
+#80000
+0#
+#85000
+b11 (
+b111 '
+0!
+1#
+#90000
+0#
+#95000
+b0 (
+b0 '
+0"
+b11 )
+1#
+#100000
+0#
+#105000
+b0 )
+1!
+1#
+#110000
+0#
+#115000
+1#
+#120000
+0#
+#125000
+1#
+#130000
+0#
+#135000
+1#
+#140000
+0#
+#145000
+1#
+#150000
+0#
+#155000
+1#
+#160000
+0#
+#165000
+1#
+#170000
+0#
+#175000
+1#
+#180000
+0#
+#185000
+1#
+#190000
+0#
+#195000
+1#
+#200000
+0#
+#205000
+1#
+#210000
+0#
+#215000
+1#
+#220000
+0#
+#225000
+1#
+#230000
+0#
+#235000
+1#
+#240000
+0#

@@ -1,0 +1,151 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision - 12;
+:vpi_module "D:\iverilog\lib\ivl\system.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "D:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "D:\iverilog\lib\ivl\va_math.vpi";
+S_0000025633906d20 .scope module, "PWM" "PWM" 2 23;
+ .timescale -9 -12;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 1 "rst_n";
+    .port_info 2 /INPUT 1 "pwm_en";
+    .port_info 3 /INPUT 16 "pwm_div";
+    .port_info 4 /INPUT 7 "pwm_duty";
+    .port_info 5 /OUTPUT 1 "pwm";
+o000002563395afd8 .functor BUFZ 1, C4<z>; HiZ drive
+v0000025633909ff0_0 .net "clk", 0 0, o000002563395afd8;  0 drivers
+v000002563390adc0_0 .var "pwm", 0 0;
+o000002563395b038 .functor BUFZ 16, C4<zzzzzzzzzzzzzzzz>; HiZ drive
+v00000256339072c0_0 .net "pwm_div", 15 0, o000002563395b038;  0 drivers
+v000002563390bf20_0 .var "pwm_div_cnt", 15 0;
+o000002563395b098 .functor BUFZ 7, C4<zzzzzzz>; HiZ drive
+v0000025633906eb0_0 .net "pwm_duty", 6 0, o000002563395b098;  0 drivers
+v0000025633906f50_0 .var "pwm_duty_cnt", 6 0;
+o000002563395b0f8 .functor BUFZ 1, C4<z>; HiZ drive
+v0000025633906ff0_0 .net "pwm_en", 0 0, o000002563395b0f8;  0 drivers
+o000002563395b128 .functor BUFZ 1, C4<z>; HiZ drive
+v0000025633954210_0 .net "rst_n", 0 0, o000002563395b128;  0 drivers
+E_0000025633908d20 .event posedge, v0000025633909ff0_0;
+    .scope S_0000025633906d20;
+T_0 ;
+    %wait E_0000025633908d20;
+    %load/vec4 v0000025633954210_0;
+    %inv;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_0.0, 8;
+    %pushi/vec4 0, 0, 16;
+    %assign/vec4 v000002563390bf20_0, 0;
+    %jmp T_0.1;
+T_0.0 ;
+    %load/vec4 v0000025633906ff0_0;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_0.2, 8;
+    %load/vec4 v000002563390bf20_0;
+    %pad/u 32;
+    %load/vec4 v00000256339072c0_0;
+    %pad/u 32;
+    %subi 1, 0, 32;
+    %cmp/e;
+    %jmp/0xz  T_0.4, 4;
+    %pushi/vec4 0, 0, 16;
+    %assign/vec4 v000002563390bf20_0, 0;
+    %jmp T_0.5;
+T_0.4 ;
+    %load/vec4 v000002563390bf20_0;
+    %addi 1, 0, 16;
+    %assign/vec4 v000002563390bf20_0, 0;
+T_0.5 ;
+    %jmp T_0.3;
+T_0.2 ;
+    %pushi/vec4 0, 0, 16;
+    %assign/vec4 v000002563390bf20_0, 0;
+T_0.3 ;
+T_0.1 ;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_0000025633906d20;
+T_1 ;
+    %wait E_0000025633908d20;
+    %load/vec4 v0000025633954210_0;
+    %inv;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_1.0, 8;
+    %pushi/vec4 0, 0, 7;
+    %assign/vec4 v0000025633906f50_0, 0;
+    %jmp T_1.1;
+T_1.0 ;
+    %load/vec4 v0000025633906ff0_0;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_1.2, 8;
+    %load/vec4 v000002563390bf20_0;
+    %pad/u 32;
+    %load/vec4 v00000256339072c0_0;
+    %pad/u 32;
+    %subi 1, 0, 32;
+    %cmp/e;
+    %jmp/0xz  T_1.4, 4;
+    %load/vec4 v0000025633906f50_0;
+    %cmpi/e 99, 0, 7;
+    %jmp/0xz  T_1.6, 4;
+    %pushi/vec4 0, 0, 7;
+    %assign/vec4 v0000025633906f50_0, 0;
+    %jmp T_1.7;
+T_1.6 ;
+    %load/vec4 v0000025633906f50_0;
+    %addi 1, 0, 7;
+    %assign/vec4 v0000025633906f50_0, 0;
+T_1.7 ;
+T_1.4 ;
+    %jmp T_1.3;
+T_1.2 ;
+    %pushi/vec4 0, 0, 7;
+    %assign/vec4 v0000025633906f50_0, 0;
+T_1.3 ;
+T_1.1 ;
+    %jmp T_1;
+    .thread T_1;
+    .scope S_0000025633906d20;
+T_2 ;
+    %wait E_0000025633908d20;
+    %load/vec4 v0000025633954210_0;
+    %inv;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_2.0, 8;
+    %pushi/vec4 0, 0, 1;
+    %assign/vec4 v000002563390adc0_0, 0;
+    %jmp T_2.1;
+T_2.0 ;
+    %load/vec4 v0000025633906ff0_0;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_2.2, 8;
+    %load/vec4 v0000025633906f50_0;
+    %load/vec4 v0000025633906eb0_0;
+    %cmp/u;
+    %flag_mov 8, 5;
+    %jmp/0 T_2.4, 8;
+    %pushi/vec4 1, 0, 2;
+    %jmp/1 T_2.5, 8;
+T_2.4 ; End of true expr.
+    %pushi/vec4 0, 0, 2;
+    %jmp/0 T_2.5, 8;
+ ; End of false expr.
+    %blend;
+T_2.5;
+    %pad/s 1;
+    %assign/vec4 v000002563390adc0_0, 0;
+    %jmp T_2.3;
+T_2.2 ;
+    %pushi/vec4 0, 0, 1;
+    %assign/vec4 v000002563390adc0_0, 0;
+T_2.3 ;
+T_2.1 ;
+    %jmp T_2;
+    .thread T_2;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "pwm.v";

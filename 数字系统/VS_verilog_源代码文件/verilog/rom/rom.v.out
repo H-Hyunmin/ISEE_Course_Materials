@@ -1,0 +1,64 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "D:\iverilog\lib\ivl\system.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "D:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "D:\iverilog\lib\ivl\va_math.vpi";
+S_00000217d6ab2ce0 .scope module, "rom" "rom" 2 1;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "E";
+    .port_info 1 /INPUT 4 "addr";
+    .port_info 2 /OUTPUT 8 "data";
+P_00000217d6ae6a80 .param/l "size" 0 2 2, +C4<00000000000000000000000000000100>;
+o00000217d6ae6f98 .functor BUFZ 1, C4<z>; HiZ drive
+v00000217d6ab34f0_0 .net "E", 0 0, o00000217d6ae6f98;  0 drivers
+v00000217d6bc88a0_0 .net *"_ivl_0", 7 0, L_00000217d6bcb740;  1 drivers
+v00000217d6ab2e70_0 .net *"_ivl_2", 5 0, L_00000217d6bcb7e0;  1 drivers
+L_00000217d6b28018 .functor BUFT 1, C4<00>, C4<0>, C4<0>, C4<0>;
+v00000217d6ab2f10_0 .net *"_ivl_5", 1 0, L_00000217d6b28018;  1 drivers
+o00000217d6ae7058 .functor BUFZ 8, C4<zzzzzzzz>; HiZ drive
+; Elide local net with no drivers, v00000217d6ab2fb0_0 name=_ivl_6
+o00000217d6ae7088 .functor BUFZ 4, C4<zzzz>; HiZ drive
+v00000217d6ab3050_0 .net "addr", 3 0, o00000217d6ae7088;  0 drivers
+v00000217d6ab30f0_0 .net "data", 7 0, L_00000217d6bcb880;  1 drivers
+v00000217d6bcb6a0 .array "mem", 15 0, 7 0;
+L_00000217d6bcb740 .array/port v00000217d6bcb6a0, L_00000217d6bcb7e0;
+L_00000217d6bcb7e0 .concat [ 4 2 0 0], o00000217d6ae7088, L_00000217d6b28018;
+L_00000217d6bcb880 .functor MUXZ 8, o00000217d6ae7058, L_00000217d6bcb740, o00000217d6ae6f98, C4<>;
+    .scope S_00000217d6ab2ce0;
+T_0 ;
+    %pushi/vec4 96, 0, 8;
+    %ix/load 3, 0, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000217d6bcb6a0, 0, 4;
+    %pushi/vec4 128, 0, 8;
+    %ix/load 3, 1, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000217d6bcb6a0, 0, 4;
+    %pushi/vec4 160, 0, 8;
+    %ix/load 3, 2, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000217d6bcb6a0, 0, 4;
+    %pushi/vec4 193, 0, 8;
+    %ix/load 3, 3, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000217d6bcb6a0, 0, 4;
+    %pushi/vec4 255, 0, 8;
+    %ix/load 3, 4, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v00000217d6bcb6a0, 0, 4;
+    %end;
+    .thread T_0;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "rom.v";

@@ -1,0 +1,152 @@
+
+**** 12/17/23 15:27:52 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-04_project"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\04_project-pspicefile
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "04_project.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+.LIB "../../../04_project-pspicefiles/04_project.lib" 
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.AC DEC 10 1 1G
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source 04_PROJECT
+V_V1         N16517 0  AC 10mV
++SIN 0 10mV 1k 0 0 0
+R_R1         N14564 N14803  72k TC=0,0 
+R_Rc         N14618 N14803  3.3k TC=0,0 
+R_R2         0 N14564  24k TC=0,0 
+R_Re1         N14680 N14676  56 TC=0,0 
+R_Re2         0 N14680  1.8k TC=0,0 
+C_C1         N14877 N14564  22uF  TC=0,0 
+C_C2         N14618 N14702  22uF  TC=0,0 
+C_C3         0 N14680  100uF  TC=0,0 
+V_V2         N14803 0 10Vdc
+Q_Q3         N14618 N14564 N14676 Q2sc1815
+R_Rs         N16517 N14877  600 TC=0,0 
+R_RL         0 N14702  5.1k TC=0,0 
+
+**** RESUMING 04_project.cir ****
+.END
+
+**** 12/17/23 15:27:52 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-04_project"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\04_project-pspicefile
+
+
+ ****     BJT MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               Q2sc1815        
+               NPN             
+       LEVEL    1            
+          IS  639.500000E-18 
+          BF  160            
+          NF    1            
+         VAF  172.5          
+         IKF     .8587       
+         ISE  750.100000E-18 
+          NE    1.47         
+          BR    6.575        
+          NR    1            
+         VAR  100            
+         IKR     .4534       
+         ISC    4.653000E-15 
+          NC    1.185        
+          NK     .5413       
+         ISS    0            
+          RE    0            
+          RC     .7972       
+         CJE    5.000000E-12 
+         VJE     .75         
+         MJE     .3333       
+         CJC    4.858000E-12 
+         VJC     .75         
+         MJC     .3333       
+        XCJC    1            
+         CJS    0            
+         VJS     .75         
+          TF  314.300000E-12 
+         VTF   10            
+         ITF   13.01         
+          TR   10.000000E-09 
+         XTB    1.5          
+          KF    0            
+          AF    1            
+          CN    2.42         
+           D     .87         
+
+
+**** 12/17/23 15:27:52 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-04_project"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\04_project-pspicefile
+
+
+ ****     SMALL SIGNAL BIAS SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(N14564)    2.3985 (N14618)    7.0395 (N14676)    1.6755 (N14680)    1.6250     
+
+(N14702)    0.0000 (N14803)   10.0000 (N14877)    0.0000 (N16517)    0.0000 
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V1         0.000E+00
+    V_V2        -1.003E-03
+
+    TOTAL POWER DISSIPATION   1.00E-02  WATTS
+
+
+
+          JOB CONCLUDED
+
+**** 12/17/23 15:27:52 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-04_project"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\04_project-pspicefile
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =        0.00
+

@@ -1,0 +1,56 @@
+$date
+	Tue May 02 19:27:57 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_D_flipflop $end
+$var wire 4 ! Q [3:0] $end
+$var reg 4 " D [3:0] $end
+$var reg 1 # clk $end
+$scope module u_D_flipflop $end
+$var wire 4 $ D [3:0] $end
+$var wire 1 # clk $end
+$var reg 4 % Q [3:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 %
+b0 $
+0#
+b0 "
+b0 !
+$end
+#8000
+1#
+#10000
+b1000 "
+b1000 $
+#16000
+0#
+#20000
+b100 "
+b100 $
+#24000
+b100 !
+b100 %
+1#
+#30000
+b10 "
+b10 $
+#32000
+0#
+#40000
+b1 !
+b1 %
+1#
+b1 "
+b1 $
+#48000
+0#
+#50000

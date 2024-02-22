@@ -1,0 +1,18 @@
+** Profile: "SCHEMATIC1-PAGE3_simulation"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_OrCAD_practice-PSpiceFiles\SCHEMATIC1\PAGE3_simulation.sim ] 
+
+** Creating circuit file "PAGE3_simulation.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 40ms 0 0.01ms 
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+.END

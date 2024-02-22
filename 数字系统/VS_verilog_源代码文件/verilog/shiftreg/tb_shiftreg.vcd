@@ -1,0 +1,72 @@
+$date
+	Wed May 03 14:38:24 2023
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module tb_shiftreg $end
+$var wire 8 ! Q [7:0] $end
+$var reg 1 " clk $end
+$var reg 1 # serial_in $end
+$var reg 1 $ shift $end
+$scope module u_shiftreg $end
+$var wire 1 " clk $end
+$var wire 1 # serial_in $end
+$var wire 1 $ shift $end
+$var reg 8 % Q [7:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 %
+0$
+0#
+0"
+b0 !
+$end
+#5000
+1"
+#10000
+0"
+1#
+1$
+#15000
+b10000000 !
+b10000000 %
+1"
+#20000
+0"
+0#
+#25000
+b1000000 !
+b1000000 %
+1"
+#30000
+0"
+1#
+#35000
+b10100000 !
+b10100000 %
+1"
+#40000
+0"
+#45000
+1"
+0$
+#50000
+0"
+#55000
+1"
+0#
+#60000
+0"
+#65000
+1"
+#70000
+0"
+#75000
+1"

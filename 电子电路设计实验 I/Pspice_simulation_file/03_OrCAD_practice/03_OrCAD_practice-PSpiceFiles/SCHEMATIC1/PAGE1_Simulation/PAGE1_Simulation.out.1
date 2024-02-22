@@ -1,0 +1,43 @@
+
+**** 11/28/23 16:53:40 ****** PSpice 16.5.0 (April 2011) ****** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-PAGE1_Simulation"  [ C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\03_OrCAD_practice\03_OrCAD_practi
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "PAGE1_Simulation.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of D:\Cadence\SPB_16.5\tools\PSpice\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.DC LIN Vs -200 40 0.1 
++ TEMP LIST -10,0,30 
+.PROBE V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source 03_ORCAD_PRACTICE
+R_R1         VIN VOUT  1k TC=0,0 
+D_D1         VOUT 0 D1N4148 
+V_V1         VIN 0   
+
+**** RESUMING PAGE1_Simulation.cir ****
+.END
+
+
+ERROR(ORPSIM-15090): DC device Vs is undefined
+

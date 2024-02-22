@@ -1,0 +1,38 @@
+#! /c/Source/iverilog-install/bin/vvp
+:ivl_version "12.0 (devel)" "(s20150603-1110-g18392a46)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "D:\iverilog\lib\ivl\system.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_sys.vpi";
+:vpi_module "D:\iverilog\lib\ivl\vhdl_textio.vpi";
+:vpi_module "D:\iverilog\lib\ivl\v2005_math.vpi";
+:vpi_module "D:\iverilog\lib\ivl\va_math.vpi";
+S_0000012f0cb42ce0 .scope module, "adder" "adder" 2 1;
+ .timescale 0 0;
+    .port_info 0 /INPUT 4 "a";
+    .port_info 1 /INPUT 4 "b";
+    .port_info 2 /OUTPUT 4 "sum";
+    .port_info 3 /OUTPUT 1 "cout";
+L_0000012f0cbbc040 .functor BUFT 1, C4<0>, C4<0>, C4<0>, C4<0>;
+v0000012f0cb43500_0 .net *"_ivl_10", 0 0, L_0000012f0cbbc040;  1 drivers
+v0000012f0cb43740_0 .net *"_ivl_11", 4 0, L_0000012f0cb73cb0;  1 drivers
+v0000012f0cb42e70_0 .net *"_ivl_3", 4 0, L_0000012f0cb2ee60;  1 drivers
+L_0000012f0cbbbff8 .functor BUFT 1, C4<0>, C4<0>, C4<0>, C4<0>;
+v0000012f0cb42f10_0 .net *"_ivl_6", 0 0, L_0000012f0cbbbff8;  1 drivers
+v0000012f0cb42fb0_0 .net *"_ivl_7", 4 0, L_0000012f0cb732b0;  1 drivers
+o0000012f0cb77078 .functor BUFZ 4, C4<zzzz>; HiZ drive
+v0000012f0cb43050_0 .net "a", 3 0, o0000012f0cb77078;  0 drivers
+o0000012f0cb770a8 .functor BUFZ 4, C4<zzzz>; HiZ drive
+v0000012f0cb430f0_0 .net "b", 3 0, o0000012f0cb770a8;  0 drivers
+v0000012f0cb2eb50_0 .net "cout", 0 0, L_0000012f0cb2ed20;  1 drivers
+v0000012f0cb2ebf0_0 .net "sum", 3 0, L_0000012f0cb2edc0;  1 drivers
+L_0000012f0cb2ed20 .part L_0000012f0cb73cb0, 4, 1;
+L_0000012f0cb2edc0 .part L_0000012f0cb73cb0, 0, 4;
+L_0000012f0cb2ee60 .concat [ 4 1 0 0], o0000012f0cb77078, L_0000012f0cbbbff8;
+L_0000012f0cb732b0 .concat [ 4 1 0 0], o0000012f0cb770a8, L_0000012f0cbbc040;
+L_0000012f0cb73cb0 .arith/sum 5, L_0000012f0cb2ee60, L_0000012f0cb732b0;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "4bitadder.v";

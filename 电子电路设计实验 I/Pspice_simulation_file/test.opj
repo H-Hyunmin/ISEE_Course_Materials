@@ -1,0 +1,106 @@
+(ExpressProject "test"
+  (ProjectVersion "19981106")
+  (ProjectType "Analog or A/D Mixed Mode")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (NoModify)
+    (File ".\test.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (PSPICE_Regenerate_Netlist_Flag "FALSE"))
+  (Folder "Outputs"
+    (File ".\test-pspicefiles\schematic1\schematic1.net"
+      (Type "Report")))
+  (Folder "PSpice Resources"
+    (Folder "Simulation Profiles"
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\test-pspicefiles\schematic1\example1_.sim"
+        (DisplayName "SCHEMATIC1-example1_")
+        (Type "PSpice Profile"))
+      (ActiveProfile ".\test-pspicefiles\schematic1\example2.sim")
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\test-pspicefiles\schematic1\example2.sim"
+        (DisplayName "SCHEMATIC1-example2")
+        (Type "PSpice Profile")))
+    (Folder "Model Libraries"
+      (Sort User))
+    (Folder "Stimulus Files"
+      (Sort User))
+    (Folder "Include Files"
+      (Sort User)))
+  (DefaultLibraryBrowseDirectory "library\PSpice")
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources"
+         "C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test.dsn")
+      (Path "Design Resources"
+         "C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test.dsn"
+         "SCHEMATIC1")
+      (Path "Design Resources"
+         "C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test.dsn"
+         "Design Cache")
+      (Path "Outputs")
+      (Select "Design Resources"
+         "C:\Users\Huang Xianmin\Desktop\Pspice_simulation_file\test.dsn"
+         "SCHEMATIC1" "PAGE2"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 0 367 0 374"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 -476 996 27 505")
+        (Scroll "-227 80")
+        (Zoom "100")
+        (Occurrence "/"))
+      (Path "C:\USERS\HUANG XIANMIN\DESKTOP\PSPICE_SIMULATION_FILE\TEST.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE1"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 -241 939 38 446")
+        (Scroll "-81 119")
+        (Zoom "100")
+        (Occurrence "/"))
+      (Path "C:\USERS\HUANG XIANMIN\DESKTOP\PSPICE_SIMULATION_FILE\TEST.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE2")))
+  (PartMRUSelector
+    (PORTBOTH-L
+      (LibraryName "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (0
+      (LibraryName "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\CAPSYM.OLB")
+      (DeviceIndex "0"))
+    (C
+      (FullPartName "C.Normal")
+      (LibraryName
+         "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName
+         "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\ANALOG.OLB")
+      (DeviceIndex "0"))
+    (VAC
+      (FullPartName "VAC.Normal")
+      (LibraryName
+         "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0"))
+    (1N5225
+      (FullPartName "1N5225.Normal")
+      (LibraryName "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\DIODE.OLB")
+      (DeviceIndex "0"))
+    (VDC
+      (FullPartName "VDC.Normal")
+      (LibraryName
+         "D:\CADENCE\SPB_16.5\TOOLS\CAPTURE\LIBRARY\PSPICE\SOURCE.OLB")
+      (DeviceIndex "0")))
+  (LastUsedLibraryBrowseDirectory
+     "D:\Cadence\SPB_16.5\tools\capture\library\pspice"))
