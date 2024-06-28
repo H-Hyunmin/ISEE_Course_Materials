@@ -1,0 +1,9 @@
+#line 1 "C:\\Users\\Huang Xianmin\\Desktop\\物联网系统设计\\课程实验与相关资料\\lab4\\threecolor_light\\.vscode\\arduino.json"
+{
+    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:mega",
+    "port": "COM5",
+    "sketch": "threecolor_light.ino",
+    "output": "./build",
+    "programmer": "avrispmkii"
+}

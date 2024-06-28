@@ -1,0 +1,15 @@
+Change Component Designator: Old Designator=GND New Designator=GND1
+Change Component Designator: Old Designator=Ii New Designator=Ii1
+Change Component Designator: Old Designator=Power New Designator=Power1
+Change Component Designator: Old Designator=R1 New Designator=R5
+Change Component Designator: Old Designator=R2 New Designator=R11
+Change Component Designator: Old Designator=R3 New Designator=R2
+Change Component Designator: Old Designator=R4 New Designator=R8
+Change Component Designator: Old Designator=R5 New Designator=R1
+Change Component Designator: Old Designator=R6 New Designator=R3
+Change Component Designator: Old Designator=R7 New Designator=R9
+Change Component Designator: Old Designator=R8 New Designator=R4
+Change Component Designator: Old Designator=R9 New Designator=R10
+Change Component Designator: Old Designator=R10 New Designator=R6
+Change Component Designator: Old Designator=R11 New Designator=R7
+Change Component Designator: Old Designator=Vo New Designator=Vo2

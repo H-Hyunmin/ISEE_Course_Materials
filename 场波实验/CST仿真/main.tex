@@ -1,0 +1,441 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验目的}
+
+\begin{enumerate}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 矩形波导馈电角锥喇叭天线CST仿真
+    \item 熟悉 CST 软件的基本使用方法，并能够运用其对特定的微波器件或电路进行建模、仿真分析。
+\end{enumerate}
+
+\section{实验原理}
+
+\textbf{1. 喇叭天线概述}
+
+喇叭天线是一种应用广泛的微波天线，其优点是结构简单、频带宽、功率容量大、调整与使用方便。
+合理的选择喇叭尺寸，可以取得良好的辐射特性：相当尖锐的主瓣，较小副瓣和较高的增益。因此喇叭天
+线在军事和民用上应用都非常广泛，是一种常见的测试用天线。喇叭天线的基本形式是把矩形波导和圆波
+导的开口面逐渐扩展而形成的，由于是波导开口面的逐渐扩大，改善了波导与自由空间的匹配，使得波导
+中的反射系数小，即波导中传输的绝大部分能量由喇叭辐射出去，反射的能量很小。
+
+\textbf{2. 矩形波导馈电角锥喇叭天线 }
+
+角锥喇叭天线是对馈电的矩形波导在宽边和窄边均按一定的角度张开的，结构示意图如图所示。矩形
+波导的尺寸为 $a×b$，喇叭口径尺寸为 $DH×DE$，喇叭高度为 $L$。其H面（xz面）内虚顶点到口径中点的距离为1R，E面（yz面）内虚顶点到口径中心的距离为2R。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_10-33-28.png}
+    \caption{矩形波导馈电角锥喇叭天线结构示意图}
+    \label{fig:enter-label}
+\end{figure}
+
+对于矩形波导的尺寸未 a×b，喇叭口径尺寸为 DH×DE，喇叭高度为 L 的角锥喇叭天线。可以用以下
+公式来估算该天线的增益：
+
+$$
+G=10.8+10\log(D_{H}\times D_{E}/\lambda^{2})-\Delta G_{H}-\Delta G_{E}(dB)
+$$
+
+$\Delta G_{\mathrm{G}},~\Delta G_{\mathrm{E}}$,可以由查表得到，其中参数$α, β$,可由公式求得。
+
+$$
+R_{_1}=\frac{L\times D_{_H}}{D_{_H}-a}
+$$
+
+$$
+R_{_2}=\frac{L\times D_{_E}}{D_{_E}-b}
+$$
+
+$$
+L_{H}=\sqrt{R_{1}^{2}+\frac{D_{H}^{2}}{4}}
+$$
+
+$$
+L_{E}=\sqrt{R_{2}^{2}+\frac{D_{E}^{2}}{4}}
+$$
+
+$$
+S_{_H}=A^{2}/(8\lambda L_{_H})
+$$
+
+$$
+S_{E}=A^{2}/(8\lambda L_{E})
+$$
+
+$$
+\alpha=8S_{H}
+$$
+
+$$
+\beta=8S_{E}
+$$
+
+
+\section{实验设备}
+装有 CST 软件的电脑
+
+
+
+
+    % \begin{figure}[H]
+    %     \centering
+    %     \includegraphics[width =.8\textwidth]{figures/fig/6.png}
+    %     \caption{用手电筒照射光敏电阻模块，可见返回值发生变化}
+    %     \label{fig:enter-label}
+    % \end{figure}
+
+\section{实验内容}
+
+
+\subsection*{实验步骤}
+
+
+\noindent \textbf{1创建工程} 
+
+
+打开CST软件，选择NewProject,选择MICROWAVES RF，Antennas，Waveguide，TimeDomain，Dimensions:mm;Frequency，GHz；新建一个工程 \\
+\textbf{2建立模型}
+\begin{itemize}
+    \item 如图先设置好喇叭天线相关参数
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-13-26.png}
+        \caption{参数设置}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在Modeling中，在Shapes 中点击 Bricks 图标输入参数创建方块
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-11-03.png}
+        \caption{创建方块}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在 Modeling的 Curves 中下拉选择 Retangle，生成矩形。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-13-08.png}
+        \caption{创建矩形}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在Modeling的 Shapes 中下拉 Extrude Curve，选择 Cover Curve，选中曲线，按回车填充矩形
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-23-36.png}
+        \caption{填充矩形}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 更改喇叭口径面的位置。点击 Modeling-Tools-Transform，将 Z 设置成 200，完成位置调整。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-24-34.png}
+        \caption{填充矩形}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 通过Picks Face 选中喇叭口径面和波导面，。点击 Modeling-Shapes-Loft,选择两个面，按回车，生成锥体
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-26-53.png}
+        \caption{生成锥体}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 选中生成的三个实体，在Modeling-Tools-Boolean 下拉栏选择 Add进行合并
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-27-35.png}
+        \caption{合并实体}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 通过Picks Face 选中实体的前后两面，在Modeling-Tools-Shape Tools 下拉栏点击 Shell Solid
+    or Thicken Sheet。选择模式为 inside，厚度为 2.54。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-29-14.png}
+        \caption{生成喇叭形状}
+        \label{fig:enter-label}
+    \end{figure}
+\end{itemize}
+
+\textbf{3参数设置}
+\begin{itemize}
+    \item 在 Simulation-Settings 栏中，通过Frequency 设置起始和终止频率分别为 8.2Ghz 到 12.4Ghz。
+    \item 通过 Background 设置边界条件为Normal。通过Boundaries 设置为 open (add space)。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-31-02.png}
+        \caption{设置频率}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 使用 Picks Face 选中后端面，点击 Waveguide Port，将 Number of modes 改为 5
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.68\textwidth]{figures/fig/Snipaste_2024-04-02_21-36-42.png}
+        \caption{设置模式吸收数}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 选择 Field Monitor，将 Type 改为 Farfield/RCS。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.72\textwidth]{figures/fig/Snipaste_2024-04-02_21-48-00.png}
+        \caption{设置Field Monitor}
+        \label{fig:enter-label}
+    \end{figure}
+\end{itemize}
+
+\textbf{4仿真设置}
+\begin{itemize}
+    \item 点击 Setup Solver，将 Source type 和 Mode 都选择 All，同时在右边勾选 Calculate Modes
+    only,点击start
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.68\textwidth]{figures/fig/Snipaste_2024-04-02_21-49-02.png}
+        \caption{设置预仿真参数}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 仿真完成后在 Logfile-Solve Logfile 中查看模式分布。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-02_21-52-02.png}
+        \caption{查看模式分布}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在 Setup Solver 中，将 Source type 和 Mode 都选择 1，同时在右边取消 Calculate Modes only，点击 Start 开始仿真。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.70\textwidth]{figures/fig/Snipaste_2024-04-02_21-52-29.png}
+        \caption{重新设置仿真参数}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 仿真结束后，在Field Monitor中选择E-Field，增加电场仿真，同理再次选择H-Field and surface current，增加磁场和表面电流仿真仿真。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.70\textwidth]{figures/fig/Snipaste_2024-04-03_11-54-25.png}
+        \caption{增加磁场和表面电流仿真仿真}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 启动仿真，进行表面电场和磁场的仿真。
+
+\end{itemize}
+
+
+
+
+
+
+
+
+\section{结果分析}
+
+\textbf{$S_{11}$曲线}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-32-15.png}
+    \caption{$S_{11}$曲线}
+    \label{fig:enter-label}
+\end{figure}
+
+\textbf{分析：}天线的S11曲线呈现波动上升的形式，在低频段增益较低，随着频率的增加，在8.55GHz左右达到最小值，说明此时天线与传输线或其他电路元件之间的匹配性能较好。这意味着较少的信号被反射回来，而更多的能量被有效地传输到外部环境中，从而提高了天线的性能。之后随着频率的增加，S11曲线逐渐上升，且振荡幅度减小，趋于稳定在-19dB左右，振荡。
+
+\textbf{驻波比曲线}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-43-21.png}
+    \caption{驻波比曲线}
+    \label{fig:enter-label}
+\end{figure}
+
+\textbf{分析：}驻波比曲线是指在天线工作频率范围内，驻波比随频率变化的曲线。驻波比是用来描述天线的匹配性能的一个重要指标，驻波比越小，说明天线的匹配性能越好。从图中可以看出，驻波比曲线在8.55GHz左右达到最小值，这表明在该频率附近，天线的匹配性能最佳。之后随着频率的增加，驻波比逐渐上升，且振荡幅度减小，趋于在1.24到1.26之间波动。
+
+
+\textbf{方向图仿真结果}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-50-02.png}
+    \caption{3D仿真结果}
+    \label{fig:enter-label}
+\end{figure}
+\textbf{分析：}从3D图像可以看出，颜色越深的地方，辐射越强。主波束指向z方向，辐射较为集中，宽带较宽，增大较大，峰值达到16dB。中心处的一些旁瓣和噪声辐射较大，辐射范围较宽，增益在3dB左右。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-51-52.png}
+    \caption{$\phi=0°$方向图}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-52-11.png}
+    \caption{$\phi=90°$方向图}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-52-39.png}
+    \caption{$\theta=0°$方向图}
+    \label{fig:enter-label}
+\end{figure}
+
+\textbf{分析：}从图中可以看出，天线在$\phi=0°$方向上的辐射特性较好，辐射方向图较为集中，主瓣较为尖锐，辐射范围较窄，辐射方向图在$\phi=90°$方向上的辐射特性较差，辐射范围较宽，且有大类的噪音辐射方向图在$\theta=0°$方向上的辐射特性较好，但在中间方向有部分毛刺和噪音。
+
+
+
+\textbf{增益仿真结果}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-50-02.png}
+    \caption{3D仿真结果}
+    \label{fig:enter-label}
+\end{figure}
+
+\textbf{分析：}与方向图类似，通过观察3D图像，可以发现颜色较深的区域代表着增益较高的区域。主波束指向z方向，辐射更为集中，具有较宽的带宽和更大的增益，达到了16dB的峰值。在中心位置，存在一些旁瓣和噪声辐射较大的区域，辐射范围较广，增益约为3dB左右。
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-51-28.png}
+    \caption{$\phi=0°$增益图}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-52-22.png}
+    \caption{$\phi=90°$增益图}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_11-52-26.png}
+    \caption{$\theta=0°$增益图}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\textbf{分析：}与方向图类似，从图中可以看到天线在$\phi=0°$方向上的辐射特性较佳。在这个方向上，辐射方向图较为集中，主瓣较为尖锐，辐射范围较窄。然而，在$\phi=90°$方向上，天线的辐射特性较差，辐射范围较宽，并且存在大量的噪音辐射。在$\theta=0°$方向上，天线的辐射特性较好，但在中间方向存在一些毛刺和噪音。
+\newpage
+
+\textbf{电场分布仿真结果}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_12-10-26.png}
+    \caption{$\theta=0°$增益图}
+    \label{fig:enter-label}
+\end{figure}
+\textbf{分析：}图中小箭头标志着电场的方向，颜色深度标准电场强度。从图中可以看出，电场最强处主要集中在天线端口的中心位置，电场强度较大，最大值约为3397.21V/m。在边缘位置，电场强度较小，辐射范围较广。
+
+
+\textbf{表面电流仿真结果}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_12-11-35.png}
+    \caption{$\theta=0°$增益图}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\textbf{分析：}从图中可以看出，表面电流主要集中在天线端口中心位置，表面电流强度较大，最大值约为7.6225A/m。电流强度沿着喇叭口表面逐渐降低。
+\textbf{磁场分布仿真结果}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_12-12-02.png}
+    \caption{$\theta=0°$增益图}
+    \label{fig:enter-label}
+\end{figure}
+
+\textbf{分析：}图中小箭头标志着磁场的方向，颜色深度标准磁场强度。从图中可以看出，磁场最强处主要集中在天线端口的中心位置，磁场强度较大。磁场分布与电场类似，且两者方向正交。
+
+\textbf{端面电场仿真结果}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_12-12-51.png}
+    \caption{$\theta=0°$增益图}
+    \label{fig:enter-label}
+\end{figure}
+
+\textbf{分析：}端面电场指向Y方向，端面中心电场强度最大，约为2629.53V/m，沿着端面向两侧逐渐减小。
+
+
+\newpage
+\textbf{端面磁场仿真结果}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-03_12-12-56.png}
+    \caption{$\theta=0°$增益图}
+    \label{fig:enter-label}
+\end{figure}
+\textbf{分析：}端面磁场指向-X方向，端面中心磁场强度最大，约5A/m，沿着端面向两侧强度逐渐减小。
+
+\section{实验的收获与体会}
+
+
+\textbf{理论知识的巩固与应用：}本次实验让我更深入地理解了矩形波导馈电角锥喇叭天线的工作原理和设计方法。通过对天线的结构特点、参数设置和性能评估进行深入学习，我对微波天线设计有了更清晰的认识，并能够更灵活地运用理论知识解决实际问题。
+
+\textbf{软件使用技能的提升：}在实验中，我掌握了 CST 软件的基本操作方法，包括建立模型、设置仿真参数、分析仿真结果等。通过反复练习，我逐渐熟悉了软件的各项功能，并能够较为熟练地进行仿真工作，这为今后的科研和工程实践打下了坚实的基础。
+
+\textbf{数据分析能力的提高：}通过对仿真结果的分析，如 S 参数曲线、方向图、增益图、电场分布、磁场分布等，我学会了如何从海量数据中提取有用信息，并对天线的性能进行客观评估。这种数据分析能力的提高，将对我的科研工作和工程实践产生重要影响。
+
+\textbf{工程实践能力的培养：}通过实验操作，我深刻体会到了理论知识与实际操作的结合。从建立天线模型到设置仿真参数，再到分析仿真结果，每一个步骤都需要细致的操作和认真的思考。这种工程实践能力的培养，对我今后从事工程技术领域的工作具有重要意义。
+
+\textbf{问题解决能力的提升：}在实验过程中，我遇到了各种各样的问题，如模型建立不完整、仿真参数设置不准确等。通过查阅资料、与同学讨论、反复尝试，我逐渐掌握了解决问题的方法，并取得了实验的顺利进行。这种问题解决能力的提升，将对我未来的学习和工作产生积极影响。
+
+总的来说，本次实验不仅加深了我对微波天线设计与仿真的理解，还培养了我的实验技能、数据分析能力和工程实践能力。这些收获将对我的学术和职业发展产生重要影响，我将继续努力学习，不断提升自己在相关领域的专业水平。
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

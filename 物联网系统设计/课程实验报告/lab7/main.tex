@@ -1,0 +1,269 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验介绍}
+\subsection{实验要求}
+
+\begin{enumerate}
+  \item 在IoT Studio中 建设一个网页，要求能控制你的灯的三色变化。
+  \item 上交的报告中应包括界面截图，回传的数据、发送的控制命令时戳和相应的调光结果。
+  \item 使用钉钉机器人实时接收灯光数据。
+\end{enumerate}
+\subsection{实验器材}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item Arduino mega 开发板及载板
+    \item 阿里云平台
+    \item 阿里云Iot Studio
+\end{itemize}
+
+
+\section{实验过程}
+
+\noindent 首先在阿里云Iot Studio中创建一个新的项目，关联产品和设备，详细操作同lab7。
+
+\subsection{web控制三色灯业务逻辑开发}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 从web控制智能灯模板创建一个业务逻辑，命名为“web控制三色灯”
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-22-14.png}
+      \caption{创建web控制智能灯业务}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 如图设置HTTP请求中的入参配置
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-23-41.png}
+      \caption{设置HTTP请求节点}
+      \label{fig:enter-label}
+    \end{figure}
+    
+    \item 设置设备下发节点，下发属性来源为HTTP请求节点
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-24-12.png}
+      \caption{设置设备下发节点}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 设置HTTP返回节点
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-24-36.png}
+      \caption{置HTTP返回节点}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 设置钉钉机器人节点
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-24-48.png}
+      \caption{设置钉钉机器人节点}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 钉钉机器人节点参数如下
+    \begin{lstlisting}[language=C]
+//query代表HTTP请求中的入参
+{
+  "msgtype": "text", 
+  "text": {
+    "content": "web控制三色灯，三色灯设备属性:ColorRed:{{query.ColorRed}}   ColorBlue:{{query.ColorBlue}}   ColorGreen:{{query.ColorGreen}}   LightSwitch:{{query.Switch}}   Frequency:{{query.Frequency}}"
+ }, 
+      "isAtAll": false
+}
+    \end{lstlisting}
+    \item 调试无误后发布业务逻辑
+\end{itemize}
+\subsection{硬件设备代码}
+本次实验硬件代码基本同lab6中代码。详情见之前报告代码，不再赘述。
+
+\subsection{web控制三色灯前端网页开发}
+
+\begin{itemize}
+  \item 如图新建一个web应用。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-30-54.png}
+    \caption{新建web应用}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 设置页面导航布局和基础样式等配置。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-31-59.png}
+    \caption{设置页面布局和基础样式}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 新建一个页面，设置页面的布局和样式。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-35-16.png}
+    \caption{设置页面的布局和样式}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 在组件库中选择卡片，托条，按钮等组件，进行页面布局。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-05_23-36-06.png}
+    \caption{设置钉钉机器人节点}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 给卡片组件设置好样式参数以及展示数据来源，数据来源来自于设备属性。
+  \item 同理给实数曲线图等其它组件设置好样式和展示数据来源，数据来源来自于设备属性。
+  \item 给滑条和按钮等组件设置好样式等参数
+  \begin{figure}[H]
+    \centering
+    \begin{minipage}{.22\textwidth}
+      \centering
+      \includegraphics[width=.55\linewidth]{figures/fig/Snipaste_2024-04-05_23-37-23.png}
+      \caption{\footnotesize 卡片组件设置}
+      \label{fig:image1}
+    \end{minipage}%
+    \begin{minipage}{.22\textwidth}
+      \centering
+      \includegraphics[width=.7\linewidth]{figures/fig/Snipaste_2024-04-05_23-37-47.png}
+      \caption{\footnotesize 数据来源}
+      \label{fig:image2}
+    \end{minipage}
+    \begin{minipage}{.22\textwidth}
+      \centering
+      \includegraphics[width=.55\linewidth]{figures/fig/Snipaste_2024-04-05_23-39-28.png}
+      \caption{\footnotesize 滑条组件设置}
+      \label{fig:image2}
+    \end{minipage}
+    \begin{minipage}{.22\textwidth}
+      \centering
+      \includegraphics[width=.55\linewidth]{figures/fig/Snipaste_2024-04-05_23-39-56.png}
+      \caption{\footnotesize 按钮组件设置}
+      \label{fig:image2}
+    \end{minipage}
+  \end{figure}
+
+
+  \item 给滑条组件设置交互，将滑条的值传递给页面变量。页面变量的设置如下图所示。
+  \begin{figure}[H]
+    \centering
+    \begin{minipage}{.3\textwidth}
+      \centering
+      \includegraphics[width=.85\linewidth]{figures/fig/Snipaste_2024-04-05_23-55-22.png}
+      \caption{\small 交互动作设置}
+      \label{fig:image1}
+    \end{minipage}%
+    \begin{minipage}{.6\textwidth}
+      \centering
+      \includegraphics[width=1\linewidth]{figures/fig/Snipaste_2024-04-05_23-55-30.png}
+      \caption{\small 页面变量}
+      \label{fig:image2}
+    \end{minipage}
+  \end{figure}
+
+  \item 同理给按键组件设置交互，调用上文所创建的业务逻辑，将页面变量的值传递给业务逻辑。
+  \begin{figure}[H]
+    \centering
+    \begin{minipage}{.4\textwidth}
+      \centering
+      \includegraphics[width=.85\linewidth]{figures/fig/Snipaste_2024-04-05_23-56-00.png}
+      \caption{\small 交互动作设置}
+      \label{fig:image1}
+    \end{minipage}%
+    \begin{minipage}{.4\textwidth}
+      \centering
+      \includegraphics[width=0.7\linewidth]{figures/fig/Snipaste_2024-04-05_23-56-24.png}
+      \caption{\small 调用服务}
+      \label{fig:image2}
+    \end{minipage}
+  \end{figure}
+  \item 前端搭建完成后，点击预览按钮，查看效果。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_00-06-37.png}
+    \caption{预览效果}
+    \label{fig:enter-label}
+  \end{figure}
+
+\end{itemize}
+
+
+\section{实验结果}
+\subsection*{三色灯控制}
+\begin{itemize}
+  \item 连接上硬件设备，此时灯初始不亮。进入web页面拖到滑条设置颜色，点击按钮后，灯亮起。同时页面上的卡片和实时曲线图也会有相应的变化。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_00-12-03.png}
+    \caption{设置开关和颜色，显示设备状态}
+    \label{fig:enter-label}
+  \end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.85\textwidth]{figures/fig/7d0254665632c7af28b1e6dbd9722a3.jpg}
+    \caption{硬件设备灯亮起}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 在设备日志中可以看到，调用API，设置设备属性等控制命令时戳信息。同时钉钉群也会收到消息。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_00-21-44.png}
+    \caption{设备日志}
+    \label{fig:enter-label}
+  \end{figure}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_00-13-25.png}
+    \caption{钉钉群通知}
+    \label{fig:enter-label}
+  \end{figure}
+\end{itemize}
+
+
+
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

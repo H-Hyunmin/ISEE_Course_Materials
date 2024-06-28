@@ -1,0 +1,462 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验目的}
+了解波导传输线的基本特性，容性膜片的负载特性及阻抗匹配方法。覆盖的基本概念：
+
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 波导的传输线模型
+    \item 波导色散特性,波导波长
+    \item 阻抗及匹配
+    \item Smith 圆图
+\end{itemize}
+
+\section{实验原理}
+
+纵向均匀的波导，如果将场分解成 TE 及 TM 两种模式，每种模式的场分解成横向场量与纵向场量，再将横向场量分解成模式函数与幅值的乘积，即 $\mathbf{E}_t = \mathbf{e}(p)V(z), \mathbf{H}_t = \mathbf{h}(p)I(z)$, 则 $V(z), I(z)$ 满足传输线方程
+
+\begin{equation}
+\begin{cases}
+\frac{dV(z)}{dz} = -jk_z Z I(z) \\
+\frac{dI(z)}{dz} = -jk_z Y V(z)
+\end{cases}
+\tag{式 4-1}
+\end{equation}
+
+式中 $k_z^2 = k^2 - k_t^2, \quad k = \omega \sqrt{\mu \varepsilon}$
+
+\begin{equation}
+Z = \frac{1}{Y} = 
+\begin{cases}
+\frac{\omega \mu}{k_z} & \text{TE} \\
+\frac{k_z}{\omega \varepsilon} & \text{TM}
+\end{cases}
+\tag{式 4-2}
+\end{equation}
+
+$V(z), I(z)$ 反映电磁场横向分量 $\mathbf{E}_t, \mathbf{H}_t$ 沿纵向 $z$ 的变化。所以就波的纵向传播而言，波导中某一模式电磁波的传播可用一特定参数 $(k_z, Z)$ 的传输线等效。\\
+本实验应用短形波导传输线，工作于 TE10 模式，其横向场 $\mathbf{E}_t, \mathbf{H}_t$ 沿纵向 $z$ 的传播特性可用 $(k_{z0}, Z_{01})$ 为特征参数的传输线上电压、电流的传播等效。
+
+传输线的状态可用以下五组参数等价表示，即电压与电流 $(V, I)$，入射波与反射波 $(V_i, V_r)$，反射系数 $(\Gamma = | \Gamma | e^{j\theta})$，阻抗导纳 $(Z = \frac{1}{Y})$，驻波系数 $\rho$ 与驻波相位 $(d_{\min 1}/\lambda_g)$. 这五组参数相互间可以变换。最常用的是反射系数 $\Gamma$, 在微波频率下它是一个便于测量的量值。使用驻波测量线，$(\rho, d_{\min 1}/\lambda_g)$ 也是一组便于测量的量值。
+
+图 4-1 所示为电压沿传输线的分布状况，这种分布叫做驻波。\\
+常用定义传输线上电压最大值与最小值之比为驻波系数 VSWR，常用 $\rho$ 表示。\\
+离开终端负载第一个电压波节的位置为 $d_{\min 1}$, 如果波长 $\lambda_g$ 一化，即
+
+\begin{equation}
+d_{\min 1} = \frac{d_{\min 1}}{\lambda_g}
+\end{equation}
+
+如果波导末端短路 (即传输线终端短路)，则在传输线上形成纯驻波。驻波两最小点之间的距离为 $\lambda_g/2$, 由此可测出波导波长 $\lambda_g$.
+
+波导中波的传播状态一般由波导终端负载确定，因此通过测量波导中的传播状态可得到其负载特性。\\
+如果矩形波导 (截面为 $a \times b$) 插入一膜片，膜片上开槽，其截面为 $(\alpha \times b')$, $b' < b$, 则该膜片的等效阻抗呈电容性，叫做容性膜片。本实验用容性膜片+匹配负载作传输线被测负载。
+
+传输线与负载匹配时，测传输线工作于行波状态 (负载阻抗 $Z_l$ 等于特征阻抗 $Z_0(0)$，此时传输线传输效率最高，传输功率容量也最大。传输线与负载不匹配时，一般在传输线与负载之间加一阻抗变换器来达到匹配。使传输线工作于行波状态。本实验使用可滑动的单销钉调配器，调节销钉的插入深度和横向位置使波导系统与负载 (容性膜片+纯负载) 达到匹配。
+
+实验涉及的公式
+
+\begin{equation}
+\Gamma(0) = \frac{Z(0) - Z}{Z(0) + Z} = |\Gamma(0)| e^{j\theta(0)} \tag{式 4-3}
+\end{equation}
+
+\begin{equation}
+Z(0) = Z \frac{1 + \Gamma (0)}{1 - \Gamma (0)} \tag{式 4-4}
+\end{equation}
+
+\begin{equation}
+\rho = \frac{V_{\max}}{V_{\min}} = \frac{1 + |\Gamma (0)|}{1 - |\Gamma (0)|} \tag{式 4-5}
+\end{equation}
+
+\begin{equation}
+d_{\min 1} = \frac{d_{\min 1}}{\lambda_g} \tag{式 4-6}
+\end{equation}
+
+\begin{equation}
+d_{\min 1} = \frac{\psi(0)\lambda_g}{4 \pi} + \frac{\lambda_g}{4} \quad (\lambda_g \text{用} \text{cm} \text{作单位}) \tag{式 4-7}
+\end{equation}
+
+\begin{equation}
+\lambda_{g}=\frac{\lambda}{\sqrt{1-(\frac{\lambda}{2a})^{2}}} (cm)\quad(\lambda,a\text{用}\text{cm} \text{作单位}) \tag{式 4-8}
+\end{equation}
+
+\text{式中 }a\text{ 为矩形波导宽边,本实验中 }a=2.286cm,b=1.016cm。
+
+\newpage
+
+
+
+
+
+
+
+\section{实验设备}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/Snipaste_2024-05-27_16-08-28.png}
+        \caption{实验装置}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+
+\section{实验内容}
+建立实验装置：
+
+把各部件连按成图1所示测量系统。注意十字孔定向耦合器的连接方向， 在本系统中定向耦合器连接方向为对反射功率采样。(定向耦合器从主波导耦合到副波导的功率传输规律是：功率传输方向通过两个耦合孔的连线拐弯，见图1中标识)。实验开始前可调衰减器保持一定衰减量。
+
+驻波测量线探针插入深度为 0 驻波测量线输出电缆连接到高精度数字万用表输入口，万用表选择 AC 电压测最模式(测最检波信号的有效值)。波导检波器输出电缆接到示波器 CH1 输入口，并把示波器输入选择置于直流工作状态。
+
+\subsection{工作频率f测量}
+(1)测量线开口端用短路块短接。
+
+(2)接通固态微波信号源，工作状态选择方波调制。
+
+(3)调节波导检波器中的短路活塞或三销钉调配器使示波器上显示的检波输出(方波)幅度最大。如果示波器上显示的输出幅度还不够大，可适当减少可调衰减器的衰减量，反之增加可调衰减器的衰减量。(注意：由于微波频率高，波长短，故调节时必须如同调节显微镜一样细心，而且在用三销钉调节时，销钉插入深度不能超过波导高度$b$的一半，否则会产生全反射以至无信号检出。)
+
+(4)用直读式频率计测量此时系统的工作频率$f$ (注意：调节时必须缓慢细调，由于频率计等效于电路中的一个并联谐振回路，当它产生谐振时，一部份能量被吸收，相应地串接在后面的检波器得到的能量就变小，于是示波器上看到的方波幅度也就变小，因而调节时注意观察示波器上的方波幅度，当看到幅度有突变，且变得最小时，频率计上读得的读数就是微波信号源的振荡频率，单位为GHz。频率计的读法是：两条水平红线夹着的那一行刻度线与垂直红线相交的
+
+
+
+\subsection{波导波长测量}
+
+(1)先调节测量线探针插入深度为 lmm 左右，再细心调节测量线上的检波调配装置，使数字万用表上指示的检波输出信号最大，即检波匹配(注意：为使测量线的检波二极管工作在小信号的平方率检波区，探针插入深度不能太深，否则探针本身会引起较大反射，使测量数值产生较大误差)。沿波导横向移动驻波测量探针，使探针位于驻波波腹点(检波的输出最大),此时再调节衰减器使数字万用表读数为0.500mV(设定信号在合适的大小),记录此时衰减器的刻度， 以便之后测量。
+
+(2)慢慢地横向移动测量线探针，记下相邻两个驻波波节点的位置$d_{min1}$、$d_{min2}$的刻度值。
+
+\subsection{容性膜片等效负载的测量}
+
+实验装置仍如图1。实验步骤如下：
+
+(1)测量线开口端接短路块，横向移动测量线探针，找到一个驻波波节点位置$d_{min1\text{(短)}}$并作记录(即等效短路面位置)
+
+(2)拆下短路块，接上容性膜片和匹配负载,从$d_{min1\text{(短)}}$ 位置往振荡源信号方向移动驻波测量线探针位置，测得第一个驻波最小点位置$d_{min1\text{(膜片)}}$,并作记录。
+
+(3)测量此时的驻波系数，即横向移动驻波测量线探针位置，在数字万用表上读出检波输出最大值 $P_{max}$与最小值$P_{min}$(注意：考虑到检波器为小信号平方率检波，故数字万用表读出的数值应为相对功率值)。
+
+\subsection{阻抗匹配测量}
+在测量线与容性膜片+匹配负载之间串接一只单销钉调配器。单销钉调配器是一个其销钉插入波导深度和纵向位置都可以调节的器件。
+
+(1)调节衰减器衰减量，使示波器有足够的方波信号显示。
+
+(2)细心调节销钉调配器销钉的横向位置和插入波导的深度，使示波器上显示的信号最小(最好能到零)。进而提高示波器的灵敏度和增加输入功率，重复上一调节过程直到当示波器的灵敏度为最高和输入功率为最大且又在示波器上观察到的信号为最小为止，即找到最佳匹配位置
+
+(3)适当增加可调衰减器的衰减量之后，横向移动驻波测量线，记录该输入功率下数字万用表上的$P_{max}$( 匹 配 1)与$P_{min}$( 匹 配 2) ,并计算此时的驻波系数$\rho$。
+
+$\text{负载端直接接入匹配负载,横向移动驻波测量线,记录该输入功率下数字万}\\\text{用表上的}P_{max\text{(匹配 2)}}\text{与}P_{min\text{(匹配 2)}}\text{,并计算此时的驻波系数}\rho\text{匹配。}$
+
+
+
+
+
+
+\section{实验结果和数据记录}
+\subsection{工作频率f测量}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/1方波幅度最大（调节）.jpg}
+        \caption{方波幅度最大（调节）}
+        \label{fig:enter-label1}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/2方波幅度最小（谐振）.jpg}
+        \caption{2方波幅度最小（谐振）}
+        \label{fig:enter-label2}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/3工作频率读数.jpg}
+        \caption{工作频率f测量}
+        \label{fig:enter-label3}
+    \end{minipage}
+\end{figure}
+
+如图工作频率f测量值为：9.388GHz
+
+
+\subsection{波导波长测量}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/1探针插入1mm.jpg}
+        \caption{探针插入1mm}
+        \label{fig:probe-insertion}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/2找到波腹.jpg}
+        \caption{找到波腹}
+        \label{fig:find-belly}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/3设定信号合适大小.jpg}
+        \caption{设定信号合适大小}
+        \label{fig:set-signal-size}
+    \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/4 dmin1.jpg}
+        \caption{dmin1}
+        \label{fig:dmin1}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/5 dmin2.jpg}
+        \caption{dmin2}
+        \label{fig:dmin2}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/6 0mv图片.jpg}
+        \caption{0mv图片}
+        \label{fig:0mv-image}
+    \end{minipage}
+\end{figure}
+
+如图，$d_{min1}=1.580cm$、$d_{min2}=3.740$
+
+
+\subsection{容性膜片等效负载的测量}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/1等效短路面位置dmin1（短）.jpg}
+        \caption{等效短路面位置dmin1（短）}
+        \label{fig:dmin1}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/2 容性膜片和匹配负载1.jpg}
+        \caption{容性膜片和匹配负载1}
+        \label{fig:dmin2}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/3 容性膜片和匹配负载2.jpg}
+        \caption{容性膜片和匹配负载2}
+        \label{fig:0mv-image}
+    \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/4 dmin1（膜片）.jpg}
+        \caption{dmin1（膜片）}
+        \label{fig:dmin1}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/5 pmin.jpg}
+        \caption{pmin}
+        \label{fig:dmin2}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/6 pmax.jpg}
+        \caption{pmax}
+        \label{fig:0mv-image}
+    \end{minipage}
+\end{figure}
+
+测试值为：
+
+$d_{min1\text{(短)}}=3.745cm$,$ d_{min1\text{(膜片)}}=2.105cm$，$P_{max}=0.207mV$，$P_{min}=0.065mV$
+
+
+\subsection{阻抗匹配测量}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/1 装配图.jpg}
+        \caption{装配图}
+        \label{fig:assembly}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/2 最佳匹配位置.jpg}
+        \caption{最佳匹配位置}
+        \label{fig:best-match}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/3 pmax（匹配1）.jpg}
+        \caption{pmax（匹配1）}
+        \label{fig:pmax-match1}
+    \end{minipage}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/4 pmin（匹配1）.jpg}
+        \caption{pmin（匹配1）}
+        \label{fig:pmin-match1}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/6 pmax（匹配2）.jpg}
+        \caption{pmax（匹配2）}
+        \label{fig:pmax-match2}
+    \end{minipage}%
+    \begin{minipage}{.33\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/fig/5 pmin（匹配2）.jpg}
+        \caption{pmin（匹配2）}
+        \label{fig:pmin-match2}
+    \end{minipage}
+\end{figure}
+
+
+测试值为：
+
+$P_{max\text{( 匹 配 1)}}=2.996mV$,$P_{min\text{( 匹 配 1)}}=2.241mV$
+
+$P_{max\text{( 匹 配 2)}}=4.203mV$,$P_{min\text{( 匹 配 2)}}=1.665mV$
+
+\newpage
+
+\section{实验任务}
+
+\subsection{参数计算与分析}
+
+\begin{enumerate}
+    \item \textbf{根据实测值计算波导波长$\lambda_g$。}
+    
+    $\lambda_g=2(d_{min2}-d_{min1})=2(3.740-1.580)=4.320cm$
+    \item \textbf{计算实测频率下矩形波导 TE10 模的波导波长$\lambda_g$的理论值，并与实验测量值比较}
+    
+    $\lambda=\frac{c}{f} = \frac{3 \times 10^{10}}{9.388 \times 10^{9}} = 3.200cm$
+    $\lambda_g= \frac{\lambda}{\sqrt{1-(\frac{\lambda}{2a})^{2}}} = \frac{3.200}{\sqrt{1-(\frac{3.200}{2 \times 2.286})^{2}}} = 4.480cm$
+    比较实测值与理论值相差0.160cm，相对误差为3.57\%
+    \item \textbf{计算容性膜片+匹配负载时的驻波系数$\rho$,在 Smith 圆图上读出容性膜片+匹配负载的反射系数$\Gamma$ 和归一化阻抗值。}
+    
+    $\rho=\frac{V_{\max}}{V_{\min}}=\sqrt[]{\frac{P_{max}}{P_{min}}}=\sqrt[1]{\frac{0.207}{0.065}}=1.785$
+
+    $|\Gamma (0)| = \frac{\rho - 1}{\rho + 1} = \frac{1.785 - 1}{1.785 + 1} = 0.282$
+
+    $d_{min1\text{(短)}}-d_{min1\text{(膜片)}}=1.640cm = \frac{\psi(0)\lambda_g}{4 \pi} + \frac{\lambda_g}{4} \quad (\lambda_g \text{用} \text{cm} \text{作单位})$
+
+    可得$\psi(0)=0.519\pi $ 由smith圆图可得$Z=1.122+0.624j$
+
+    \item \textbf{计算用单销钉调节匹配后的驻波系数$\rho$并与负载为匹配负载时的驻波系数$\rho$匹配比较。}
+    
+     $\rho=\frac{V_{\max}}{V_{\min}}=\sqrt[]{\frac{P_{max}\text{(匹配 1)}}{P_{min}\text{(匹配 1)}}}=\sqrt[1]{\frac{2.996}{2.241}}=1.160$
+
+    $\rho\text{(匹配)}=\frac{V_{\max}\text{(匹配 2)}}{V_{\min}\text{(匹配 2)}}=\sqrt[]{\frac{P_{max}\text{(匹配 2)}}{P_{min}\text{(匹配 2)}}}=\sqrt[1]{\frac{4.203}{1.665}}=1.589$
+
+    比较两者，可见直接接入匹配负载时的驻波系数大于用单销钉调节匹配后的驻波系数，说明用单销钉调节匹配后的驻波系数更接近1，匹配效果更好。
+    \item \textbf{量出单销钉调配器销钉到负载的长度，计算匹配状态时销钉所呈现的归一化电抗值。借用圆图说明此时系统为什么匹配？}
+    $|\Gamma (0)| = \frac{\rho - 1}{\rho + 1} = \frac{1.160 - 1}{1.160 + 1} = 0.074$
+    同理可以计算得到$Z=1.00+0.152j$，根据smith圆图可知系统阻抗匹配
+
+\end{enumerate}
+
+\subsection{回答问题}
+\textbf{(1)测量线开口端不按短路块，任意接一负载，能否测出波导波长？按短路块测波导波长有什么优点？}
+
+能够测出波导波长，通过Smith原图变换，可以由任意负载推导处波导波长。按短路块测波导波长的优点在于短路块能够有效地将电磁波反射回来，形成驻波，从而使得波导内部的驻波节点和波腹更加清晰，有利于准确测量波导波长。
+
+\textbf{(2)测负载驻波相位为什么要先测$d_{min1\text{(短)}}?$}
+
+在测量过程中，$d_{\text{min}1\text{(短)}}$相当于短路条件下的驻波测量的参考位置，通过该位置确定零点，便于后续的测量。
+
+\textbf{(3)在单销钉调配器调配前，测量线探针为什么不能伸入到波导里面？}
+
+探针插入波导内部会引入额外的反射，干扰驻波的形成，影响测量结果的准确性。且伸入波导不易于后续最佳匹配位置的寻找
+
+\textbf{(4)单销钉调配器调节匹配时，为什么检波器输出指示越小，表示调配得越好？}
+
+调配器的作用是使得传输线与负载之间达到匹配状态，此时减小了反射，使得系统中的驻波减小，因此检波器输出信号相应减小。输出指示越小，则表示其与负载之间的波更趋近于行波，表示负载匹配状况良好
+
+\textbf{(5)如果经销钉调配器调配后，测得驻波系数$\rho=1$,在单销钉调配器与负载之间是否是行波？单销钉调配器至信号源方向是否是行波？为什么？}
+
+在单销钉调配器与负载之间不一定是行波。单销钉调配器至信号源方向是行波。
+
+如果经过单销钉调配器调配后，测得驻波系数$\rho=1$，则表示传输线与负载之间匹配得非常好，几乎没有反射，因此单销钉调配器与负载之间是行波状态。但实验调节匹配过程中将单销钉调配器与负载看作一整个负载，所以无法判断其内部是否为行波。
+
+\section{实验总结与心得体会}
+
+在进行这次实验后，我对微波技术和波导传输线的特性有了更深入的理解。以下是我的实验心得和体会：
+
+首先，通过这次实验，我对波导传输线的基本特性有了更清晰的认识。波导传输线作为一种重要的微波传输结构，具有较好的屏蔽性能和传输效率，广泛应用于微波通信、雷达系统等领域。在实验中，我们通过测量波导中的驻波分布、工作频率和波导波长等参数，深入理解了波导中电磁波的传播规律。同时，实验中的理论知识和实际操作相结合，使我对波导传输线的工作原理有了更直观的认识。
+
+其次，实验中涉及了阻抗匹配的内容，这对于提高微波系统的传输效率和性能至关重要。在实验中，我们通过调节阻抗变换器，使波导传输线与负载之间达到最佳匹配状态，从而实现了最大功率传输。这一过程不仅加深了我对阻抗匹配原理的理解，也培养了我调试和优化微波系统的能力。
+
+此外，实验中还涉及了容性膜片的负载特性测量。容性膜片作为一种常用的微波器件，具有较好的阻抗调节和匹配性能，在微波通信和天线设计中有广泛的应用。通过测量容性膜片的等效负载特性，我们可以了解其对波导传输线的影响，并进一步优化系统的性能。
+
+在实验过程中，我还学会了使用一些常用的微波测量仪器，如示波器、频率计和数字万用表等，这些工具在微波领域的研究和工程实践中起着至关重要的作用。通过实际操作这些仪器，我对微波信号的调试和测量有了更深入的了解，也提高了我在实验室中的实验技能和操作能力。
+
+总的来说，这次实验不仅加深了我对微波技术和波导传输线的理解，也提高了我的实验操作能力和问题解决能力。
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

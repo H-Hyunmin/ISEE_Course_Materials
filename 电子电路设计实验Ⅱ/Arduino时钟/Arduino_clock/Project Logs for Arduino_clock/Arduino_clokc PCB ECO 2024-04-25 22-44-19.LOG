@@ -1,0 +1,138 @@
+Added Component: Designator=B1(Beep)
+Added Component: Designator=C1(CY 5*7*2.5)
+Add component (AddParameter): Name = "BOM名称"; Value = "高压陶瓷电容，Y电容"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=LCD1(1602-1)
+Added Component: Designator=P1(KF2EDGK-2.54-LI-3P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P2(XH2.54-LI-5P)
+Add component (AddParameter): Name = "BOM名称"; Value = "5P接插件"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=P3(KF2EDGK-2.54-LI-10P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P4(KF2EDGK-2.54-LI-8P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P5(KF2EDGK-2.54-LI-8P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P6(KF2EDGK-2.54-LI-6P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=R1(AXIAL0.4-1/4W)
+Add component (AddParameter): Name = "BOM名称"; Value = "贴片电阻"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=RP1(RM065)
+Add component (AddParameter): Name = "BOM名称"; Value = "插件电位器"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=SW1(TSW DIP-6*6*6)
+Add component (AddParameter): Name = "BOM名称"; Value = "直插6x6轻触开关"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=SW2(TSW DIP-6*6*6)
+Add component (AddParameter): Name = "BOM名称"; Value = "直插6x6轻触开关"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=SW3(TSW DIP-6*6*6)
+Add component (AddParameter): Name = "BOM名称"; Value = "直插6x6轻触开关"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=U1(Arduino-UNO)
+Added Pin To Net: NetName=D13 Pin=B1-1
+Added Pin To Net: NetName=GND Pin=B1-2
+Added Pin To Net: NetName=GND Pin=C1-1
+Added Pin To Net: NetName=5V Pin=C1-2
+Added Pin To Net: NetName=GND Pin=LCD1-1
+Added Pin To Net: NetName=5V Pin=LCD1-2
+Added Pin To Net: NetName=NetLCD1_3 Pin=LCD1-3
+Added Pin To Net: NetName=D12 Pin=LCD1-4
+Added Pin To Net: NetName=GND Pin=LCD1-5
+Added Pin To Net: NetName=D11 Pin=LCD1-6
+Added Pin To Net: NetName=D5 Pin=LCD1-11
+Added Pin To Net: NetName=D4 Pin=LCD1-12
+Added Pin To Net: NetName=D3 Pin=LCD1-13
+Added Pin To Net: NetName=D2 Pin=LCD1-14
+Added Pin To Net: NetName=NetLCD1_15 Pin=LCD1-15
+Added Pin To Net: NetName=GND Pin=LCD1-16
+Added Pin To Net: NetName=GND Pin=P1-1
+Added Pin To Net: NetName=A3 Pin=P1-2
+Added Pin To Net: NetName=5V Pin=P1-3
+Added Pin To Net: NetName=5V Pin=P2-1
+Added Pin To Net: NetName=GND Pin=P2-2
+Added Pin To Net: NetName=D10 Pin=P2-3
+Added Pin To Net: NetName=D9 Pin=P2-4
+Added Pin To Net: NetName=D8 Pin=P2-5
+Added Pin To Net: NetName=D8 Pin=P3-1
+Added Pin To Net: NetName=D9 Pin=P3-2
+Added Pin To Net: NetName=D10 Pin=P3-3
+Added Pin To Net: NetName=D11 Pin=P3-4
+Added Pin To Net: NetName=D12 Pin=P3-5
+Added Pin To Net: NetName=D13 Pin=P3-6
+Added Pin To Net: NetName=GND Pin=P3-7
+Added Pin To Net: NetName=5V Pin=P3-8
+Added Pin To Net: NetName=SDA Pin=P3-9
+Added Pin To Net: NetName=SCL Pin=P3-10
+Added Pin To Net: NetName=D0 Pin=P4-1
+Added Pin To Net: NetName=D1 Pin=P4-2
+Added Pin To Net: NetName=D2 Pin=P4-3
+Added Pin To Net: NetName=D3 Pin=P4-4
+Added Pin To Net: NetName=D4 Pin=P4-5
+Added Pin To Net: NetName=D5 Pin=P4-6
+Added Pin To Net: NetName=D6 Pin=P4-7
+Added Pin To Net: NetName=D7 Pin=P4-8
+Added Pin To Net: NetName=5V Pin=P5-2
+Added Pin To Net: NetName=RES Pin=P5-3
+Added Pin To Net: NetName=3.3V Pin=P5-4
+Added Pin To Net: NetName=5V Pin=P5-5
+Added Pin To Net: NetName=GND Pin=P5-6
+Added Pin To Net: NetName=GND Pin=P5-7
+Added Pin To Net: NetName=VIN Pin=P5-8
+Added Pin To Net: NetName=A0 Pin=P6-1
+Added Pin To Net: NetName=A1 Pin=P6-2
+Added Pin To Net: NetName=A2 Pin=P6-3
+Added Pin To Net: NetName=A3 Pin=P6-4
+Added Pin To Net: NetName=A4 Pin=P6-5
+Added Pin To Net: NetName=A5 Pin=P6-6
+Added Pin To Net: NetName=NetLCD1_15 Pin=R1-1
+Added Pin To Net: NetName=5V Pin=R1-2
+Added Pin To Net: NetName=5V Pin=RP1-1
+Added Pin To Net: NetName=NetLCD1_3 Pin=RP1-2
+Added Pin To Net: NetName=GND Pin=RP1-3
+Added Pin To Net: NetName=A0 Pin=SW1-1
+Added Pin To Net: NetName=5V Pin=SW1-2
+Added Pin To Net: NetName=5V Pin=SW1-3
+Added Pin To Net: NetName=A0 Pin=SW1-4
+Added Pin To Net: NetName=A1 Pin=SW2-1
+Added Pin To Net: NetName=5V Pin=SW2-2
+Added Pin To Net: NetName=5V Pin=SW2-3
+Added Pin To Net: NetName=A1 Pin=SW2-4
+Added Pin To Net: NetName=A2 Pin=SW3-1
+Added Pin To Net: NetName=5V Pin=SW3-2
+Added Pin To Net: NetName=5V Pin=SW3-3
+Added Pin To Net: NetName=A2 Pin=SW3-4
+Added Member To Class: ClassName=Arduino_clock Member=Component B1 BEEP
+Added Member To Class: ClassName=Arduino_clock Member=Component C1 0.1uF
+Added Member To Class: ClassName=Arduino_clock Member=Component LCD1 LCD1602
+Added Member To Class: ClassName=Arduino_clock Member=Component P1 Header 3
+Added Member To Class: ClassName=Arduino_clock Member=Component P2 HDR-1X5
+Added Member To Class: ClassName=Arduino_clock Member=Component P3 Header 10
+Added Member To Class: ClassName=Arduino_clock Member=Component P4 Header 8
+Added Member To Class: ClassName=Arduino_clock Member=Component P5 Header 8
+Added Member To Class: ClassName=Arduino_clock Member=Component P6 Header 6
+Added Member To Class: ClassName=Arduino_clock Member=Component R1 100
+Added Member To Class: ClassName=Arduino_clock Member=Component RP1 10K
+Added Member To Class: ClassName=Arduino_clock Member=Component SW1 6x6x5
+Added Member To Class: ClassName=Arduino_clock Member=Component SW2 6x6x5
+Added Member To Class: ClassName=Arduino_clock Member=Component SW3 6x6x5
+Added Member To Class: ClassName=Arduino_clock Member=Component U1 Arduino

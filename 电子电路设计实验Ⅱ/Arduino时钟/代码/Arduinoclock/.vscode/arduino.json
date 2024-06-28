@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "programmer": "avrispmkii",
+    "sketch": "Arduinoclock.ino",
+    "port": "COM5"
+}

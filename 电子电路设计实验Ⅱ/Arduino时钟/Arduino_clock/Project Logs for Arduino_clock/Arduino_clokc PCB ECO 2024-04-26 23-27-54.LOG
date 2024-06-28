@@ -1,0 +1,28 @@
+Removed Pin From Net: NetName=5V Pin=SW1-2
+Removed Pin From Net: NetName=5V Pin=SW1-3
+Removed Pin From Net: NetName=5V Pin=SW2-2
+Removed Pin From Net: NetName=5V Pin=SW2-3
+Removed Pin From Net: NetName=5V Pin=SW3-2
+Removed Pin From Net: NetName=5V Pin=SW3-3
+Added Component: Designator=U1(Arduino-UNO)
+Added Pin To Net: NetName=GND Pin=SW1-2
+Added Pin To Net: NetName=GND Pin=SW1-3
+Added Pin To Net: NetName=GND Pin=SW2-2
+Added Pin To Net: NetName=GND Pin=SW2-3
+Added Pin To Net: NetName=GND Pin=SW3-2
+Added Pin To Net: NetName=GND Pin=SW3-3
+Added Member To Class: ClassName=Arduino_clock Member=Component B1 BEEP
+Added Member To Class: ClassName=Arduino_clock Member=Component C1 0.1uF
+Added Member To Class: ClassName=Arduino_clock Member=Component LCD1 LCD1602
+Added Member To Class: ClassName=Arduino_clock Member=Component P1 Header 3
+Added Member To Class: ClassName=Arduino_clock Member=Component P2 HDR-1X5
+Added Member To Class: ClassName=Arduino_clock Member=Component P3 Header 10
+Added Member To Class: ClassName=Arduino_clock Member=Component P4 Header 8
+Added Member To Class: ClassName=Arduino_clock Member=Component P5 Header 8
+Added Member To Class: ClassName=Arduino_clock Member=Component P6 Header 6
+Added Member To Class: ClassName=Arduino_clock Member=Component R1 100
+Added Member To Class: ClassName=Arduino_clock Member=Component RP1 10K
+Added Member To Class: ClassName=Arduino_clock Member=Component SW1 6x6x5
+Added Member To Class: ClassName=Arduino_clock Member=Component SW2 6x6x5
+Added Member To Class: ClassName=Arduino_clock Member=Component SW3 6x6x5
+Added Member To Class: ClassName=Arduino_clock Member=Component U1 Arduino

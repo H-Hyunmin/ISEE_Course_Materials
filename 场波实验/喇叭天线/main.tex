@@ -1,0 +1,784 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{gensymb}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+
+\section{实验目的}
+
+揭示喇叭天线的特性。
+
+覆盖的基本概念：
+\begin{itemize}
+    \item $S$参数
+    \item 天线辐射方向图
+    \item 天线的极化特性
+    \item 电磁波在空间传播中与距离的关系
+\end{itemize}
+
+
+\section{实验原理}
+
+随着移动通信、遥控遥测、雷达、卫星导航等技术的飞速发展，天线行业也已在国民经济中占据重要地位。在这些无线通信系统中不管是发送还是接收，天线都是不可缺少的组成部分。自从1886年赫兹建立第一个无线系统发展到今天，天线的种类和规模已经多种多样，同时天线的测量设备和测量技术也不断得到了改进和提高。
+
+描述天线的参量有很多，主要可分为两大类：一是如输入阻抗、驻波比、噪声温度、辐射效率等电路特性参量；除此外就是辐射特性参量，如方向图、增益、极化等。天线发射（或接收）的电磁波都有其极化特性。所谓极化是指电磁波电场矢量的方向。因此接收机接收到的信号大小跟收、发天线的安装方向有关（以下简称发射天线的极化方向或接收天线的极化方向）。当发射天线所发射的极化方向与接收天线的极化方向一致时，接收信号最大；若两者正交，接收机接收不到信号。
+
+天线测量研究又是十分重要。其任务就是用试验的方法测定和检验天线的这些特性，我们通常借助于天线测量系统，正确使用测量仪器来进行测量。
+
+本实验使用的天线综合测控系统由硬件子系统和软件子系统构成。 
+
+硬件子系统分为测量框架子系统、采样架子系统、以及信号链路子系统。其中测量框架子系统主要承担着测量电磁环境保障的任务，要对测量不受外界电磁场的干扰；采样架子系统是硬件系统的核心，它的任务是根据用户的设置相合，带动天线探头按照预设的方式运动，并实时测量位置和速度信息，在中心计算机的控制下，与信号链路子系统相配合完成采样任务；信号链路子系统完成信号的生成、传输、接收和采集。
+
+测量系统通过矢量网络分析仪在收发天线之间形成一个由开路或负载网络组成的广义双端口网络，对应不同的激励点、测得一个$S_{21}$参数。测通所有不同激励点后，即可获得细致天线扫描面的近场幅度和相位分布。为了减少外来电磁波的干扰，可利用可移动的微波屏蔽板进行遮挡。
+
+系统的软件子系统由测量控制、数据采集处理和显示输出子系统组成。均由计算机控制。数据处理了采样后原始数据后的图像数据格式转换适合处理的格式，提取数据后加配坐标轴和排序显示。
+
+本实验将利用该天线综合测控系统，测量3个分米波段（8-12GHz）角锥喇叭天线。揭示天线辐射的方向性、波的极化和传播特性等。
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/fig/image1.png}
+    \caption{角锥喇叭天线尺寸}
+\end{figure}
+
+实验用到的一些概念公式如下：
+
+(1) 近场和远场：
+
+天线是一种能量转换装置，发射天线将导行波转变为电磁波，接收天线则把电磁波转换为导行波。如图3-3通常根据观察点与天线的距离不同，可将观察点周围的场的区域划分为感应近场区、辐射近场区和辐射远场区。
+
+感应场区的边界条件：$r<\frac{2a^2}{\lambda}$
+
+远场条件：$r\gg\frac{2D_eD_H}{\lambda}$ \quad (m)
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/fig/image2.png}
+    \caption{天线场区}
+\end{figure}
+
+
+(2) 反射系数$\Gamma$，电压驻波比$VSWR$，回波损耗$RL$三者的关系可以转换：
+
+\[
+\Gamma = \frac{VSWR-1}{VSWR+1}
+\]
+
+\[
+RL = 20\log|\Gamma|
+\]
+
+(3) 电磁波在空间传播中与距离的关系（弗里斯传输公式）：
+
+\[
+\frac{P_r}{P_t}(W) = \left(\frac{\lambda}{4\pi R}\right)^2 G_t G_r
+\]
+
+其中$R$为收、发天线距离（本实验$R$取收发天线喇叭口之间的距离）。
+
+$dBm$与$W$的转换：$dBm = 10\log\left(\frac{W}{1mW}\right), \quad W = 10^{\frac{dBm}{10}} \times 1mW$
+
+$G_t, G_r$是发射、接收天线增益。与$dBi$为单位的增益换算：$G_t(G_r) = 10^{\frac{G_t(G_r)}{10}}$
+
+根据工程经验，实际的增益值比该计算值小3-5dBi。
+
+(4) 天线增益
+
+增益是天线极为重要的一个参数，用它可以衡量天线辐射能量的集中程度。短形波导锁电的角锥喇叭天线的增益理论值参见P3“矩形波导锁电角锥喇叭天线理论分析”。
+
+此外， 还可用以下公式估算矩形角锥喇叭天线增益：
+
+\[
+G = 0.51 \frac{4\pi A_p}{\lambda^2} \quad (A_p = D_e \times D_H)
+\]
+
+在实际工程测试中，天线的增益有多种测试方法。本系统选用的是弗里斯和波束宽度法。
+
+弗里斯法利用上述3-3的弗里斯公式，当发射天线的增益已知或收发天线的增益相同的时候，根据公式即可计算可求解的接收天线的增益。
+
+\[
+G_t(dB) + G_r(dB) = \frac{1}{2} \left[20\log \left( \frac{4\pi R}{\lambda}\right) - 10\log \frac{P_c(dB) } {P_t(dB)}\right]
+\]
+
+\[
+G(dB) = \frac{1}{2}\left[20\log \left( \frac{4\pi R}{\lambda}\right) - (P_c(dB) - P_t(dB))\right]
+\]
+
+波束宽度法是通过天线方向图的H面和E面半功率波束宽度，即3dB点的波束宽度从而计算天线增益的方法。
+
+\[
+G(dB)=\frac{10lgC}{\theta_{-3A}\theta_{-3E}}
+\]
+
+公式中，$\theta_{-3dB_{H}}$ 和$\theta_{-3dB_{E}}$分别代表H面和E面方向3dB点波束宽度，单位为角度，C工程序上根据经验取值，通常普通天线为32400，反射面天线如卫星电视视投天线为27000，对数周期天线为41000。
+
+(5) 喇叭天线半功率波束宽度
+
+
+${\mathcal{H}}$面：$2\theta_{0.5}\approx1.18\frac\lambda{D_H}(rad)$
+
+$\mathbb{E}$面：2$\theta_{0.5}\approx0.89\frac\lambda{D_E}(rad)$
+
+(6) 天线轴向交叉极化隔离度
+$$XPD=P_{cop}(dBm)-P_{xp}(dBm)$$
+公式中，$P_cop$为同极化信号功率，$P_xp$为交叉极化信号功率。
+\newpage
+
+
+\section{实验设备}
+
+实验装置如图
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/fig/image3.png}
+    \caption{实验装置}
+\end{figure}
+
+
+
+
+
+\section{实验内容}
+\subsection*{实验前准备}
+
+(1) 天线采样架控制器开机前，必须确保接收天线位于滑轨的光电检测传感器的左侧，此时可手动调整滑轨位置(注意：开机后滑轨和舵机将被锁定，
+此时不得强制调整以免损伤电机),然后打开控制器电源，接收天线将向发射天线端移动，经过光电传感定位后，最终停在为收发天线间距为零的位置，可记录此时滑轨标尺的位置。
+
+(2)检查计算机与天线采样架控制器的 USB 接口以及和矢量网络分析仪的LNA 口连线是否正常，打开计算机与矢网的电源。
+
+(3)打开计算机桌面的“天线测量”程序，点击左上角“连接”菜单分别查找并连接天线控制器和网络分析仪。
+
+(4)接下去就可根据具体的实验内容进行天线特性的测量，在测量过程中请规范操作，实验数据支持导出处理，建议不要保存在 C 盘，以免重启后清空。微波屏蔽板可移动到合适的位置以减少其他电磁波的干扰。
+
+(5)在测试窗口点击[调试],可调出调试窗口，在此窗口中，可调整发射天线水平方位角度(一号舵机角度校正值),发射天线轴向角度(二号舵机角度校正值),接收天线轴向角度(三号舵机角度校正值)。在天线参量测量前，需要调节收发天线极化方向相同，轴向对准时，通过此处调节。
+
+\subsection{电路特性参数测量}
+
+1. 驻波比、反射系数、回波损耗测量
+
+驻波比、反射系数、回波损耗三折的关系可以转换，所以只要测量一个参数就可以计算另外的参数。(转换关系可参见附录 1)
+
+实验步骤：在[调试1窗口，调节收、发天线极化方向，轴向角度一致。在测试程序中，如图 3-7,依次选择[S 参数测量]、[驻波比]、[S11](矢网端口 1连接发射天线，端口 2 连接接收天线),确认收发天线的初始状态，设定扫描的起始和终止频率，点击[矢网初始化]、[刷新]之后就可以在测试窗口看到驻波比曲线。观察记录测试结果，并可调整参数重新测试。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/fig/微信图片_20240621193119.jpg}
+    \caption{测量过程}
+\end{figure}
+
+
+
+2. 扫频测量
+HH
+实验步骤：在[调试1窗口，调节收、发天线极化方向，轴向角度一致。在测试程序中，如图 3-8,依次选择[S 参数测量]、[对数幅度]、[S21],确认收发天线的初始状态，设定扫描的起始和终止频率，点击[矢网初始化]、[刷新]之后就可以在测试窗口看到天线的扫频曲线。观察记录测试结果，并可调整参数重新测试。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/fig/微信图片_20240621193121.jpg}
+    \caption{测量过程}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+\subsection{喇叭天线辐射方向图测量}
+天线方向图表征天线在空间中各个方向上所具有的发射或接收电磁波的能力，是天线辐射特性的重要参数。完整的方向图是一个三维空间图，实际工程中通常只需测量水平面 H 方向图和垂直面 E 方向图。
+
+实验步骤：在「调试[窗口，调节收、发天线极化方向，轴向角度一致。
+
+(1)水平面方向图测量：在测试程序中，如图 3-9,依次选择[辐射方向图]、 [极坐标]、[水平方向图],右侧框图中，天线类型选择“波导喇叭天线”,发射天线增益未知则默认为 0dBi, 当发射与接收天线相同的时候可勾选两者增益相同，设置收发天线间的距离(注意：收发天线间的距离指的是两个喇叭口之向的问题，可根据滑轨侧边的标尺来读取)。发射天线水平角度、发射和接收天线的极化角度无需设置(测试开始后都将转到0°的位置),测试频率可以设置多个，填入数据后回车即可(建议根据之前驻波比测量结果，选择三个频率进行测量)。开始、结束角度和采样步进选择默认值。点击[矢网初始化]、[开始测试之后，发射天线将转到水平方位开始角度，并以步进值向结束角度旋转， 同时在方向图窗口实时显示测试曲线。测试过程中注意人员不要遮挡天线，并可移动屏蔽板防止其他十扰信号，等待测试完成后，观察测试结果可导出数据， 如有明显偏差可调整参数重新测试。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.73\textwidth]{figures/fig/微信图片_20240621193643.jpg}
+    \caption{测量过程}
+\end{figure}
+
+
+
+(2)垂直面方向图测量：在测试程序中，依次选择[辐射方向图]、[极坐标]、 [垂直方向图],可设置收发天线间的距离，开始、结束角度和采样步进。发射天线水平角度、发射和按收天线的极化角度无需设置(测试开始后都将转到到0和 90°的位置),其他设置和水平方向图测试相同，等待测试完成后，观察测试结果可导出数据，如有明显偏差可调整参数重新测试。天线方向图测试完成后，在程序右下角将自动显示主瓣，3dB 点波束宽度、增益等计算值。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.73\textwidth]{figures/fig/微信图片_20240621193644.jpg}
+    \caption{测量过程}
+\end{figure}
+
+
+\subsection{极化测量}
+
+实验步骤：在[调试[窗口，调节收、发天线极化方向，轴向角度一致。
+
+(1)天线极化测量：在测试程序中，如图 3-10,依次选择[极化测量]、[对数幅度]「常规极化测量],确认收发天线的初始状态，设定测试频率，常规极化测试时发射天线极化角度默认从0°扫描到90°,点击[矢网初始化]、[开始]之后就可以在测试窗口看到天线的极化测试曲线。观察记录测试结果，并可调整
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/fig/微信图片_20240621193123.jpg}
+    \caption{测量过程}
+\end{figure}
+
+
+(2)极化栅网特性测量：极化栅网是在一块玻璃上间隔均匀的缝隙拉上金属丝，如果金属丝的宽度与缝隙的宽度都比波长小得多，则对于投射到栅网上的电磁波，对于电场平行于缝隙方向的电磁波将被全反射，而垂直于缝隙方向的电磁波将能顺利通过。所以将图 3-11 所示极化栅网放到发射天线前面，则按收天线所按收到的信号大小随着极化栅网旋转角度的改变而改变。极化栅网特性测量时，将一个水平栅网放置在收发天线之间，在测试程序中，除选择「栅网极化测量1外，其他设置和“天线极化测量”相同。测试过程中，收、发天线将从
+$0^{\circ}$到90°轴向相对旋转，以实现和极化栅网旋转同等的效果。设置完成后，点击[矢网初始化]、「开始]之后就可以在测试窗口看到天线的极化测试曲线。观察记录测试结果，并可调整参数重新测试。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.73\textwidth]{figures/fig/微信图片_20240621193124.jpg}
+    \caption{测量过程}
+\end{figure}
+
+
+\subsection{电磁波在空间传播中与距离的关系测量}
+
+实验步骤：在测试程序中，如图 3-12.依次选择[距离测量]]对数幅度1确认收发天线的初始状态，设定测试频率、发射天线在滑轨上的的起始位置、 结束位置、采样步进等参数，点击[矢网初始化]、「开始1之后就可以在测试窗口看到电波在空间传播时按收到的信号与距离的关系曲线。观察记录测试结果并可调整参数重新测试。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.73\textwidth]{figures/fig/微信图片_20240621193127.jpg}
+    \caption{测量过程}
+\end{figure}
+
+
+
+
+\section{数据分析}
+
+\subsection*{1.天线驻波比测量，存在哪些误差？要提高测量的准确性，需怎么做？}
+
+在天线驻波比测量过程中，存在以下几种误差：
+
+\begin{itemize}
+    \item \textbf{仪器精度误差}：矢量网络分析仪的精度影响测量结果，校准不准确或本身存在精度误差会导致测量不准确。
+    \item \textbf{连接器和电缆误差}：损坏或质量不高的连接器和电缆会引入额外的反射和损耗，影响测量准确性。
+    \item \textbf{反射系数测量误差}：反射系数测量中的微小误差会被放大，从而影响驻波比的计算结果。
+    \item \textbf{环境干扰}：外界电磁干扰会影响测量精度，电磁噪声、反射和其他电磁波源可能会对测量结果造成干扰。
+    \item \textbf{天线安装和对准误差}：天线的极化方向和轴向对准不正确会导致测量误差，收发天线的安装方向、角度和对准精度都会影响测量结果。
+    \item \textbf{频率和带宽选择}：不同频率和带宽范围内的测量精度可能不同，选择不当可能导致测量结果不准确。
+\end{itemize}
+
+为了提高测量的准确性，可以采取以下措施：
+
+\begin{itemize}
+    \item \textbf{仪器校准}：确保矢量网络分析仪经过精确校准，定期维护和校准仪器，以减少仪器本身的误差。
+    \item \textbf{高质量连接器和电缆}：使用高质量的连接器和电缆，确保它们没有损坏，并且在连接时保持良好的接触状态。
+    \item \textbf{减少反射和损耗}：确保连接器和电缆的连接处没有明显的反射和损耗，可以通过使用匹配的负载来减少反射。
+    \item \textbf{屏蔽环境干扰}：在屏蔽良好的环境中进行测量，使用微波屏蔽板和其他屏蔽措施来减少外界电磁干扰。
+    \item \textbf{精确对准天线}：在测量前，确保收发天线的极化方向和轴向角度一致，使用高精度的测量和调整工具来确保天线的对准。
+    \item \textbf{适当选择频率和带宽}：根据需要选择合适的频率和带宽范围，避免在高误差的频段进行测量。
+    \item \textbf{多次测量和数据处理}：进行多次测量取平均值，减少单次测量的随机误差，使用数据处理技术对测量数据进行分析和处理。
+\end{itemize}
+
+\subsection*{2.根据导出的数据作出电磁波传播与距离的关系曲线。该曲线接近$\frac1R$,$\frac1{R^2}$
+还是$\frac{1}{R^3}$ ?与理论预期值符合吗？}
+
+使用附录A中的代码1作图可以得到电磁波传播与距离的关系曲线。选取7GHz数据使用附录A中的代码2进行拟合，可以直观的看到最接近$\frac1R$，与理论公式符合。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.73\textwidth]{figures/fig/Figure_1.png}
+    \caption{电磁波传播与距离的关系曲线}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.73\textwidth]{figures/fig/Figure_2.png}
+    \caption{曲线拟合}
+\end{figure}
+
+\subsection*{3.根据数据作出发射喇叭天线极化曲线，横坐标为天线极化角度$\theta$。}
+
+使用附录A中的代码3作图可以得到喇叭天线极化曲线图，如下：
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/fig/Figure_5.png}
+    \caption{天线极化曲线图}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/fig/Figure_6.png}
+    \caption{天线极化曲线图}
+\end{figure}
+
+
+\subsection*{4.问题回答：}
+\textbf{(1)从发射喇叭天线极化特性曲线看，接收喇叭天线所接收到的信号与发射
+喇叭天线极化角度$\theta$的关系是符合$cos\theta$还是$cos^2\theta$关系？
+}
+
+使用附录A中的代码4作图可以得到喇叭天线极化曲线图，和$cos\theta$，$cos^2\theta$曲线的对比图
+可以直观的看到接收喇叭天线所接收到的信号与发射
+喇叭天线极化角度$\theta$的关系是符合$cos\theta$关系
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/fig/Figure_7.png}
+    \caption{对比图}
+\end{figure}
+
+
+
+
+\textbf{
+(2)如果发射喇叭天线和接收喇叭天线的极化角相差 90°,而极化栅网相对
+于发射喇叭天线的极化角度为 45°,极化器对系统的影响如何？}
+
+当发射喇叭天线和接收喇叭天线的极化角相差 90° 时，接收到的信号强度理论上应该为零，因为 \( \cos(90^\circ) = 0 \) 或 \( \cos^2(90^\circ) = 0 \)。
+
+然而，如果在系统中加入了一个极化栅网，并且极化栅网相对于发射喇叭天线的极化角度为 45°，则情况会发生变化。极化栅网会将线极化的信号转换为两个正交分量，每个分量的幅度为原信号的 \( \cos(45^\circ) \) 或 \( \cos^2(45^\circ) \)。
+
+极化栅网的作用：
+\begin{itemize}
+    \item 将发射天线的极化方向旋转一定角度（例如45°）。
+    \item 如果接收天线的极化角相对于栅网也是45°，则接收天线可以接收到部分信号。
+\end{itemize}
+
+在这种情况下：
+\begin{itemize}
+    \item 原信号经过45°的极化栅网后，分为两个等幅分量。
+    \item 接收天线可以接收到这些分量之一（如果其极化方向匹配）。
+\end{itemize}
+
+因此，虽然发射和接收天线的极化角相差90°，但由于极化栅网的作用，接收天线仍然能够接收到一定强度的信号。这减小了由于极化失配造成的信号损失，提高了系统的极化匹配性能。
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection*{5. 对发射天线计算远区场距离，实验中是否符合远区场条件？}
+
+远场条件：$r\gg\frac{2D_ED_H}{\lambda}$ \quad (m)
+
+发射天线$D_E=3.7cm ,D_H=8.2cm$   选取实验测试为三公分波段$\lambda=3cm$
+
+$\frac{2D_ED_H}{\lambda}=\frac{2 \times 3.7 \times 8.2}{3}=20.227cm$
+
+R=1.2m 基本可以视为符合远场条件
+
+\subsection*{6.分别计算收、发天线理论增益，半功率波束宽度(假定$k\approx1$)。有什么结
+论？}
+\textbf{对发射天线：}
+估算矩形角锥喇叭天线增益:
+\[
+G = 0.51 \frac{4\pi A_p}{\lambda^2} =0.51\times\frac{4\pi \times 3.7 \times 8.2}{3^2}= 21.605dB
+\]
+喇叭天线半功率波束宽度:
+
+
+${\mathcal{H}}$面：$2\theta_0.5\approx1.18\frac\lambda{D_H}=0.432(rad)$
+
+$\mathbb{E}$面：2$\theta_0.5\approx0.89\frac\lambda{D_E}=0.722(rad)$
+
+\textbf{对接受天线：}
+估算矩形角锥喇叭天线增益:
+\[
+G = 0.51 \frac{4\pi A_p}{\lambda^2} =0.51\times\frac{4\pi \times 10.5 \times 14.1}{3^2}= 105.426dB
+\]
+喇叭天线半功率波束宽度:
+
+
+${\mathcal{H}}$面：$2\theta_0.5\approx1.18\frac\lambda{D_H}=0.251(rad)$
+
+$\mathbb{E}$面：2$\theta_0.5\approx0.89\frac\lambda{D_E}=0.254(rad)$
+
+\subsection*{7. 当收发天线相同时，可以用什么方法便捷测量天线增益，思考测量时
+如何消除误差？}
+当收发天线相同时，可以用弗里斯法来便捷地测量天线增益。
+
+当收发天线相同时，即 $G_t = G_r = G$，公式可以简化为：
+\[
+\frac{P_r}{P_t} = \left( \frac{\lambda}{4\pi R} \right)^2 G^2
+\]
+
+\textbf{求解增益 $G$：}
+\[
+G = \sqrt{ \frac{P_r}{P_t} \left( \frac{4\pi R}{\lambda} \right)^2 }
+\]
+
+只需要简单测量$\frac{P_r}{P_t} $即可得到天线增益
+
+
+为了减少测量误差，可以采取以下措施：
+\begin{itemize}
+    \item 仪器校准：确保矢量网络分析仪经过精确校准，定期维护和校准仪器。
+    \item 减少反射和损耗：使用匹配的负载来减少反射，确保连接处没有明显的反射和损耗。
+    \item 屏蔽环境干扰：在屏蔽良好的环境中进行测量，使用微波屏蔽板减少外界电磁干扰。
+    \item 精确对准天线：确保收发天线的极化方向和轴向角度一致，使用高精度的测量和调整工具。
+    \item 适当选择频率和带宽：选择合适的频率和带宽范围，避免高误差频段。
+    \item 多次测量和数据处理：进行多次测量取平均值，使用数据处理技术分析和处理测量数据。
+\end{itemize}
+
+
+
+
+
+
+\subsection*{8.根据测试数据分别绘制发射喇叭天线在水平面上、垂直面上的极座标系方
+向图，评估该天线性能。}
+使用附录A中的代码5作图可以得到喇叭天线方向图，如下：
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/fig/Figure_3.png}
+    \caption{水平辐射方向图}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/fig/Figure_4.png}
+    \caption{垂直辐射方向图}
+\end{figure}
+
+
+\textbf{喇叭天线性能评估}
+
+根据给定的喇叭天线在不同频率下的水平面和垂直面的极坐标方向图，可以从以下几个方面评估该天线的性能：
+
+\textbf{方向性}
+
+\begin{itemize}
+    \item \textbf{水平极射方向图}：在5.00GHz（蓝色）、7.00GHz（绿色）和8.00GHz（红色）三个频率下，天线在不同方向上的辐射强度不同。方向图显示了天线在水平面内具有较高的方向性，尤其是在7.00GHz和8.00GHz频率下，能量集中在特定的方向上。
+    \item \textbf{垂直极射方向图}：在垂直面内，天线在不同频率下也表现出一定的方向性。可以看到，7.00GHz和8.00GHz频率下具有明显的主瓣和旁瓣结构，表明天线在这些频率下的方向性较好。
+\end{itemize}
+
+\textbf{主瓣宽度}
+
+\begin{itemize}
+    \item \textbf{水平面}：从图16可以观察到，在7.00GHz和8.00GHz频率下，主瓣宽度较窄，这意味着天线在这些频率下具有较高的方向性和更好的空间分辨率。
+    \item \textbf{垂直面}：图17显示了在7.00GHz和8.00GHz频率下，天线的主瓣宽度同样较窄，进一步说明了在这些频率下天线的方向性较好。
+\end{itemize}
+
+\textbf{旁瓣电平}
+
+\begin{itemize}
+    \item \textbf{水平面}：在各个频率下，尤其是7.00GHz和8.00GHz，旁瓣电平较低，这意味着天线在这些频率下的辐射能量主要集中在主瓣方向，减少了旁瓣方向的干扰和能量损失。
+    \item \textbf{垂直面}：同样在垂直面内，7.00GHz和8.00GHz频率下的旁瓣电平较低，进一步表明了天线在这些频率下的性能优越。
+\end{itemize}
+
+\textbf{增益}
+
+虽然从方向图中不能直接读取增益数值，但可以推测在方向性好的频率下（如7.00GHz和8.00GHz），天线的增益通常较高。因为增益和方向性直接相关，方向性越好，增益通常越高。
+
+综上所述，该喇叭天线在7.00GHz和8.00GHz频率下表现出良好的方向性、窄的主瓣宽度和低的旁瓣电平，表明在这些频率下具有较高的天线增益和性能优越的辐射特性。
+
+
+\subsection*{9.比较半功率波束宽度的计算值与实测值，并对你的实验结果加以评论。}
+
+半功率波束宽度即在主瓣上，从最大辐射强度降至最大辐射强度的一半（即半功率点）所对应的角度范围。
+
+以8GHz为例，从水平和垂直方向图上可以直观地读取半功率波束宽度的实测值：找到-3dB对应的圆，读出主瓣的半功率波束宽度：
+
+${\mathcal{H}}$面：$2\theta_{0.5}\approx=28\degree=0.489(rad)$
+
+${\mathcal{E}}$面：$2\theta_{0.5}\approx=46\degree=0.803(rad)$
+
+\textbf{结论}：实验结果表明，在8GHz频率下，水平面和垂直面的半功率波束宽度的实测值均大于计算值。这可能是由于实验环境、测量误差和天线设计等因素的影响。尤其是在垂直面中，实测值与理论值的差距较大，可能反映了天线制造或测量中的某些不理想因素。总体来看，理论计算对于估算天线性能具有指导意义，但实际应用中仍需进行实测以获得更准确的天线特性。
+
+
+
+\subsection*{10.解释在±90°时辐射方向图测量值(提示：跟背景噪声比较)}
+
+在±90°时（即图中的90°和270°方向），辐射方向图的测量值接近背景噪声水平。这可以从水平极射方向图和垂直极射方向图中观察到。
+
+\textbf{背景噪声的影响}
+
+在±90°方向上，天线的辐射强度接近于零，因为这些方向远离天线的主辐射方向。此时，测量值几乎完全由背景噪声决定。背景噪声可能包括以下几种来源：
+\begin{itemize}
+    \item \textbf{环境噪声}：由于测量环境中的电磁干扰，例如其他设备的辐射、无线电频率干扰等。
+    \item \textbf{仪器噪声}：测量设备本身产生的噪声，例如接收天线和放大器的固有噪声。
+\end{itemize}
+
+在±90°方向上所有频率7.00GHz和8.00GHz下的测量值都非常接近。这表明这些测量值主要受背景噪声的影响，而不是天线的辐射特性。
+
+在±90°方向上，由于信号强度很低，信噪比也很低。这意味着测量值中的信号部分非常小，噪声占据了主导地位。因此，在这些方向上的测量结果主要反映了背景噪声水平，而不是天线的实际辐射性能。
+
+\subsection*{11.比较波导角锥喇叭天线辐射特性的实验测量结果和 CST 仿真，有什么结论。}
+CST 仿真在驻波比、辐射方向图、极化特性和电磁波传播特性等方面均与实验测量结果有一点的误差。
+结论：CST 仿真是在理想条件下进行的，而实验测量结果中的一些偏差主要是由实验环境、仪器校准误差等影响所致。
+因此，自然会存在明显的误差，在实际操作中，我们需要尽量减少这些误差，以获得更准确的测量结果。
+
+
+
+
+
+
+\section{实验总结与心得体会}
+
+本次实验的主要目的是揭示喇叭天线的特性，实验内容包括天线驻波比的测量、辐射方向图的测量、极化特性的测量以及电磁波传播与距离关系的测量。通过本次实验，我对天线的基本特性和测量方法有了更深入的了解。
+
+在驻波比测量过程中，我认识到仪器的精度、连接器和电缆的质量、环境干扰以及天线安装和对准的精确度都会对测量结果产生影响。为了提高测量的准确性，我们需要确保矢量网络分析仪的精确校准，使用高质量的连接器和电缆，并在屏蔽良好的环境中进行测量。同时，精确对准天线也是确保测量准确性的重要因素。
+
+在辐射方向图的测量中，通过水平面和垂直面方向图的测量，我们能够直观地看到天线在不同方向上的辐射能力。实际操作中，需要确保收发天线的极化方向一致，设置合适的频率、角度和步进值，尽量减少外界干扰，保证测量结果的准确性。
+
+在极化特性的测量中，我们通过对天线极化和极化栅网特性的测量，进一步理解了电磁波的极化特性。实验表明，当发射天线和接收天线的极化方向一致时，接收信号最强；而当它们正交时，接收信号最弱。这一现象验证了理论的正确性。
+
+通过本次实验，我深刻体会到了理论与实际操作的结合。天线测量不仅需要对天线特性有深入的理解，还需要精密的仪器和严格的操作规范。实验过程中遇到的一些问题，如仪器校准不准确、环境干扰等，也让我认识到在实际工程中细节和精确度的重要性。总的来说，本次实验不仅增强了我对天线测量技术的掌握，也培养了我严谨的实验态度和动手能力。
+
+
+\appendix
+\section{附录}
+
+
+
+\begin{lstlisting}[language=Python, caption=代码1]
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+import numpy as np
+# 读取CSV文件
+df = pd.read_csv('distance.csv', encoding='gbk')
+
+# 设置字体
+font = FontProperties(fname=r"c:\windows\fonts\simsun.ttc", size=10)
+
+# 绘制每个频率的对数值与传播距离的关系曲线
+plt.plot(df['d5'], df['5.00GHz'], label='5.00GHz')
+plt.plot(df['d7'], df['7.00GHz'], label='7.00GHz')
+plt.plot(df['d8'], df['8.00GHz'], label='8.00GHz')
+
+# 设置图形的标题，x轴和y轴的标签
+plt.title('对数值与传播距离的关系', fontproperties=font)
+plt.xlabel('传播距离', fontproperties=font)
+plt.ylabel('对数值', fontproperties=font)
+
+# 显示图例
+plt.legend(prop=font)
+
+# 显示图形
+plt.show()
+
+# 保存图形，设置dpi为300
+plt.savefig('distance.png', dpi=300)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption=代码2]
+import pandas as pd
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+
+# 定义函数形式
+def func_R(x, a, b):
+    return a / x + b
+
+def func_R2(x, a, b):
+    return a / np.power(x, 2) + b
+
+def func_R3(x, a, b):
+    return a / np.power(x, 3) + b
+
+# 读取CSV文件
+df = pd.read_csv('distance.csv', encoding='gbk')
+
+# 获取传播距离和7.00GHz的对数值
+distance = df['d7']
+log_value = df['7.00GHz']
+
+# 拟合函数
+popt_R, _ = curve_fit(func_R, distance, log_value)
+popt_R2, _ = curve_fit(func_R2, distance, log_value)
+popt_R3, _ = curve_fit(func_R3, distance, log_value)
+
+# 绘制原始数据
+plt.scatter(distance, log_value, label='Original data')
+
+# 绘制拟合结果
+plt.plot(distance, func_R(distance, *popt_R), label='Fit: 2/R')
+plt.plot(distance, func_R2(distance, *popt_R2), label='Fit: 1/R^2')
+plt.plot(distance, func_R3(distance, *popt_R3), label='Fit: 1/R^3')
+
+# 显示图例
+plt.legend()
+
+# 显示图形
+plt.show()
+\end{lstlisting}
+
+
+
+\begin{lstlisting}[language=Python, caption=代码3]
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 读取CSV文件
+df = pd.read_csv('polar_normal.csv',encoding='gbk')
+plt.rcParams['axes.unicode_minus'] = False
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+import numpy as np
+
+
+# 绘制每个频率的对数值与传播距离的关系曲线
+plt.plot(df['d4'], df['5.00GHz(对数值)'], label='5.00GHz')
+plt.plot(df['d5'], df['7.00GHz(对数值)'], label='7.00GHz')
+plt.plot(df['d6'], df['8.00GHz(对数值)'], label='8.00GHz')
+
+# 设置图形的标题，x轴和y轴的标签
+plt.title('发射喇叭天线极化曲线')
+plt.xlabel('角度')
+plt.ylabel('对数值')
+
+# 显示图例
+plt.legend()
+
+# 显示图形
+plt.show()
+
+
+
+# # 绘制每个频率的对数值与传播距离的关系曲线
+# plt.plot(df['d1'], df['5.00GHz(线性值)'], label='5.00GHz')
+# plt.plot(df['d2'], df['7.00GHz(线性值)'], label='7.00GHz')
+# plt.plot(df['d3'], df['8.00GHz(线性值)'], label='8.00GHz')
+
+# # 设置图形的标题，x轴和y轴的标签
+# plt.title('发射喇叭天线极化曲线', fontproperties=font)
+# plt.xlabel('角度', fontproperties=font)
+# plt.ylabel('线性值', fontproperties=font)
+
+# # 显示图例
+# plt.legend(prop=font)
+
+# # 显示图形
+# plt.show()
+
+\end{lstlisting}
+
+
+
+\begin{lstlisting}[language=Python, caption=代码4]
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# 读取CSV文件
+df = pd.read_csv('polar_normal.csv',encoding='gbk')
+
+# 计算cosθ和cos²θ的值
+df['cos_theta'] = np.cos(np.deg2rad(df['d1']))
+df['cos_squared_theta'] = np.cos(np.deg2rad(df['d1']))**2
+
+# 绘制图形
+plt.figure(figsize=(10, 6))
+plt.plot(df['d1'], df['7.00GHz(线性值)'], label='Original data')
+plt.plot(df['d1'], df['cos_theta'], label='cos(theta)')
+plt.plot(df['d1'], df['cos_squared_theta'], label='cos^2(theta)')
+
+# 设置图形参数
+plt.xlabel('角度')
+plt.ylabel('值')
+plt.legend()
+
+# 显示图形
+plt.show()
+\end{lstlisting}
+
+
+
+\begin{lstlisting}[language=Python, caption=代码5]
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.font_manager import FontProperties
+plt.rcParams['axes.unicode_minus'] = False
+
+data = pd.read_csv('RADIATION_horizon.CSV')
+
+# 提取数据
+theta5 = data['theta5']
+ghz5 = data['5.00GHz']
+theta7 = data['theta7']
+ghz7 = data['7.00GHz']
+theta8 = data['theta8']
+ghz8 = data['8.00GHz']
+
+# 创建极坐标图
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='polar')
+
+# 将角度转换为弧度
+theta5_rad = np.deg2rad(theta5)
+theta7_rad = np.deg2rad(theta7)
+theta8_rad = np.deg2rad(theta8)
+
+
+ax.plot(theta5_rad, ghz5, label='5.00GHz',  color='blue')
+ax.plot(theta7_rad, ghz7, label='7.00GHz',  color='green')
+ax.plot(theta8_rad, ghz8, label='8.00GHz',  color='red')
+
+# 设置图例，更改字体样式
+ax.legend(loc='best', prop={'size': 10, 'style': 'italic'})
+
+# 添加标题
+ax.set_title("水平辐射方向图", va='bottom', fontsize=14, color='purple')
+
+# 显示图形
+plt.show()
+
+\end{lstlisting}
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

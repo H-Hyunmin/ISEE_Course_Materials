@@ -1,0 +1,486 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验目的}
+
+\begin{enumerate}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 了解基本传输线、微带线的特性。
+    \item 熟悉网络参量测量，掌握矢量网络分析仪的基本使用方法。
+\end{enumerate}
+
+\section{实验原理}
+考虑一段特性阻抗为$Z_0$的传输线，一端接信号源，另一端则接上负载，如图1-1所示。假设此传输线无耗，且传输系数$\gamma=\mathrm{j}\beta$，则传输线上电压及电流可用下列二式表示：
+\begin{equation}\begin{aligned}\mathrm{U}(z)&=U^+e^{-\beta z}+U^-e^{\beta z}\\\mathrm{I}(z)&=I^+e^{-\beta z}-I^-e^{\beta z}\end{aligned}\end{equation}
+
+1、负载端(z=0)处情况电压及电流为
+
+\begin{equation}\begin{aligned}\mathbf{U}&=U_L=U^++U^-\\\mathbf{I}&=I_L=I^+-I^-\end{aligned}\end{equation}
+
+而$Z_0I^+=U^+,\quad Z_0I^-=U^-$, 公式可改写成
+
+$$
+\mathrm{I}_{L}=\frac{1}{Z_{0}}(U^{+}-U^{-})
+$$
+
+可得负载阻抗为
+$$
+Z_{L}=\frac{U_{L}}{I_{L}}=Z_{0}\left(\frac{U^{+}+U^{-}}{U^{+}-U^{-}}\right)
+$$
+定义归一化负载阻抗为
+$$
+z_{L}=\overline{Z_{L}}=\frac{Z_{L}}{Z_{0}}=\frac{1+\Gamma_{L}}{1-\Gamma_{L}}
+$$
+
+其中定义 $\Gamma_\mathrm{L}$为负载端的电压反射系数
+$$
+\Gamma_L=\frac{U^-}{U^+}=\frac{\overline{Z_L}-1}{\overline{Z_L}+1}=|\Gamma_L|e^{j\varphi_L}
+$$
+当$\mathbb{Z}_L=\mathbb{Z}_0$或为无限长传输线时，$\Gamma_L=0$,无反射波，是行波状态或匹配状态。\\
+当$\mathbb{Z}_L$为纯电抗元件或处于开路或者短路状态时，$|\Gamma_L|=1$, 全反射，为驻波\\
+当$\mathbb{Z}_L$为其他值时，$|\Gamma_L|\leq1$,为行波驻波状态。
+线上任意点的反射系数为
+$$
+\Gamma_{L}=|\Gamma_{L}|e^{j\varphi_{L}-j2\beta z}
+$$
+
+定义驻波比 VSWR 和回拨损耗 RL 为
+
+\begin{equation}\begin{aligned}\mathrm{VSWR}&=\frac{1+|\Gamma_L|}{1-|\Gamma_L|}\\\mathrm{RL}&=-20\mathrm{lg}|\Gamma_L|\end{aligned}\end{equation}
+
+
+\begin{equation}
+    \begin{aligned}
+    &\text{2、输入端(z=- L)处情况} \\
+    &反射系数 \Gamma(z)应改成 \\
+    &&&\Gamma(\mathrm{L})=\frac{U^{-}e^{-j\beta_{L}}}{U^{+}e^{j\varphi\beta_{L}}}=\frac{U^{-}}{U^{+}}e^{-j2\beta_{L}}=\Gamma_{L}e^{-j2\beta_{L}} \\
+    &\text{输入阻抗为} \\
+    &&&\text{2} Z_{\mathrm{in}}=Z_{0}\frac{Z_{L}+jZ_{0}\tan(\beta\mathrm{L})}{Z_{0}+jZ_{L}\tan(\beta\mathrm{L})}  \\
+    &\text{由上式可知:} \\
+    &(1)\text{当 L}\to\infty\text{时},\mathbb{Z}_{\mathrm{in}}\to\mathbb{Z}_{0}。 \\
+    &\mathrm{(2)}\text{当 L}=\lambda/2\text{时},\mathrm{Z_{in}=Z_{L^{\circ}}} \\
+    &(3)当\mathrm{L}=\lambda/4\text{时},\mathrm{Z}_{\mathrm{in}}=\mathrm{Z}_{0}^{2}/Z_{I}
+    \end{aligned}
+\end{equation}
+
+
+\section{实验设备}
+\begin{enumerate}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 矢量网络分析仪一台
+    \item 微带电路一套
+\end{enumerate}
+
+
+
+    % \begin{figure}[H]
+    %     \centering
+    %     \includegraphics[width =.8\textwidth]{figures/fig/6.png}
+    %     \caption{用手电筒照射光敏电阻模块，可见返回值发生变化}
+    %     \label{fig:enter-label}
+    % \end{figure}
+
+\section{实验内容}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+        \item 实验内容1．查阅“附2.矢量网络分析仪操作说明.pdf”，了解矢量网络分析仪的原理和使用方法。
+        \item 实验内容2.用矢量网络分析仪分别测量微带开路传输线模块的反射特性，并引入电阻、电容和电感负载测量并分析在不同负载情况下的反射特性。
+\end{itemize}
+
+
+其中微带电路参数如下：（1）工作频率2.5GHz；（2）特性阻抗50欧姆；（3）传输线1/2波长；（4）微波介质基板特性：相对介电常数4.6，介质层厚度0.765mm，铜箔厚度0.035mm(1OZ)，损耗正切0.015；
+
+\subsection*{实验步骤}
+
+1) 开机\\
+打开网络分析仪电源，系统开机后需要先预热几分钟，等待仪器内器件稳定再开始测量。观察仪器面板和测量界面。
+
+
+ 2) 选择测量内容\\
+仪器完成预热后先选择测量内容。一般先进行 S 参数测量。按【测量】键， 根据测试的内容选择显示面板右侧的按键，如按下[S11]软按键即测量反射，[S21] 软按键即测量传输。
+
+
+ 3) 选择测量格式\\
+按【格式】键，可选择测量结果显示的格式，如对数幅度，史密斯圆图等。
+(注意：只有在反射测量的情况下才能显示史密斯圆图) 
+
+
+4) 设置频率范围\\
+矢量网络分析仪扫频工作，默认最大扫描频率范围工作，如 AV36580 是300KHz 扫描到 3GHz。但是在具体测量的过程中，需要设置频率扫描的范围， 以便观察和得到更高精度的数据。
+
+
+5)校准\\
+测量校准是通过测量特性已知的标准来确定系统误差，然后在进行被测件测量时去除这些系统误差影响的过程，通过校准可减小测量误差，提高分析仪的测量精度。\\
+一般情况下系统默认校准参数，为了测量更准确，每次测量之前需要连接好射频电缆线，然后校准。
+
+6)测量微带传输线电路模块\\
+在射频电缆线端接入微带开路传输线模块。然后按【光标】键打开光标，可看到类似如图1-4的Smith曲线。旋转旋钮光标会沿着扫描曲线移动，同时可观察右上角的测试数据。
+
+7)其他负载测量
+
+以51欧姆电阻负载为例。用防静电镊子夹取一个51欧姆阻值0805或1206封装的贴片电阻，放置在测量模块的微带传输线末端，将电阻两端管脚分别架在传输线的开路端和覆铜接地端上，然后用镊子向下压紧使接触充分有效，观察此时网络分析仪测试窗口曲线的变化即为传输线负载端接入51欧姆电阻的情况。利用光标可观察各个频率上的反射情况。
+
+8)天线测量\\
+天线通常用网络分析仪来测试驻波比、相位等特性，用以判断该天线在工作频段的匹配情况。本实验中，天线也可以看做一复阻抗负载，测量方法和上述负载类似。但由于实验中的短天线为SMA接口，测量需要在微带线上焊接转换头来连接，为方便起见将该天线直接转接在网络分析仪端口处测量，参见图1-6。因为此时没有用射频电缆线，所以需要对网络分析仪端口处重新进行校准操作。
+
+9)微带滤波器测量\\
+滤波器是体现网络特性的最好部件。本实验中以测量平行耦合线带通滤波器网络特性为例来熟悉网络参量测量。
+% \begin{lstlisting}[language=C]
+% // the setup routine runs once when you press reset:
+% void setup() {
+%   // initialize serial communication at 9600 bits per second:
+%   Serial.begin(9600);
+% }
+
+% // the loop routine runs over and over again forever:
+% void loop() {
+%   // read the input on analog pin 0:
+%   int sensorValue = analogRead(A2);
+%   // print out the value you read:
+%   Serial.println(sensorValue);
+%   delay(1);  // delay in between reads for stability
+% }
+
+% \end{lstlisting}
+
+
+
+
+
+\section{实验数据}
+\subsection{微带传输线负载反射特性}
+\subsubsection{开路}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8134.jpeg}
+    \caption{开路负载反射特性测量}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{cccccc}
+\hline
+频率 f/GHz & 电阻 R/Ω & 电抗 X/Ω & 等效电容/电感 & 实验值 & 理论值 \\
+\hline
+2.3 & 10.340 & 61.316 & 4.243nH & $0.849e^{1.352}$ & 1 \\
+2.4 & 22.395 & 100.136 & 6.640nH & $0.841e^{0.895}$ & 1 \\
+2.5 & 78.127 & 196.036 & 12.480nH & $0.846e^{0.436}$ & 1 \\
+2.6 & 600.090 & -93.161 & 657.070fF & $0.850e^{-0.025}$ & 1 \\
+2.7 & 61.813 & -181.253 & 325.215fF & $0.853e^{-0.488}$ & 1 \\
+
+\hline
+\end{tabular}
+\caption{测量数据}
+\label{tab:my_label}
+\end{table}
+
+
+
+根据传输线的特性阻抗$Z_0$和负载阻抗$Z_L$，可以由下列公式计算出反射系数$\Gamma$：
+理论上，开路负载的反射系数为1，即$\Gamma = 1$
+
+对比数据可以发现，随着频率的变化，阻抗（包括电阻和电抗）显示出明显的变化。这可能表明开路负载的复杂阻抗随着频率的变化而变化。
+
+实验测量的反射系数（以极坐标形式表示）的模长大致在0.85左右，而理论上，开路负载的反射系数应为1。
+
+实验值和理论值之间存在一些差异，这可能是由于测量误差、设备误差等原因导致的。
+\begin{equation}
+    \Gamma = \frac{Z_L - Z_0}{Z_L + Z_0}
+\end{equation}
+
+\subsubsection{短路}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8135.jpeg}
+    \caption{短路负载反射特性测量}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{cccccc}
+    \hline
+    频率 f/GHz & 电阻 R/Ω & 电抗 X/Ω & 等效电容/电感 & 实验值 & 理论值 \\
+    \hline
+    2.3 & 3.913 & -14.646 & 4.725pF & $0.866e^{-2.569}$ & -1 \\
+    2.4 & 3.895 & -0.39085 & 169.666pF & $0855.e^{-3.126}$ & -1 \\
+    2.5 & 4.710 & 13.709 & 872.719pH & $0.839e^{2.602}$ & -1 \\
+    2.6 & 6.684 & 29.870 & 1.828nH & $0.821e^{2.053}$ & -1 \\
+    2.7 & 10.985 & 52.119 & 3.072nH & $0.812e^{1.506}$ & -1 \\
+    \hline
+    \end{tabular}
+    \caption{测量数据}
+    \label{tab:my_label}
+    \end{table}
+
+理论上，短路负载的反射系数为-1，即$\Gamma = -1$
+
+随着频率的增加，电阻和电抗值都逐渐增大，等效电容/电感值随着频率的增加而增加，电路从容性变为感性。
+
+实验测量的反射系数随频率增大逐渐减小，但维持在0.8以上，误差可能主要由于短路电阻是徒手压在模型上的存在误差，以及测量误差、设备误差等其它原因导致的。
+
+
+\subsubsection{49.9Ω负载}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8136.jpeg}
+        \caption{负载匹配反射特性测量}
+        \label{fig:enter-label}
+    \end{figure}
+    
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{cccccc}
+        \hline
+        频率 f/GHz & 电阻 R/Ω & 电抗 X/Ω & 等效电容/电感 & 实验值 & 理论值 \\
+        \hline
+        2.3 & 40.753 & 8.390 & 580.546pH & $0.137e^{2.313}$ & 0 \\
+        2.4 & 43.880 & 13.063 & 866.269pH & $0.152e^{1.871}$ & 0 \\
+        2.5 & 50.628 & 18.837 & 1.199nH & $0.184e^{1.352}$ & 0 \\
+        2.6 & 63.324 & 18.311 & 1.121nH & $0.197e^{0.782}$ & 0 \\
+        2.7 & 72.545 & 10.092 & 594.875pH & $0.201e^{0.339}$ & 0 \\
+        \hline
+        \end{tabular}
+        \caption{测量数据}
+        \label{tab:my_label}
+        \end{table}
+
+理论上，负载匹配49.9Ω负载的反射系数为0，即$\Gamma = 0$
+
+
+随着频率增大，电阻值逐渐增大，等效电容/电感值逐渐增大，反射系数逐渐增大。史密斯圆图较为集中在圆心附近，说明负载匹配较好。
+
+\subsubsection{3.3nH负载}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8138.jpeg}
+            \caption{3.3nH负载反射特性测量}
+            \label{fig:enter-label}
+        \end{figure}
+        
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{cccccc}
+            \hline
+            频率 f/GHz & 电阻 R/Ω & 电抗 X/Ω & 等效电容/电感 & 实验值 & 理论值 \\
+            \hline
+            2.3 & 4.390 & 8.614 & 596.041pH & $0.843e^{2.798}$ & $1e^{1.618}$ \\
+            2.4 & 5.469 & 24.058 & 1.595nH & $0.837e^{2.237}$ & $1e^{1.576}$ \\
+            2.5 & 8.251 & 43.994 & 2.798nH & $0.831e^{1.683}$ & $1e^{1.535}$ \\
+            2.6 & 16.379 & 74.837 & 4.581nH & $0.820e^{1.148}$ & $1e^{1.496}$ \\
+            2.7 & 49.843 & 140.004 & 8.253nH & $0.814e^{0.621}$ & $1e^{1.458}$ \\
+            \hline
+            \end{tabular}
+            \caption{测量数据}
+            \label{tab:my_label}
+            \end{table}
+
+电感的阻抗为$\mathrm{j}\omega L$，将不同频率下的电感阻抗转换为等效电感值，代入反射系数公式计算，可以得到反射系数$\Gamma$的理论值。
+
+随着频率增大，电阻和电抗值逐渐增大，等效电容/电感值逐渐增大，反射系数逐渐减小。在低频时，反射系数与理论值较为接近。高频后误差增大。
+
+\subsubsection{1pF负载}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8139.jpeg}
+            \caption{1pF负载反射特性测量}
+            \label{fig:enter-label}
+        \end{figure}
+        
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{cccccc}
+            \hline
+            频率 f/GHz & 电阻 R/Ω & 电抗 X/Ω & 等效电容/电感 & 实验值 & 理论值 \\
+            \hline
+            2.3 & 4.734 & -26.031 & 2.658pF & $0.862e^{-2.176}$ & $1e^{1.251}$ \\
+            2.4 & 4.278 & -10.006 & 6.628pF & $0.848e^{-2.744}$ & $1e^{1.251}$ \\
+            2.5 & 4.550 & 4.241 & 269.975pH & $0.834e^{2.971}$ & $1e^{1.251}$ \\
+            2.6 & 5.686 & 19.226 & 1.117nH & $0.820e^{2.400}$ & $1e^{1.251}$ \\
+            2.7 & 8.602 & 37.815 & 2.229nH & $0.804e^{1.828}$ & $1e^{1.251}$ \\
+            \hline
+            \end{tabular}
+            \caption{测量数据}
+            \label{tab:my_label}
+            \end{table}
+
+电容的阻抗为$1/\mathrm{j}\omega C$，将不同频率下的电容阻抗转换为等效电容值，代入反射系数公式计算，可以得到反射系数$\Gamma$的理论值。
+
+随着频率增大，电阻和电抗值逐渐增大，等效电容/电感值逐渐增大，反射系数逐渐减小。在低频时，反射系数与理论值较为接近。高频后误差增大。误差较大，可能是测量误差和高频率误差导致的结果。
+
+\subsection{天线测量}
+天线相关数据测量结果如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8142.jpeg}
+    \caption{天线史密斯圆图测量}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8143.jpeg}
+    \caption{天线驻幅度测量}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8144.jpeg}
+    \caption{天线相位测量}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8149.jpeg}
+    \caption{天线驻波比测量}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection*{驻波比特性分析}
+
+如上图可见，天线的驻波比曲线呈现倒钟形分布，最低点频率约为2.38GHz，最低驻波比在1.2左右。典型的天线SWR在工作频段内应该在1到2之间。可见该天线的工作频道在2.27GHz到2.49GHz左右，天线最小驻波比在1.2左右，可见该天线性能尚佳。
+
+
+\subsection{微带耦合滤波器测量}
+微带耦合滤波器相关参数测量如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/IMG_8152.jpeg}
+    \caption{微带耦合滤波器测量}
+    \label{fig:enter-label}
+\end{figure}
+如图可见，中心频率为2.397GHz;3dB带宽:为0.108GHz;插入损耗约为12.592dB左右;通道部分较为平整，带内波纹约为零;阻带衰减为54.6dB至55.720dB左右。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.88\textwidth]{figures/fig/IMG_8153.jpeg}
+    \caption{微带耦合滤波器测量}
+    \label{fig:enter-label}
+\end{figure}
+
+S参数与$\omega$功率与相位关系曲线如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.88\textwidth]{figures/fig/IMG_8156.jpeg}
+    \caption{S参数与$\omega$功率与相位关系曲线}
+    \label{fig:enter-label}
+\end{figure}
+在反射测量下，分别观察滤波器特性曲线、驻波比特性和史密斯圆图如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.85\textwidth]{figures/fig/IMG_8157.jpeg}
+    \caption{通道一测量结果}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =0.85\textwidth]{figures/fig/IMG_8158.jpeg}
+    \caption{通道二测量结果}
+    \label{fig:enter-label}
+\end{figure}
+
+用手指或金属片作为外界干扰，可以看到滤波器特性曲线、驻波比特性和史密斯圆图上曲线均发生抖动，输入阻抗发生变化。
+
+
+\section{思考题}
+\subsection*{什么是S参数？}
+S参数（Scattering Parameters，散射参数）是用于描述线性电路或被测设备在高频或微波频率范围内的电磁传输特性的一种参数表示方法。S参数描述了输入与输出端口之间的电磁信号的传输、散射和耦合情况。
+
+S11参数表示从端口1输入的信号中，从端口1反射回来的信号的功率与输入功率之比。即端口1反射系数，同理S22为端口2反射系数
+S21参数表示从端口1输入的信号中，从端口2输出的信号的功率与输入功率之比，即正向传输系数。
+S12参数表示从端口1到端口2的反向传输系数。
+
+S参数可以提供关于设备的传输特性、反射特性和互耦合特性的详细信息，因此在射频、微波电路设计和测量中被广泛应用。通过测量S参数，可以评估设备的性能、优化电路设计，并且在通信系统和雷达系统等领域中起着至关重要的作用。
+\subsection*{如果不校准，直接接入射频电缆和电路模块测量会对结果有什么影响，为什么？}
+误差累积：射频电缆和电路模块本身具有固有的传输特性，如衰减、相移等。如果不进行校准，这些特性将会影响测量结果，并且在多次测量中可能会累积误差，使得测量结果不准确。
+
+反射影响：电路模块与射频电缆之间存在不匹配，可能导致信号反射。这些反射会引入额外的干扰信号，并且可能会干扰所测量的信号，导致测量结果出现失真。
+
+传输损耗：射频电缆和连接器本身存在传输损耗，这会导致信号在传输过程中的衰减。如果不校准，就无法准确补偿这些传输损耗，从而影响测量结果的准确性。
+
+相位不准确：由于信号在传输过程中存在传播延迟和相位变化，如果不进行校准，信号的相位信息可能会受到影响，导致测量结果中相位信息不准确。
+\subsection*{如何测量转接头对测试曲线的影响。}
+测量基准曲线，记录测试设备直接连接时的性能。连接转接头并重新测量曲线。
+比较两个曲线，观察转接头引入的增益/损耗、反射系数和相位变化等影响。
+分析影响，并考虑校准或补偿措施来消除或减小转接头的影响。
+\subsection*{利用实验内容2中已知的设计参数，计算50欧半波长微带线的长度和宽度。}
+传输线参数为：$\epsilon_{r}=4.6,h=0.765mm,d=0.035mm,\text{损耗正切}0.015$ 工作频率为2.5GHz
+
+\begin{equation}Z_{o}=\frac{87}{\sqrt{\varepsilon_{r}+1.41}}\ln\biggl[\frac{5.98h}{(0.8W+d)}\biggr]\end{equation}
+
+\begin{equation}L=\frac\lambda4=\frac c{4f\sqrt{\varepsilon_{eff}}}\end{equation}
+代入参数可以求得：W=1.354mm L=34.969mm
+\section{实验的收获与体会}
+在进行电磁场与电磁波课程实验中，我参与了微带传输线负载特性矢量网络测量实验，通过这次实验，我获得了以下收获与体会：
+
+熟悉了矢量网络分析仪的操作原理和使用方法：通过查阅操作说明书并实际操作，我了解了矢量网络分析仪的基本原理和操作流程，包括测量内容的选择、测量格式的设置、频率范围的设置以及校准等步骤，为后续实验提供了必要的操作基础。
+
+掌握了微带传输线负载特性的测量方法：在实验中，我通过测量微带传输线模块的反射特性，并引入不同的电阻、电容和电感负载进行测量分析，掌握了不同负载情况下的反射特性测量方法，加深了对微带传输线的理解。
+
+提高了实验操作能力：通过实际操作设备和测量过程，我增强了实验操作的技能，包括正确连接射频电缆线、调整仪器参数、校准仪器等方面，提高了实验操作的熟练度和准确性。
+
+分析与总结实验数据：在实验中，我通过测量数据的分析和对比，理解了开路、短路和负载匹配等不同情况下的反射特性，并且学会了利用理论知识解释实验结果的差异，提高了数据分析和实验结果解释的能力。
+
+总的来说，通过这次实验，我不仅学到了理论知识，还提高了实验操作能力和数据分析能力，对电磁场与电磁波课程的学习有了更深入的认识和理解。
+\section{实验的建议与意见}
+理论与实践结合：建议在实验前的理论讲解中，适当减少理论内容的篇幅，将更多的时间用于实际操作的讲解和演示。理论知识是基础，但实际操作更能够加深学生对知识的理解和掌握。
+
+增加实际操作的讲解：在实验开始前，可以增加一些实际操作的讲解内容，包括设备的使用方法、操作步骤等。这样可以帮助学生更好地准备实验，并降低实验中出现操作失误的可能性。
+
+鼓励互动和提问：在实验过程中，鼓励学生积极参与讨论，提出问题和疑惑。老师可以及时回答学生的问题，帮助他们更好地理解实验内容。
+
+加强实验技能培训：除了理论知识外，还要注重培养学生的实验技能。可以开设一些实验技能培训课程，教授学生实验操作的技巧和方法，提高他们的实验技能水平。
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

@@ -1,0 +1,10 @@
+{
+  "additionalFiles": "..\\..\\..,..\\..\\..,..\\..",
+  "builtInToolsFolders": "",
+  "compiler.optimization_flags": "",
+  "customBuildProperties": "build.warn_data_percentage=75",
+  "fqbn": "arduino:avr:mega:cpu=atmega2560",
+  "hardwareFolders": "C:\\Users\\Huang Xianmin\\AppData\\Local\\Arduino15\\packages",
+  "otherLibrariesFolders": "D:\\Documents\\Arduino\\libraries",
+  "sketchLocation": "C:\\Users\\Huang Xianmin\\Desktop\\物联网系统设计\\课程实验与相关资料\\lab4\\threecolor_light"
+}

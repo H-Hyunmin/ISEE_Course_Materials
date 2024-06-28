@@ -1,0 +1,15 @@
+Added Component: Designator=P5(HDR2.54-LI-8P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=IOREF Pin=P5-2
+Added Pin To Net: NetName=5V Pin=P5-5
+Added Pin To Net: NetName=GND Pin=P5-6
+Added Pin To Net: NetName=GND Pin=P5-7
+Added Pin To Net: NetName=3.3V Pin=P5-4
+Added Net: Name=3.3V
+Added Pin To Net: NetName=RES Pin=P5-3
+Added Net: Name=RES
+Added Pin To Net: NetName=VIN Pin=P5-8
+Added Net: Name=VIN
+Added Member To Class: ClassName=Arduino_clock Member=Component P5 Header 8

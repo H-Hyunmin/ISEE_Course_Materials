@@ -1,0 +1,1 @@
+录音文件的读取和输入都是使用默认路径。请在matlab中打开时把路径设置在hw2-VoiceRecognize文件夹下

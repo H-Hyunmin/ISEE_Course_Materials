@@ -1,0 +1,337 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验介绍}
+\subsection{实验要求}
+
+\begin{enumerate}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 在阿里云端注册，创建产品和设备，直接导入物模型model.json 
+    \item 计算MQTT和阿里云链接的参数，连接Aliyun。
+    \item 通过sub订阅消息，通过pub发布消息。 
+    \item 利用Alink Json 格式改变温度、闪烁数据。（注意：pub的主题不同，状态的改变）
+    \item 利用阿里云的自定义topic，发送自定义文本数据，MQTT.fx接收。
+\end{enumerate}
+\subsection{实验平台}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 阿里云物联网平台
+    \item MQTTFX软件
+    \item 阿里云平台配置软件
+\end{itemize}
+
+
+\section{任务一:阿里云端注册，创建产品和设备，导入物模型}
+\subsection{实验过程}
+
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 打开阿里云平台，注册账号并登入，开通物联网平台。（注册等具体操作过程略）
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-07_16-28-24.png}
+        \caption{开通账号，进入物联网平台}
+        \label{fig:enter-label}
+    \end{figure}    
+    
+    \item 进入公共实例->设备管理->产品页面
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-07_16-37-54.png}
+        \caption{进入产品页面}
+        \label{fig:enter-label}
+    \end{figure}  
+
+    \item 选择创建产品，输入产品名称，自定义品类，WIFI连网方式，JSON数据格式
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-07_16-38-54.png}
+        \caption{创建产品}
+        \label{fig:enter-label}
+    \end{figure} 
+
+    \item 进入设备管理->设备页面，选择添加设备，产品选择刚刚创建的产品的MQTTlab,输入设备名称
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-07_16-43-12.png}
+        \caption{创建设备}
+        \label{fig:enter-label}
+    \end{figure} 
+
+    \item 回到原来的产品页面，找到刚刚创建的产品MQTTlab，点击查看，在功能定义中选择前往编辑草稿
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-07_16-56-27.png}
+        \caption{在产品功能定义中编辑物模型}
+        \label{fig:enter-label}
+    \end{figure} 
+
+    \item 在编辑草稿页面，选择快速导入->导入物模型->点击上传，在打开的文件选择框中选择model.json文件，之后点击创建物模型
+    \item \bf{注意：创建后记得选择发布上线，发布物模型，否则无法在设备列表中看到设备的物模型}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-07_17-01-20.png}
+        \caption{导入物模型}
+        \label{fig:enter-label}
+    \end{figure} 
+\end{itemize}
+
+
+
+
+\subsection{实验结果}
+\begin{itemize}
+    \item 在产品列表中可以看到刚刚创建的产品MQTTlab
+    \item 在设备列表中可以看到刚刚创建的设备
+    \item 在产品功能定义中可以看到刚刚导入的物模型
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-07_17-05-58.png}
+        \caption{创建的物模型}
+        \label{fig:enter-label}
+    \end{figure} 
+\end{itemize}
+
+
+
+
+\section{任务二:计算 MQTT 和阿里云链接的参数，连接 Aliyun}
+
+\subsection{实验过程}
+\begin{itemize}[]
+    \item 在产品页面中找到刚刚创建的产品MQTTlab，选择发布，发布产品
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/Snipaste_2024-03-07_17-25-44.png}
+        \caption{发布产品}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+    \item 在设备页面中找到创建的MQTTlabdevice1设备，点击查看，在设备信息中选择查看Deviceserver，一键复制设备的三元组信息
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/Snipaste_2024-03-07_17-12-21.png}
+        \caption{获取三元组}
+        \label{fig:enter-label}
+    \end{figure} 
+
+    \item 打开阿里云平台配置应用程序，粘贴三元组信息，点击生成
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.6\textwidth]{figures/fig/Snipaste_2024-03-07_17-15-40.png}
+        \caption{生成信息}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \item 随意输入时间戳，建议clientid输入当前设备名称，再点击生成，得到所需的参数
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.6\textwidth]{figures/fig/Snipaste_2024-03-07_17-18-30.png}
+        \caption{生成参数}
+        \label{fig:enter-label}
+    \end{figure}
+    
+    \
+    \item 打开MQTT.fx软件，选择设置，在对应位置输入阿里云的参数，点击应用
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-03-07_17-30-49.png}
+        \caption{生成参数}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \item 选择connect，可以看到绿灯代表成功连接上
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-03-07_17-34-06.png}
+        \caption{连接云平台}
+        \label{fig:enter-label}
+    \end{figure}
+\end{itemize}
+
+
+\subsection{实验结果}
+    可以在阿里云平台的设备监控中看到设备的连接状态，成功连接上阿里云
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-07_21-31-47.png}
+        \caption{设备状态显示在线，连接成功}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+
+\section{任务三:通过sub订阅消息，通过pub发布消息}
+\subsection{sub订阅消息实验过程}
+
+
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 查看MQTTlab产品，在Topic类列表，物模型通信Topic中可以看到属性设置功能
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.75\textwidth]{figures/fig/Snipaste_2024-03-07_21-22-58.png}
+        \caption{查看物模型通信topic}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 将Topic类复制到MQTT软件的Subscribe框中，将\$\{deviceName\}换为设备名称MQTT\_lab\_device1
+    \item 点击subscribe可以看到已经成功订阅
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-07_21-33-49.png}
+        \caption{订阅云平台}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \item 选择物联网云平台中的在线调试，选择产品和设备，设置一下参数，然后点击设置发送指令
+    \subsection{实验结果}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-07_21-36-30.png}
+        \caption{云平台发送消息}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \item 在MQTT软件中查看接受到的消息
+
+
+\end{itemize}
+
+\subsection{sub订阅消息实验结果}
+可以在MQTT软件上看到订阅后收到的消息
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-07_21-39-04.png}
+    \caption{接受到的订阅消息}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\subsection{pub发布消息实验过程}
+
+\begin{itemize}
+    \item 查看MQTTlab产品，在Topic类列表，物模型通信Topic中可以看到属性上报功能。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.95\textwidth]{figures/fig/Snipaste_2024-03-07_21-43-58.png}
+        \caption{查看要发布的topic类}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \item 选择操作类型为发布的topic类，将Topic类复制到MQTT软件的publication框中，将\$\{deviceName\}换为设备名称MQTT\_lab\_device1
+    \item 根据JSON格式写上要发布的消息，点击publish发布
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-07_22-14-29.png}
+        \caption{MQTT软件端设置发布消息}
+        \label{fig:enter-label}
+    \end{figure}
+
+\end{itemize}
+
+\subsection{pub发布消息实验结果}
+可以在云端的日志服务中看到运动接受本地发布的消息日志，在设备上也可以直接看到接受到的本地发布的数据。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-03-07_22-02-07.png}
+    \caption{云端接受到发布的消息}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\section{任务四:利用Alink Json 格式改变物模型的参数}
+\begin{itemize}
+    \item 选择操作类型为发布的topic类，将Topic类复制到MQTT软件的publication框中，将\$\{deviceName\}换为设备名称MQTT\_lab\_device1
+    \item 根据JSON格式写上要发布的消息，点击publish发布
+\end{itemize}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-03-07_21-58-50.png}
+    \caption{自定义topic}
+    \label{fig:enter-label}
+\end{figure}
+
+\section{任务五:利用阿里云的自定义topic，发送自定义文本数据，MQTT.fx接收}
+\begin{itemize}
+    \item 在产品中设置自定义topic
+    \item \bf{在MQTT的订阅}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1.1\textwidth]{figures/fig/Snipaste_2024-03-07_22-19-02.png}
+        \caption{自定义topic}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \item 在MQTT的订阅刚刚自定义的消息
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-03-07_22-25-53.png}
+        \caption{在MQTT订阅}
+        \label{fig:enter-label}
+    \end{figure}
+    
+    \item 在云平台发布消息
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-07_22-21-48.png}
+        \caption{云平台发布自定义消息}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在MQTT软件中查看接受到的消息
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-07_22-26-46.png}
+        \caption{在MQTT软件中查看接受到的自定义消息}
+        \label{fig:enter-label}
+    \end{figure}
+
+\end{itemize}
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

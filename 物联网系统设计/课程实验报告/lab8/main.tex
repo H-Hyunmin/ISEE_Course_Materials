@@ -1,0 +1,975 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    basicstyle=\small\linespread{0.85}\selectfont, % 设置代码字体大小和行间距
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验介绍}
+\subsection{实验要求}
+
+\begin{enumerate}
+  \item 开发一个微信小程序，能够控制你的灯的开关，频率和三色变化。
+  \item 小程序能够接受设备的温度和光照数据，并且能够实时显示。
+\end{enumerate}
+\subsection{实验器材}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item Arduino mega 开发板及载板
+    \item 阿里云平台
+    \item 微信小程序开发工具
+\end{itemize}
+
+
+\section{实验过程}
+
+\subsection{阿里云平台设置}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 新建产品和两个设备，一个用于微信小程序端，一个用于设备端。
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-06_15-35-57.png}
+      \caption{新建产品和设备}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 设置产品的物模型，添加属性。
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-06_15-36-38.png}
+      \caption{设置物模型}
+      \label{fig:enter-label}
+    \end{figure}
+    
+    \item 设置自定义topic，用于之后设备端和微信小程序端的通信。
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-06_15-36-51.png}
+      \caption{设置自定义topic}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 参照下图进行云产品流程的设置
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_15-37-13.png}
+      \caption{云产品流程图}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 创建云产品流转规则
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_15-38-16.png}
+      \caption{创建云产品流转规则}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 编写SQL处理数据和添加转发数据操作
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_15-39-41.png}
+      \caption{编写数据处理和转发数据}
+      \label{fig:enter-label}
+    \end{figure}
+    \item 具体操作如下图。SQL语句选择Arduino上报的所有数据，然后转发到自定义的微信端topic。
+    \begin{figure}[H]
+      \centering
+      \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=.8\linewidth]{figures/fig/Snipaste_2024-04-06_15-40-02.png}
+        \caption{\small SQL创建}
+        \label{fig:image1}
+      \end{minipage}%
+      \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=1.1\linewidth]{figures/fig/Snipaste_2024-04-06_15-40-12.png}
+        \caption{\small 数据转发设置}
+        \label{fig:image2}
+      \end{minipage}
+    \end{figure}
+    \item 同理微信端到设备端的云产品流转规则如下图所示。
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_15-39-19.png}
+      \caption{编写数据处理和转发数据}
+      \label{fig:enter-label}
+    \end{figure}
+
+\end{itemize}
+\subsection{硬件设备代码}
+本次实验硬件代码基本同lab5中代码。新增了光敏电阻的读取，并修改了上传的数据。
+增添的代码如下：
+\begin{lstlisting}[language=C]
+  //增加两个全局变量
+  int LightSwitch=0;
+  int photon=0; //光照强度
+  //在parse函数中增加对LightSwitch的解析
+  //增加对光敏电阻的读取
+  photon = analogRead(A2);
+  //update函数中修改为上传光照强度和温度
+  //将阿里云链接的所需的productKey，deviceName，deviceSecret，clientID等信息改为ArduinoDev设备的信息
+\end{lstlisting}
+其余主体代码与lab5中相同，不多赘述。详细代码见附录。
+
+\subsection{微信小程序端开发}
+
+\begin{itemize}
+  \item 注册微信小程序开发者账号，下载微信小程序开发工具，打开并导入学在浙大上给出的模板项目。
+  \item 打开index.js文件，修改其中的设备信息，将设备的productKey，deviceName，deviceSecret等信息修改为之前创建的WechatControl设备的信息。注意将publish和subscribe的topic也修改为之前设置的自定义topic。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-06_16-16-01.png}
+    \caption{修改参数}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 在消息处理函数中，添加对Json数据的解析，将设备上报的数据显示在页面上。数据对应物模型中的属性名称。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-06_16-24-59.png}
+    \caption{编写Json数据解析}
+    \label{fig:enter-label}
+  \end{figure}
+
+  \item 修改app.json文件和index.wxml文件，可以设置小程序的页面布局和样式。增添组件等。这里我修改了小程序的名称，改变了按钮的位置，添加了设置灯的颜色的按钮等。
+  \item 修改对应的按钮的事件处理函数和发送的json数据，从而将需要的数据发送到设备端。
+  \item \textbf{本人的微信小程序源码和详细注释详见报告附录}
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-04-06_16-37-10.png}
+    \caption{最终效果图}
+    \label{fig:enter-label}
+  \end{figure}
+
+
+
+
+
+  % \item 给滑条组件设置交互，将滑条的值传递给页面变量。页面变量的设置如下图所示。
+  % \begin{figure}[H]
+  %   \centering
+  %   \begin{minipage}{.3\textwidth}
+  %     \centering
+  %     \includegraphics[width=.85\linewidth]{figures/fig/Snipaste_2024-04-05_23-55-22.png}
+  %     \caption{\small 交互动作设置}
+  %     \label{fig:image1}
+  %   \end{minipage}%
+  %   \begin{minipage}{.6\textwidth}
+  %     \centering
+  %     \includegraphics[width=1\linewidth]{figures/fig/Snipaste_2024-04-05_23-55-30.png}
+  %     \caption{\small 页面变量}
+  %     \label{fig:image2}
+  %   \end{minipage}
+  % \end{figure}
+
+\end{itemize}
+
+
+\section{实验结果展示}
+\subsection{设备链接阿里云}
+\begin{itemize}
+  \item 在硬件设备上电，连接到阿里云平台。
+  \item 在微信小程序开发工具中，编译项目，只要MQTT链接参数设置正确，设备就会连接到阿里云平台。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.85\textwidth]{figures/fig/Snipaste_2024-04-06_16-44-55.png}
+    \caption{设备均已连接到阿里云平台}
+    \label{fig:enter-label}
+  \end{figure}
+\end{itemize}
+
+\subsection{微信小程序控制三色灯}
+\begin{itemize}
+  \item 首先打开微信小程序，拖动滑块，设置参数，点击开灯按钮，在console中可以看到如下图红框中的数据，包括拖动滑条设置参数的提示消息和微信小程序调用了publish方法，将数据发送到阿里云平台的消息。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/Snipaste_2024-04-06_16-46-43.png}
+    \caption{微信小程序设置参数点击开灯}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 此时微信小程序调用了publish方法，将数据发送到阿里云平台，阿里云平台通过云产品流转规则转发到设备端，设备端解析数据，控制灯的开关和颜色。
+  \item 下图红框圈出的三个日志分别是微信小程序发布数据到阿里云平台，阿里云平台接收到数据并云产品流转，阿里云将数据转发到设备端的过程。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.9\textwidth]{figures/fig/Snipaste_2024-04-06_16-53-04.png}
+    \caption{云平台日志}
+    \label{fig:enter-label}
+  \end{figure}
+ 
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =0.7\textwidth]{figures/fig/f5d98f34e3aac0ba1a308abf8e610cb.jpg}
+    \caption{设备端效果图}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 设备端接收到数据，解析数据，控制灯的开关和颜色，上图为设备端的效果图。
+\end{itemize}
+
+\subsection{设备端上传，小程序显示}
+\begin{itemize}
+  \item 设备端已经写好代码，定时上传温度和光照强度数据，数据上传到阿里云平台，阿里云平台通过云产品流转规则转发到微信小程序端。
+  \item 微信小程序端接收到数据，解析数据，显示在页面上。
+  \item 在微信小程序中点击订阅按钮，此时会提示订阅成功，并调用subscribe方法，订阅设备端的数据。在console中可以看到如下图红框中的数据，包括订阅成功的提示消息和微信小程序接受到的数据。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-06_17-01-40.png}
+    \caption{微信小程序订阅数据}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 同样在阿里云平台的日志中可以看到数据的流转过程。如下图所示，框出的五个日志分别是设备端上传数据到阿里云平台，阿里云平台接收到数据并设置物模型属性，云产品流转，阿里云将数据转发到微信小程序端的过程，微信小程序端接收到数据返回的日志。
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-06_17-04-55.png}
+    \caption{云平台日志}
+    \label{fig:enter-label}
+  \end{figure}
+  \item 最终效果为，微信小程序端接收到数据，解析数据，显示在页面的按钮上，如前文图片所示。
+\end{itemize}
+
+\newpage
+
+
+\appendix
+\section{微信小程序源码}
+index.js文件是微信小程序的主要逻辑代码，主要实现了与阿里云平台的连接，数据的发送和接收，页面的数据绑定等功能。
+index.js源码和详细注释如下：
+\begin{lstlisting}[language=python]
+import mqtt from '../../utils/mqtt.js';  //引入mqtt.js库文件
+const aliyunOpt = require('../../utils/aliyun/aliyun_connect.js');
+var RGBtemp = [0, 0, 0, 0, 0];
+let that = null; //记录this的指向
+var ison = 0; //记录灯的开关状态的变量
+
+//page是一个页面的实例对象，page对象的属性和方法可以通过this访问
+Page({
+  data: {//用于页面的数据绑定
+
+    //设置温度值和湿度值 
+    temperature: "",
+    humidity: "",
+
+    client: null,//记录重连的次数
+    reconnectCounts: 0,//MQTT连接的配置
+    options: {
+      protocolVersion: 4, //MQTT连接协议版本
+      clean: false,
+      reconnectPeriod: 1000, //1000毫秒，两次重新连接之间的间隔
+      connectTimeout: 30 * 1000, //1000毫秒，两次重新连接之间的间隔
+      resubscribe: true, //如果连接断开并重新连接，则会再次自动订阅已订阅的主题（默认true）
+      clientId: 'WechatControl',
+      password: 'A35FEE5433054A8001EE247B5F315F2CF4EB41FC',
+      username: 'WechatControl&k0v6onEdM6S',
+    },
+
+    aliyunInfo: {
+      productKey: 'k0v6onEdM6S', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
+      deviceName: 'WechatControl', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
+      deviceSecret: 'b8ec96a34b1b17a13ff90b8b0f617bfe', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
+      regionId: 'cn-shanghai', //阿里云连接的三元组 ，请自己替代为自己的产品信息!!
+      pubTopic: '/k0v6onEdM6S/WechatControl/user/WechatControl', //发布消息的主题
+      subTopic: '/k0v6onEdM6S/WechatControl/user/get', //订阅消息的主题
+
+    },
+  },
+
+  //onLoad函数会在页面加载后执行
+  onLoad: function () {
+    //配置MQTT连接
+    that = this;
+    let clientOpt = aliyunOpt.getAliyunIotMqttClient({
+      productKey: that.data.aliyunInfo.productKey,
+      deviceName: that.data.aliyunInfo.deviceName,
+      deviceSecret: that.data.aliyunInfo.deviceSecret,
+      regionId: that.data.aliyunInfo.regionId,
+      port: that.data.aliyunInfo.port,
+    });
+  
+    console.log("get data:" + JSON.stringify(clientOpt));
+    let host = 'wxs://' + clientOpt.host;
+   //设置连接的参数
+    this.setData({
+      'options.clientId': clientOpt.clientId,
+      'options.password': clientOpt.password,
+      'options.username': clientOpt.username,
+    })
+    console.log("this.data.options host:" + host);
+    console.log("this.data.options data:" + JSON.stringify(this.data.options));
+
+    //调用mqtt.connect方法连接服务器
+    this.data.client = mqtt.connect(host, this.data.options);
+    //当连接服务器时的回调函数
+    this.data.client.on('connect', function (connack) {
+      wx.showToast({
+        title: '连接成功'
+      })
+      console.log("连接成功");
+    })
+
+    //接收消息监听，当接受到消息时执行的回调函数
+    this.data.client.on("message", function (topic, payload) {
+      console.log(" 收到 topic:" + topic + " , payload :" + payload);
+      if(topic=='/k0v6onEdM6S/WechatControl/user/get'){
+      that.setData({
+        //转换成JSON格式的数据进行读取
+        temperature: JSON.parse(payload).items.Temperature.value,
+        photores:JSON.parse(payload).items.Photon.value,
+      })
+    }
+    })
+
+    //服务器连接异常的回调
+    that.data.client.on("error", function (error) {
+      console.log(" 服务器 error 的回调" + error)
+
+    })
+    //服务器重连连接异常的回调
+    that.data.client.on("reconnect", function () {
+      console.log(" 服务器 reconnect的回调")
+
+    })
+    //服务器连接异常的回调
+    that.data.client.on("offline", function (errr) {
+      console.log(" 服务器offline的回调")
+    })
+  },
+  //开灯按钮的事件处理函数
+  onClickOpen() {
+    ison=1;
+    that.sendCommond('set',1);
+  },
+  //关灯按钮的事件处理函数
+  onClickOff() {
+    ison=0;
+    that.sendCommond('set',0);
+  },
+  //订阅按钮的事件处理函数
+  setcolor() {
+    that.sendCommond('set',ison);
+  },
+
+  //下面是各个滑条的事件处理函数
+  slider1change: function (e) {  //RED
+    RGBtemp[1] = e.detail.value;
+    console.log(`需要发送的RGB数据分别为：`, 'R:', RGBtemp[1], 'G:', RGBtemp[3], 'B:', RGBtemp[2], 'fre:', RGBtemp[4]);
+    console.log(`slider1发生change事件，携带值为`, e.detail.value);
+  },
+
+  slider2change: function (e) {  //BLUE
+    RGBtemp[2] = e.detail.value;
+    console.log(`需要发送的RGB数据分别为：`, 'R:', RGBtemp[1], 'G:', RGBtemp[3], 'B:', RGBtemp[2], 'fre:', RGBtemp[4]);
+    console.log(`slider2发生change事件，携带值为`, e.detail.value);
+  },
+  slider3change: function (e) { //Green
+    RGBtemp[3] = e.detail.value;
+    console.log(`需要发送的RGB数据分别为：`, 'R:', RGBtemp[1], 'G:', RGBtemp[3], 'B:', RGBtemp[2], 'fre:', RGBtemp[4]);
+    console.log(`slider3发生change事件，携带值为`, e.detail.value);
+  },
+
+  slider4change: function (e) {  //Fre
+    RGBtemp[4] = e.detail.value;
+    console.log(`需要发送的RGB数据分别为：`, 'R:', RGBtemp[1], 'G:', RGBtemp[3], 'B:', RGBtemp[2], 'fre:', RGBtemp[4]);
+    console.log(`slider3发生change事件，携带值为`, e.detail.value);
+  },
+
+  //发送数据的函数，被上面的按钮事件处理函数调用
+  sendCommond(cmd,data) {
+
+  let sendData = {
+    id: '12233443',
+    version: '1.0',
+    params:{//设置要发送的数据
+      ColorRed: RGBtemp[1],
+      ColorGreen: RGBtemp[3],
+      ColorBlue:RGBtemp[2],
+      Frequency:RGBtemp[4],
+      LightSwitch:data
+    }
+};
+  
+    //发布消息
+    if (this.data.client && this.data.client.connected) {//判断是否连接服务器
+      //发送数据并打印
+      this.data.client.publish(this.data.aliyunInfo.pubTopic, JSON.stringify(sendData));
+      console.log("************************")
+      console.log(this.data.aliyunInfo.pubTopic)
+      console.log(JSON.stringify(sendData))
+    } else {
+      wx.showToast({
+        title: '请先连接服务器',
+        icon: 'none',
+        duration: 2000
+      })
+    }
+  },
+
+  //订阅按钮的事件处理函数
+  subTopic() {
+    //此函数是订阅的函数，因为放在访问服务器的函数后面没法成功订阅topic，因此把他放在这个确保订阅topic的时候已成功连接服务器
+    //订阅消息函数，订阅一次即可 如果云端没有订阅的话，需要取消注释，等待成功连接服务器之后，在随便点击（开灯）或（关灯）就可以订阅函数
+    this.data.client.subscribe(this.data.aliyunInfo.subTopic, function (err) {
+      if (!err) {
+        console.log("订阅成功");
+        //that.page.subTopic.disabled = "true";
+      };
+      wx.showModal({
+        content: "订阅成功",
+        showCancel: false,
+      })
+    })
+
+  }
+
+})
+  
+\end{lstlisting}
+
+index.wxml文件是微信小程序的页面布局代码，主要实现了页面的布局和样式。源码如下：
+\begin{lstlisting}[language=html]
+  <view class="page">
+    <view class="button-sp-are">
+      //设置了按钮的位置和样式
+      <button class="weui-btn" type="primary" size="mini" bindtap="onClickOpen" style="position: relative; left: 78rpx; top: 529rpx; width: 445rpx; height: 51rpx; display: inline-block; box-sizing: border-box">开灯</button>
+      <button type="warn" size="mini" bindtap="onClickOff" style="position: relative; left: 77rpx; top: 400rpx; width: 445rpx; height: 51rpx; display: inline-block; box-sizing: border-box">关灯</button>
+      <button type="warn" size="mini" bindtap="setcolor" style="position: relative; left: 77rpx; top: 270rpx; width: 445rpx; height: 51rpx; display: inline-block; box-sizing: border-box">设置</button>
+
+      <button type="warn" size="mini" bindtap="subTopic" style="position: relative; left: 78rpx; top: 130rpx; width: 445rpx; height: 51rpx; display: inline-block; box-sizing: border-box">订阅</button>
+      <button size="mini" style="position: relative; left: 77rpx; top: 144rpx; width: 445rpx; height: 51rpx; display: inline-block; box-sizing: border-box">温度：{{temperature}}℃</button>
+      <button size="mini" style="position: relative; left: 77rpx; top: 20rpx; width: 445rpx; height: 51rpx; display: inline-block; box-sizing: border-box">光照：{{photores}}</button>
+    </view>
+  
+    <view class="section section_gap">
+        //设置滑条的位置和样式
+        <text class="section__title">设置频率</text>
+        <view class="body-view">
+            <slider bindchange="slider4change" min="0" max="100" show-value />
+        </view>
+    </view>
+
+    <view class="page__bd">
+        //设置三个滑条的位置和样式
+        <view class="section section_gap">
+            <text class="section__title">设置红色</text>
+            <view class="body-view">
+                <slider bindchange="slider1change" activeColor="#ff4a4a"  min="0" max="255" show-value/>
+            </view>
+        </view>
+
+        <view class="section section_gap">
+            <text class="section__title">设置蓝色</text>
+            <view class="body-view">
+                <slider bindchange="slider2change" activeColor="#4a4aff" min="0" max="255" show-value/>
+            </view>
+        </view>
+
+        <view class="section section_gap">
+            <text class="section__title">设置绿色</text>
+            <view class="body-view">
+                <slider bindchange="slider3change" activeColor="#4aff4a" min="0" max="255" show-value/>
+            </view>
+        </view>
+    
+
+
+    </view>
+</view>
+\end{lstlisting}
+
+index.wxss文件是微信小程序的页面样式代码，主要实现了页面的样式。源码如下：
+\begin{lstlisting}[language=html]
+  button{
+    margin:40px;
+    font-size:10px;
+    width:80%;
+  }
+  .userinfo-nickname{
+    color :#aaa;
+  }
+  .button-sp-are{margin-top:60px;
+  height:50rpx}
+  .weui-btn{margin-top:50px}
+\end{lstlisting}
+其余文件为小程序的配置文件，不再赘述。
+
+\section{硬件设备代码}
+Arduino代码如下：
+\begin{lstlisting}[language=C]
+
+  //#include <Wire.h>
+  //头文件
+  #include <string.h>
+  #include <ArduinoJson.h>
+  #include <Adafruit_BMP280.h>
+  
+  // #define CLOSE_LIGHT //
+  
+  //————————————————————————————————————————————————————————————————————————
+  #define My_JSON_PACK_1        "{\"id\":\"66666\",\"version\":\"1.0\",\"method\":\"thing.event.property.post\",\"params\":{\"Temperature\":%d.%02d,\"Photon\":%d}}\r"
+  
+  //————————————————————————————————————————————————————————————————————————
+  //BMP280
+  #define BMP_SCK  (13)
+  #define BMP_MISO (12)
+  #define BMP_MOSI (11)
+  #define BMP_CS   (10)
+  
+  Adafruit_BMP280 bmp;
+  //————————————————————————————————————————————————————————————————————————
+  //User Modified Part
+  //WIFI，MQTT等参数设置
+  #define wifi_ssid     "**"    
+  #define wifi_psw      "*******"     
+  
+  #define clientIDstr   "*******"
+  #define timestamp     "*******"
+  #define ProductKey    "*******"
+  #define DeviceName    "*******"
+  #define DeviceSecret  "*******"
+  #define password      "*******"
+  //————————————————————————————————————————————————————————————————————————
+  
+  
+  
+  
+  
+  //开关等宏
+  #define OFF           0
+  #define ON            1
+  #define MUTE          2
+  #define KEEP_OFF      2
+  #define KEEP_ON       3
+  
+  
+  //蜂鸣器宏
+  #define Buzzer_ON   digitalWrite(BuzzerPin,HIGH)
+  #define Buzzer_OFF  digitalWrite(BuzzerPin,LOW)
+  
+  
+  //AT指令宏设置
+  #define AT                    "AT\r"
+  #define AT_OK                 "OK"
+  #define AT_REBOOT             "AT+REBOOT\r"
+  #define AT_ECHO_OFF           "AT+UARTE=OFF\r"
+  #define AT_MSG_ON             "AT+WEVENT=ON\r"
+  
+  #define AT_WIFI_START         "AT+WJAP=%s,%s\r"
+  #define AT_WIFI_START_SUCC    "+WEVENT:STATION_UP"
+  
+  #define AT_MQTT_AUTH          "AT+MQTTAUTH=%s&%s,%s\r"
+  #define AT_MQTT_CID           "AT+MQTTCID=%s|securemode=3\\,signmethod=hmacsha1\\,timestamp=%s|\r"
+  #define AT_MQTT_SOCK          "AT+MQTTSOCK=%s.iot-as-mqtt.cn-shanghai.aliyuncs.com,1883\r"
+  
+  #define AT_MQTT_AUTOSTART_OFF "AT+MQTTAUTOSTART=OFF\r"
+  #define AT_MQTT_ALIVE         "AT+MQTTKEEPALIVE=500\r"
+  #define AT_MQTT_START         "AT+MQTTSTART\r"
+  #define AT_MQTT_START_SUCC    "+MQTTEVENT:CONNECT,SUCCESS"
+  #define AT_MQTT_PUB_SET       "AT+MQTTPUB=/sys/%s/%s/thing/event/property/post,1\r"
+  #define AT_MQTT_PUB_ALARM_SET "AT+MQTTPUB=/sys/%s/%s/thing/event/GasAlarm/post,1\r"
+  #define AT_MQTT_PUB_DATA      "AT+MQTTSEND=%d\r"
+  
+  #define JSON_DATA_PACK        "{\"id\":\"100\",\"version\":\"1.0\",\"method\":\"thing.event.property.post\",\"params\":{\"RoomTemp\":%d.%02d,\"AC\":%d,\"Fan\":%d,\"Buzzer\":%d,\"GasDetector\":%d}}\r"
+  #define JSON_DATA_PACK_2      "{\"id\":\"110\",\"version\":\"1.0\",\"method\":\"thing.event.property.post\",\"params\":{\"LightDetector\":%d,\"Curtain\":%d,\"Light\":%d,\"SoilHumi\":%d,\"Pump\":%d,\"eCO2\":%d,\"TVOC\":%d}}\r"
+  #define JSON_DATA_PACK_ALARM  "{\"id\":\"110\",\"version\":\"1.0\",\"method\":\"thing.event.GasAlarm.post\",\"params\":{\"GasDetector\":%d}}\r"
+  #define AT_MQTT_PUB_DATA_SUCC "+MQTTEVENT:PUBLISH,SUCCESS"
+  #define AT_MQTT_UNSUB         "AT+MQTTUNSUB=2\r"
+  #define AT_MQTT_SUB           "AT+MQTTSUB=2,/sys/%s/%s/thing/service/property/set,1\r"
+  #define AT_MQTT_SUB_SUCC      "+MQTTEVENT:2,SUBSCRIBE,SUCCESS"
+  #define AT_MQTT_CLOSE          "AT+MQTTCLOSE\r"
+  
+  #define AT_BUZZER_MUTE           "\"Buzzer\":2"
+  
+  
+  #define DEFAULT_TIMEOUT       10   //默认超时时间
+  #define BUF_LEN               100  //缓冲区长度
+  #define BUF_LEN_DATA          190  //缓冲区数据长度
+  
+  char      ATcmd[BUF_LEN];       //AT指令缓冲区
+  char      ATbuffer[BUF_LEN];    //AT返回数据缓冲区
+  char      ATdata[BUF_LEN_DATA]; //AT数据缓冲区
+  #define BuzzerPin             3 //蜂鸣器引脚
+  int   Buzzer = OFF;             //蜂鸣器状态
+  
+  String data;  //串口数据
+  float temperature=0; //温度
+  int photon=0; //光照强度
+  double frequency=1; 
+  int delay_seconds;
+  int ColorGreen=0;
+  int ColorRed=0; 
+  int ColorBlue=0; 
+  int IsFlickering=0;
+  int IsBreathing=0;
+  int LightSwitch=0;
+  StaticJsonDocument<300> doc; //创建一个json文档
+  String inString;//串口数据
+  
+  void setup() {
+    //Serial Initial
+    Serial3.begin(115200);
+    Serial.begin(115200);
+    String inString="";
+    pinMode(7,OUTPUT);  //RGB引脚
+    pinMode(8,OUTPUT); 
+    pinMode(9,OUTPUT); 
+    pinMode(13,OUTPUT); //板载led
+    
+    //  BMP module test
+    Serial.println(F("BMP280 Forced Mode Test."));
+    if (!bmp.begin(0x76,0x58)) {
+      Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
+                        "try a different address!"));
+      while (1) delay(10);
+    }
+    bmp.setSampling(Adafruit_BMP280::MODE_FORCED,     /* Operating Mode. */
+                    Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                    Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                    Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                    Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+  
+    
+    //  Pin_init();
+    //BEEP(1);//蜂鸣器响一声
+    
+    //wifi连接和阿里云连接
+    while(1)
+    {
+      if(!WiFi_init())continue;
+     // BEEP(2);
+      Serial.println("WiFi init success");
+      if(!Ali_connect())continue;
+      break;
+    }
+    //BEEP(3);
+    Serial.println("Ali connect success");
+  }
+  
+  
+  //设置了一个解析的函数，利用库ArdunioJson版本是6.2.13
+  double parse(String data){
+  
+    //找到“{”，并截断到倒数第二个字符
+    int commaPosition;  
+    commaPosition = data.indexOf('{');
+    data= data.substring(commaPosition, data.length());
+    Serial.println(data);
+    
+    // Deserialize the JSON document
+    DeserializationError error = deserializeJson(doc, data);
+  
+    // 错误处理
+    if (error) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(error.f_str());
+      return;
+    }
+  
+    // 获取数据
+    const char* method  = doc["method"];
+    const char* id      = doc["id"];
+    frequency  = doc["params"]["Frequency"];
+    IsFlickering=doc["params"]["IsFlickering"];
+    IsBreathing=doc["params"]["IsBreathing"];
+    ColorRed=doc["params"]["ColorRed"];
+    ColorGreen=doc["params"]["ColorGreen"];
+    ColorBlue=doc["params"]["ColorBlue"];
+    LightSwitch=doc["params"]["LightSwitch"];
+  
+    // 打印数据
+    Serial.println("==============Start================");
+    Serial.print("Frequency:");
+    Serial.println(frequency);
+    Serial.print("IsFlickering:");
+    Serial.println(IsFlickering);
+    Serial.print("IsBreathing:");
+    Serial.println(IsBreathing);
+    Serial.print("ColorRed:");
+    Serial.println(ColorRed);
+    Serial.print("ColorGreen:");
+    Serial.println(ColorGreen);
+    Serial.print("ColorBlue:");
+    Serial.println(ColorBlue);
+    Serial.print("LightSwitch:");
+    Serial.println(LightSwitch);
+    return frequency;
+  }
+    
+  void loop() {
+      delay(10);
+      while (1)
+      {
+        if (bmp.takeForcedMeasurement()) {
+          // can now print out the new measurements
+          temperature=bmp.readTemperature();
+          Serial.print(F("Temperature = "));
+          Serial.print(bmp.readTemperature());
+          Serial.println(" *C");
+        } 
+        else {
+          Serial.println("Forced measurement failed!");
+        }
+        photon = analogRead(A2);
+        Serial.print("Photon:");
+        Serial.println(photon);
+        if(Update()) Serial.println("Update success");
+        Serial.println("============================");
+        while(Serial3.available()){ //清楚串口缓冲区
+          Serial3.read();
+        }
+  //闪烁灯
+        unsigned long starmil=millis();
+        unsigned long currmil;
+        do{
+            if (Serial3.available() > 0) {
+                // 读取并处理串口数据
+                handleSerialData();
+              }
+            if (LightSwitch){//闪烁灯实现
+              delay(delay_seconds/2);
+              analogWrite(9, ColorBlue);
+              analogWrite(7, ColorGreen);
+              analogWrite(8, ColorRed);
+  
+              delay(delay_seconds/2);
+              analogWrite(9, 0);
+              analogWrite(7, 0);
+              analogWrite(8, 0);   
+          }
+          currmil=millis();
+        }while (currmil-starmil<10000);
+      }
+    }
+  
+  
+  void handleSerialData() {
+    delay(10);
+    inString = Serial3.readString();  // 读取串口数据
+    if (inString != "") {
+      // 在这里处理接收到的串口数据
+      data=inString;
+      Serial.println(inString);
+    }
+      frequency=parse(data);   //解析数据并打印
+    if (frequency==0) { frequency=1;}
+    Serial.print("Frequency:");
+    Serial.println(frequency);  
+    delay_seconds=1.0/frequency*1000; //单位为毫秒
+    Serial.print("delay_seconds(ms):");
+    Serial.println(delay_seconds);
+    if(IsBreathing && IsFlickering){//防止两个同时为真
+        IsBreathing==0;
+        Serial.println("IsBreathing and IsFlickering can't be true at the same time,set IsBreathing to false");
+    }
+  }
+  
+  bool Update()
+  {
+    bool flag;
+    int  frac;
+    int zs;
+    int len;
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_PUB_SET,ProductKey,DeviceName);
+    flag = check_send_cmd(ATcmd,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag) {
+      Serial.println("send AT_MQTT_PUB_SET false");
+      return false;
+    }
+  
+    cleanBuffer(ATdata,BUF_LEN_DATA);
+    zs=(int) temperature;
+    frac=(temperature-zs)*100;
+    len = snprintf(ATdata,BUF_LEN_DATA,My_JSON_PACK_1,zs,frac,photon);
+  
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_PUB_DATA,len-1);
+    flag=0;
+    flag = check_send_cmd(ATcmd,">",DEFAULT_TIMEOUT);
+    if(flag) {
+      flag = check_send_cmd(ATdata,AT_MQTT_PUB_DATA_SUCC,20);
+      
+    } 
+    else {
+      Serial.println("> accept wrong");
+      return false;
+    }
+      return true;
+  
+  }
+  
+  
+  
+  //该函数通过调用check_send_cmd函数发送AT指令并检查返回值，进行阿里云连接
+  bool Ali_connect()
+  {
+    bool flag;
+    bool flag1;
+  
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_AUTH,DeviceName,ProductKey,password);
+    flag = check_send_cmd(ATcmd,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag) {
+      Serial.println("send AT_MQTT_AUTH false");
+      return false;
+    }
+  
+  
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_CID,clientIDstr,timestamp);
+    flag = check_send_cmd(ATcmd,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag){
+      Serial.println("send AT_MQTT_CID false");
+      return false;
+    }
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_SOCK,ProductKey);
+    flag = check_send_cmd(ATcmd,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag){
+      Serial.println("send AT_MQTT_SOCK false");
+      return false;
+    }
+    flag = check_send_cmd(AT_MQTT_AUTOSTART_OFF,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag){
+      Serial.println("send AT_MQTT_AUTOSTART_OFF false");
+      return false;
+    }
+    flag = check_send_cmd(AT_MQTT_ALIVE,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag){
+      Serial.println("send AT_MQTT_ALIVE false");
+      return false;
+    }
+    flag = check_send_cmd(AT_MQTT_START,AT_MQTT_START_SUCC,50);
+    if(!flag){
+      Serial.println("send AT_MQTT_START false");
+      return false;
+    }
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_PUB_SET,ProductKey,DeviceName);
+    flag = check_send_cmd(ATcmd,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag){
+      Serial.println("send AT_MQTT_PUB_SET false");
+      return false;
+    }
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_SUB,ProductKey,DeviceName);
+    flag = check_send_cmd(ATcmd,AT_MQTT_SUB_SUCC,DEFAULT_TIMEOUT);
+    // if(!flag){ BEEP(4);flag1 = check_send_cmd(AT_MQTT_CLOSE,AT_OK,DEFAULT_TIMEOUT);}
+    return flag;
+  }
+  
+  
+  //该函数通过调用check_send_cmd函数发送AT指令并检查返回值，初始化WiFi模块
+  bool WiFi_init()
+  {
+    bool flag;
+  
+    flag = check_send_cmd(AT,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag)return false;
+    
+    flag = check_send_cmd(AT_REBOOT,AT_OK,20);
+    if(!flag)return false;
+    delay(5000);
+  
+    flag = check_send_cmd(AT_ECHO_OFF,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag)return false;
+  
+    flag = check_send_cmd(AT_MSG_ON,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag)return false;
+    
+    cleanBuffer(ATcmd,BUF_LEN);//清理缓冲区，然后使用snprintf函数将WiFi启动的AT命令、WiFi的SSID和密码格式化到ATcmd缓冲区。
+    snprintf(ATcmd,BUF_LEN,AT_WIFI_START,wifi_ssid,wifi_psw);//snprintf是一个C语言中的函数，用于将格式化的数据写入字符串
+    flag = check_send_cmd(ATcmd,AT_WIFI_START_SUCC,20);
+    return flag;
+  }
+  
+  
+  //发送AT指令并检查返回值
+  bool check_send_cmd(const char* cmd,const char* resp,unsigned int timeout)
+  {
+    int i = 0;
+    unsigned long timeStart;
+    timeStart = millis();
+    cleanBuffer(ATbuffer,BUF_LEN);
+    Serial3.print(cmd);
+    Serial3.flush();//阻塞程序，等到所有发送完后程序再继续
+    while(1)
+    {
+      while(Serial3.available())//如果串行端口有可用数据
+      {
+        ATbuffer[i++] = Serial3.read();//就读取数据并存入缓冲区
+        if(i >= BUF_LEN)i = 0;//如果缓冲区满了，就从头开始覆盖。
+      }
+      if(NULL != strstr(ATbuffer,resp))break;
+      if((unsigned long)(millis() - timeStart > timeout * 1000)) break;//超时
+    }
+    
+    if(NULL != strstr(ATbuffer,resp))return true;
+    return false;
+  }
+  
+  void cleanBuffer(char *buf,int len)
+  {
+    for(int i = 0;i < len;i++)
+    {
+      buf[i] = '\0';
+    } 
+  }
+  
+  void BEEP(int b_time)
+  {
+    for(int i = 1;i <= b_time;i++)
+    { 
+      digitalWrite(BuzzerPin,HIGH);
+      delay(100);
+      digitalWrite(BuzzerPin,LOW);
+      delay(100);
+    }
+  }
+  void Buzzer_mute()
+  {
+    Buzzer_OFF;
+    Buzzer = MUTE;
+  }
+    
+\end{lstlisting}  
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

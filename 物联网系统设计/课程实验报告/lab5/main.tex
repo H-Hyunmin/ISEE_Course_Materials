@@ -1,0 +1,420 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    lineskip={-1.5pt},
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验介绍}
+\subsection{实验要求}
+
+\begin{enumerate}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 在设备端直接采样温度的数据，将数据发送云端，十秒更新一次。（周期性上报温度数据）
+    \item 设置温度报警并推送钉钉群。当温度>25℃时，自动推送报警信息到钉钉群。
+    \item 在事件响应中创建定时开关灯的场景，实现在指定时间开启LED，在特定时间关闭LED。
+\end{enumerate}
+\subsection{实验平台}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 阿里云物联网平台
+    \item Arduino硬件平台
+\end{itemize}
+
+
+\section{任务一:采样温度数据，发送云端}
+\subsection{实验过程}
+\subsection*{实验代码}
+    
+\begin{lstlisting}[language=C++]
+    //自定义的宏
+    #define My_JSON_PACK_1        "{\"id\":\"66666\",\"version\":\"1.0\",\"method\":\"thing.event.property.post\",\"params\":{\"Temperature\":%d.%02d}}\r"
+
+    //loop中的上传温度代码
+    if (bmp.takeForcedMeasurement()) {
+        // can now print out the new measurements
+        temperature=bmp.readTemperature();
+        Serial.print(F("Temperature = "));
+        Serial.print(bmp.readTemperature());
+        Serial.println(" *C");
+      } 
+      else {
+        Serial.println("Forced measurement failed!");
+      }
+      if(Update()) Serial.println("Update success");
+\end{lstlisting}
+
+温度上传函数如下：
+    \begin{lstlisting}[language=C++]
+bool Update()
+    {
+    bool flag;
+    int  frac;
+    int zs;
+    int len;
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_PUB_SET,ProductKey,DeviceName);
+    flag = check_send_cmd(ATcmd,AT_OK,DEFAULT_TIMEOUT);
+    if(!flag) {
+        Serial.println("send AT_MQTT_PUB_SET false");
+        return false;
+    }
+
+    cleanBuffer(ATdata,BUF_LEN_DATA);
+    zs=(int) temperature;
+    frac=(temperature-zs)*100;
+    len = snprintf(ATdata,BUF_LEN_DATA,My_JSON_PACK_1,zs,frac);
+
+    cleanBuffer(ATcmd,BUF_LEN);
+    snprintf(ATcmd,BUF_LEN,AT_MQTT_PUB_DATA,len-1);
+    flag=0;
+    flag = check_send_cmd(ATcmd,">",DEFAULT_TIMEOUT);
+    if(flag) {
+        flag = check_send_cmd(ATdata,AT_MQTT_PUB_DATA_SUCC,20);
+        
+    } 
+    else {
+        Serial.println("> accept wrong");
+        return false;
+    }
+        return true;
+}
+    \end{lstlisting}
+
+
+
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 连接硬件，烧写程序，打开串口监视器
+    \item 在串口监视器中可以看到设备上传的温度数据
+    \item 打开阿里云平台，可以看到设备已经成功连接
+    \item 在监控运维中可以看到设备上传的温度数据
+\end{itemize}
+
+
+
+
+\subsection{实验结果}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-22_15-46-55.png}
+    \caption{串口显示}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-22_15-46-17.png}
+    \caption{阿里云接受温度数据}
+    \label{fig:enter-label}
+\end{figure}
+
+
+
+
+\section{任务二:设置温度报警并推送钉钉群}
+
+\subsection{实验过程}
+\begin{itemize}[]
+    \item 在钉钉群中设置机器人
+    \begin{figure}[H]
+        \centering
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{figures/fig/Snipaste_2024-03-21_21-30-21.png}
+            \caption{设置钉钉机器人}
+            \label{fig:enter-label1}
+        \end{minipage}\hfill
+        \begin{minipage}{0.45\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{figures/fig/Snipaste_2024-03-21_21-30-37.png}
+            \caption{设置钉钉机器人}
+            \label{fig:enter-label2}
+        \end{minipage}
+    \end{figure}
+
+    \item 在阿里云上-事件响应-联系人管理中-创建事件联系人
+    \item 把钉钉机器人的webhook地址和密钥填入
+    \item 在事件响应，场景管理中创建温度报警场景
+    \item 设置好场景定义和场景动作，立即启用场景
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.5\textwidth]{figures/fig/Snipaste_2024-03-21_21-32-41.png}
+        \caption{阿里云创建联系人}
+        \label{fig:enter-label}
+    \end{figure} 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-03-21_21-35-04.png}
+        \caption{温度报警场景创建}
+        \label{fig:enter-label}
+    \end{figure} 
+    \item 加热传感器到25摄氏度以上，可以在钉钉中看到消息推送
+\end{itemize}
+
+\subsection{实验结果}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-03-22_15-58-37.png}
+    \caption{温度报警日志}
+    \label{fig:enter-label}
+\end{figure} 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =1.0\textwidth]{figures/fig/Snipaste_2024-03-22_15-58-58.png}
+    \caption{钉钉收到温度报警}
+    \label{fig:enter-label}
+\end{figure} 
+
+
+
+
+
+\section{任务三:创建定时开关灯的场景，实现在指定时间开启 LED}
+\subsection{实验过程}
+
+\subsection*{实验代码}
+    
+\begin{lstlisting}[language=C++]
+    //定时开启闪烁灯或关闭
+    unsigned long starmil=millis();
+    unsigned long currmil;
+    do{
+        if (Serial3.available() > 0) {
+            handleSerialData();//串口数据处理函数
+          }
+        if (IsFlickering){//闪烁灯实现
+          delay(delay_seconds/2);
+          analogWrite(9, ColorBlue);
+          analogWrite(7, ColorGreen);
+          analogWrite(8, ColorRed);
+
+          delay(delay_seconds/2);
+          analogWrite(9, 0);
+          analogWrite(7, 0);
+          analogWrite(8, 0);   
+      }
+      currmil=millis();
+    }while (currmil-starmil<10000);//10s计时结束后要发送一次温度数据
+  
+\end{lstlisting}
+
+
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    
+    \item 在事件响应中创建定时开关灯的场景，设置好参数，开启事件。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.95\textwidth]{figures/fig/Snipaste_2024-03-21_21-37-41.png}
+        \caption{设置开关灯场景}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 同理设置好定时关灯场景，启用场景
+\end{itemize}
+
+\subsection{实验结果}
+可以看到定时开灯和定时关灯场景都成功执行，设备上的灯定时开启闪烁，定时关闭闪烁。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.95\textwidth]{figures/fig/Snipaste_2024-03-22_16-11-24.png}
+    \caption{定时开灯}
+    \label{fig:enter-label}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.95\textwidth]{figures/fig/Snipaste_2024-03-22_16-13-09.png}
+    \caption{定时关灯}
+    \label{fig:enter-label}
+\end{figure}
+\newpage
+\subsection*{附录}
+实验关键代码如下：
+\begin{lstlisting}[language=C++]
+//setup部分代码
+    void setup() {
+        //Serial Initial
+        Serial3.begin(115200);
+        Serial.begin(115200);
+        String inString="";
+        pinMode(7,OUTPUT);  //RGB引脚
+        pinMode(8,OUTPUT); 
+        pinMode(9,OUTPUT); 
+        pinMode(13,OUTPUT); //板载led
+        
+        //  BMP module test
+        Serial.println(F("BMP280 Forced Mode Test."));
+        if (!bmp.begin(0x76,0x58)) {
+          Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
+                            "try a different address!"));
+          while (1) delay(10);
+        }
+        bmp.setSampling(Adafruit_BMP280::MODE_FORCED,     /* Operating Mode. */
+                        Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                        Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                        Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                        Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+      
+        
+        //  Pin_init();
+        BEEP(1);//蜂鸣器响一声
+        
+        //wifi连接和阿里云连接
+        while(1)
+        {
+          if(!WiFi_init())continue;
+          BEEP(2);
+          Serial.println("WiFi init success");
+          if(!Ali_connect())continue;
+          break;
+        }
+        BEEP(3);
+        Serial.println("Ali connect success");
+      }
+      
+//————————————————————————————————————————————————
+void loop() {
+    delay(10);
+    while (1)
+    {
+    //温度传感器上传
+      if (bmp.takeForcedMeasurement()) {
+        // can now print out the new measurements
+        temperature=bmp.readTemperature();
+        Serial.print(F("Temperature = "));
+        Serial.print(bmp.readTemperature());
+        Serial.println(" *C");
+      }
+      else {
+        Serial.println("Forced measurement failed!");
+      }
+      if(Update()) Serial.println("Update success");
+      Serial.println("============================");
+      while(Serial3.available()){ //清楚串口缓冲区
+        Serial3.read();
+      }
+//闪烁灯
+      unsigned long starmil=millis();
+      unsigned long currmil;
+      do{
+          if (Serial3.available() > 0) {
+              // 读取并处理串口数据
+              handleSerialData();
+            }
+          if (IsFlickering){//闪烁灯实现
+            delay(delay_seconds/2);
+            analogWrite(9, ColorBlue);
+            analogWrite(7, ColorGreen);
+            analogWrite(8, ColorRed);
+
+            delay(delay_seconds/2);
+            analogWrite(9, 0);
+            analogWrite(7, 0);
+            analogWrite(8, 0);   
+        }
+        currmil=millis();
+      }while (currmil-starmil<10000);
+    }
+  }
+//————————————————————————————————————————————————
+//upload函数
+bool Update()
+{
+  bool flag;
+  int  frac;
+  int zs;
+  int len;
+  cleanBuffer(ATcmd,BUF_LEN);
+  snprintf(ATcmd,BUF_LEN,AT_MQTT_PUB_SET,ProductKey,DeviceName);
+  flag = check_send_cmd(ATcmd,AT_OK,DEFAULT_TIMEOUT);
+  if(!flag) {
+    Serial.println("send AT_MQTT_PUB_SET false");
+    return false;
+  }
+
+  cleanBuffer(ATdata,BUF_LEN_DATA);
+  zs=(int) temperature;
+  frac=(temperature-zs)*100;
+  len = snprintf(ATdata,BUF_LEN_DATA,My_JSON_PACK_1,zs,frac);
+
+  cleanBuffer(ATcmd,BUF_LEN);
+  snprintf(ATcmd,BUF_LEN,AT_MQTT_PUB_DATA,len-1);
+  flag=0;
+  flag = check_send_cmd(ATcmd,">",DEFAULT_TIMEOUT);
+  if(flag) {
+    flag = check_send_cmd(ATdata,AT_MQTT_PUB_DATA_SUCC,20);
+    
+  } 
+  else {
+    Serial.println("> accept wrong");
+    return false;
+  }
+    return true;
+}
+//————————————————————————————————————————————————
+//串口数据处理函数
+void handleSerialData() {
+  delay(10);
+  inString = Serial3.readString();  // 读取串口数据
+  if (inString != "") {
+    // 在这里处理接收到的串口数据
+    data=inString;
+    Serial.println(inString);
+  }
+    frequency=parse(data);   //解析数据并打印
+  if (frequency==0) { frequency=1;}
+  Serial.print("Frequency:");
+  Serial.println(frequency);  
+  delay_seconds=1.0/frequency*1000; //单位为毫秒
+  Serial.print("delay_seconds(ms):");
+  Serial.println(delay_seconds);
+  if(IsBreathing && IsFlickering){//防止两个同时为真
+      IsBreathing==0;
+      Serial.println("IsBreathing and IsFlickering can't be true at the same time,set IsBreathing to false");
+  }
+}
+
+\end{lstlisting}
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

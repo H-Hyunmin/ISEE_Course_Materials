@@ -1,0 +1,32 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "C:\\Users\\Huang Xianmin\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "C:\\Users\\Huang Xianmin\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\mega"
+  },
+  {
+    "Sourcefile": "C:\\Users\\Huang Xianmin\\Desktop\\物联网系统设计\\课程实验与相关资料\\lab4\\threecolor_light\\build\\sketch\\threecolor_light.ino.cpp",
+    "Include": "ArduinoJson.h",
+    "Includepath": "D:\\Documents\\Arduino\\libraries\\ArduinoJson\\src"
+  },
+  {
+    "Sourcefile": "C:\\Users\\Huang Xianmin\\Desktop\\物联网系统设计\\课程实验与相关资料\\lab4\\threecolor_light\\build\\sketch\\threecolor_light.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Huang Xianmin\\Desktop\\物联网系统设计\\课程实验与相关资料\\lab4\\threecolor_light\\build\\sketch\\connect.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\Users\\Huang Xianmin\\Desktop\\物联网系统设计\\课程实验与相关资料\\lab4\\threecolor_light\\build\\sketch\\connect.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

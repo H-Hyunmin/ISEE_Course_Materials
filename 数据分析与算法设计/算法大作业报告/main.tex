@@ -1,0 +1,401 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+\section{实验介绍}
+\subsection*{实验简介}
+本课程为《大数据》实验课程，模拟高校学生系统，在华为MRS上进行HBase操作，通过创建表、对表进行CURD操作、创建预分region表及Filter过滤器的使用，让学员达到在MRS上熟练掌握KV查询.
+\subsection*{实验流程}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{figures/fig/图片1.png}
+    \caption{实验流程图}
+    \label{fig:1}
+\end{figure}
+
+\subsection*{实验环境}
+为了满足基于HBase-MRS实验需要，提前注册华为云账号并充值，确保通过PUTTY访问外网畅通。购买MapReduce 1个
+购买弹性IP 1个
+
+
+\section{实验准备：申请弹性公网IP和创建虚拟云}
+\subsection*{申请弹性公网IP}
+\begin{enumerate}
+    \item 选择弹性公网IP
+    \item 点击右上角的“购买弹性公网IP”
+    \item 相关配置如图
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/fig/Snipaste_2024-06-06_21-08-56.png}
+        \caption{购买弹性公网IP}
+        \label{fig:4}
+    \end{figure}
+    \item 查看购买的弹性公网IP
+\end{enumerate}
+
+\subsection*{创建虚拟云}
+
+\begin{enumerate}
+    \item 进入虚拟私有云控制台后，点击右上角的“创建虚拟私有云”。
+    \item 配置基本信息
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.78\textwidth]{figures/fig/Snipaste_2024-06-06_19-20-25.png}
+        \caption{配置虚拟云}
+        \label{fig:6}
+    \end{figure}
+    \item 查看创建的VPC
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/fig/Snipaste_2024-06-06_19-20-43.png}
+        \caption{查看创建的VPC}
+        \label{fig:7}
+    \end{figure}
+\end{enumerate}
+
+
+
+\section{实验一：购买MapReduce服务}
+
+
+\begin{enumerate}
+    \item 打开MRS服务申请集群
+    \item 集群配置：配置如下
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.78\textwidth]{figures/fig/Snipaste_2024-06-06_20-35-03.png}
+        \caption{集群配置}
+        \label{fig:8}
+    \end{figure}
+    \item 点击集群名称，“前往Manager”。输入用户名admin及密码,点击“登录”，进入MRS Manager
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.78\textwidth]{figures/fig/Snipaste_2024-06-06_21-42-18.png}
+        \caption{进入MRS Manager}
+        \label{fig:8}
+    \end{figure}    
+\end{enumerate}
+
+
+\section{实验二：远程登录云服务器操作HBase}
+
+\begin{enumerate}
+    \item 配置安全组，选择“节点管理”，点击含有“master1”的节点，在弹出页面中选择“安全组”，点击“更改安全组规则”，选择“入方向规则”，点击“一键放通”，确认即可。
+    \item 远程登录master节点，在安全组配置项，点击右上方“远程登录”，选择cloudshell登录。输入密码，点击连接即可。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_21-45-14.png}
+        \caption{远程连接登入}
+        \label{fig:8}
+    \end{figure}
+    \item 设置环境变量
+    \begin{verbatim}
+# source env_file 
+# hbase shell
+    \end{verbatim}
+    \item 创建基表
+    \begin{verbatim}
+# create 'cx_table_stu01', 'cf1'
+    \end{verbatim}
+    \item list：显示所有的表
+    \begin{verbatim}
+# create 'cx_table_stu01', 'cf1'
+    \end{verbatim}
+    如下图，创建了一个名为cx\_table\_stu01的空表，list指令显示了当前有一个表cx\_table\_stu01
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-00-04.png}
+        \caption{创建和显示表}
+        \label{fig:8}
+    \end{figure}
+    \item 增加数据
+    \begin{verbatim}
+# put 'cx_table_stu01','20200001','cf1:name','tom'
+# put 'cx_table_stu01','20200001','cf1:gender','male'
+# put 'cx_table_stu01','20200001', 'cf1:age','20'
+# put 'cx_table_stu01','20200002', 'cf1:name','hanmeimei'
+# put 'cx_table_stu01','20200002', 'cf1:gender','female'
+# put 'cx_table_stu01','20200002', 'cf1:age','19'
+# scan 'cx_table_stu01'
+    \end{verbatim}
+    如下图，向表中添加了两条数据。第一条数据的rowkey为20200001，包含name、gender、age三个列族，第二条数据的rowkey为20200002，包含name、gender、age三个列族。scan指令显示了表中的所有数据
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-01-09.png}
+        \caption{向表中添加数据}
+        \label{fig:8}
+    \end{figure} 
+    \item Scan方式查询数据
+    \begin{verbatim}
+#  scan 'cx_table_stu01',{COLUMNS=>'cf1'}
+# scan 'cx_table_stu01',{COLUMNS=>'cf1:name'}
+    \end{verbatim}
+    如下图，scan指令可以查询表中的所有数据，也可以指定列族查询数据
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-04-46.png}
+        \caption{scan查询数据结果}
+        \label{fig:8}
+    \end{figure} 
+    \item Get方式查询数据
+    \begin{verbatim}
+# get 'cx_table_stu01','20200001'
+# get 'cx_table_stu01','20200001','cf1:name'
+    \end{verbatim}
+    \item 指定条件查询数据
+    \begin{verbatim}
+#  scan 'cx_table_stu01',{STARTROW=>'20200001','LIMIT'=>2,STOPROW=>'20200002'}
+    \end{verbatim}
+    如下图，get指令可以查询指定rowkey的数据，也可以指定列族查询数据。scan指令可以指定条件查询数据，可以指定起始行、终止行、查询条数等条件
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-07-53.png}
+        \caption{get与指定条件查询数据结果}
+        \label{fig:8}
+    \end{figure} 
+    \item 过滤器查询
+    \begin{verbatim}
+# scan 'cx_table_stu01',{FILTER=>"ValueFilter(=,'binary:20')"}
+# scan 'cx_table_stu01',{FILTER=>"ValueFilter(=,'binary:tom')"}
+# scan 'cx_table_stu01', {FILTER => "ColumnPrefixFilter('gender')"}
+# scan 'cx_table_stu01',{FILTER=>"ColumnPrefixFilter('name') 
+    AND ValueFilter(=,'binary:hanmeimei')"}
+    \end{verbatim}    
+    如下图，过滤器查询可以通过指定条件查询数据，可以通过值、列族、列名等条件查询数据
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-18-28.png}
+        \caption{过滤器查询结果}
+        \label{fig:8}
+    \end{figure} 
+    \item 查询多版本数据，Hbase可以存储历史版本的数据，通过设定版本号VERSIONS值，版本号为几就是存储几个版本。
+    \begin{verbatim}
+    增加数据执行命令：
+# put 'cx_table_stu01','20200001','cf1:name','ZhangSan'
+# put 'cx_table_stu01','20200001','cf1:name','LiSi'
+# put 'cx_table_stu01','20200001','cf1:name','WangWu'
+    然后get时指定多版本查询：
+# get 'cx_table_stu01','20200001',{COLUMNS=>'cf1',VERSIONS=>5}
+    \end{verbatim}      
+    如下图，添加不同版本的数据，然后查询多版本数据，可以看到get指令只查询了20200001版本的数据 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-22-45.png}
+        \caption{多版本查询}
+        \label{fig:8}
+    \end{figure}    
+    \item 查看表的属性，执行语句：
+    \begin{verbatim}
+#desc 'cx_table_stu01'
+    \end{verbatim}       
+    如下图，可以看到表的属性，包括表名、列族、版本数等信息
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-30-56.png}
+        \caption{表属性查看}
+        \label{fig:8}
+    \end{figure} 
+
+    \item 查看多个版本的数据:需要修改表的VERSIONS值（或者在建表的时候就指定VERSIONS值）
+    \begin{verbatim}
+# alter 'cx_table_stu01',{NAME=>'cf1','VERSIONS'=>5}
+# put 'cx_table_stu01','20200001','cf1:name','ZhangSan' 
+# put 'cx_table_stu01','20200001','cf1:name','LiSi'
+# put 'cx_table_stu01','20200001','cf1:name','WangWu'
+# get 'cx_table_stu01','20200001',{COLUMN=>'cf1',VERSIONS=>5}
+    \end{verbatim}  
+    alter指令可以修改表的属性，包括列族、版本数等信息。如下图，修改了表的版本数为5，然后添加了不同版本的数据，查询多版本数据，可以看到get指令查询了20200001版本的数据
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-32-57.png}
+        \caption{多版本数据查询}
+        \label{fig:8}
+    \end{figure} 
+    
+    
+    \item 删除数据
+    \begin{verbatim}
+删除某列族下数据，执行命令：
+# delete 'cx_table_stu01','20200002','cf1:age'
+# get 'cx_table_stu01','20200002'
+ 
+删除整行数据，执行命令：
+# deleteall 'cx_table_stu01','20200002'
+# get 'cx_table_stu01','20200002'
+    \end{verbatim} 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-36-13.png}
+        \caption{删除表中数据}
+        \label{fig:8}
+    \end{figure} 
+
+
+    \item 删除表
+    \begin{verbatim}
+用drop命令可以删除表。但是在删除一个表之前必须先将其禁用。
+第一步：disable“表名称”
+# disable ‘cx_table_stu01’
+第二步：drop“表名称”
+# drop ‘cx_table_stu01’
+    \end{verbatim} 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-41-23.png}
+        \caption{删除表}
+        \label{fig:8}
+    \end{figure} 
+
+\end{enumerate}
+
+
+
+
+
+\section{实验三：创建预分region表}
+HBase默认建表时只有一个region，这个region的rowkey是没有边界的，即没有startkey，也没有endkey。在数据写入时，所有数据都会写入这个默认的region，随着数据量的不断增加，此region已经不能承受不断增长的数据量，会进行split，分成2个region。在此过程中，会产生两个问题：
+\begin{enumerate}
+    \item 数据往一个region上写,会有写热点问题。
+    \item region split会消耗宝贵的集群I/O资源。
+\end{enumerate}
+
+
+基于此我们可以在建表的时候，创建多个空region，并确定每个region的起始和终止rowky，这样只要我们的rowkey设计能均匀的命中各个region，就不会存在写热点问题，自然split的几率也会大大降低。hbase提供了两种pre-split算法：HexStringSplit和UniformSplit，前者适用于十六进制字符的rowkey，后者适用于随机字节数组的rowkey。以rowkey切分，随机分为4个region。
+以rowkey切分，随机分为4个region。
+
+\begin{enumerate}
+    \item 创建表执行命令：
+    \begin{verbatim}
+# create 'cx_table_stu02','cf2',{NUMREGIONS => 4,SPLITALGO =>'UniformSplit'}
+Region命名格式：[table],[region start key],[region id]
+    \end{verbatim} 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-45-45.png}
+        \caption{创建表}
+        \label{fig:8}
+    \end{figure} 
+
+
+    \item 登录HBase WebUI查看表的分区情况\\
+    MRS Manager界面，点击“HBase”服务,点击HMaster(主)进入HBase UI,“User Tables”下点击创建好的表名“cxtablestu02”
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/fig/Snipaste_2024-06-06_22-50-22.png}
+        \caption{查看该表分区情况}
+        \label{fig:8}
+    \end{figure} 
+
+
+    \item 指定region的startKey和endKey
+    \begin{verbatim}
+创建表执行命令：
+# create 'cx_table_stu03', 'cf3', SPLITS => ['10000', '20000', '30000']
+    \end{verbatim} 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{figures/fig/Snipaste_2024-06-06_22-54-47.png}
+        \caption{创建表}
+        \label{fig:8}
+    \end{figure} 
+    同理，查看该表分区情况：
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/fig/Snipaste_2024-06-06_22-55-08.png}
+        \caption{查看该表分区情况}
+        \label{fig:8}
+    \end{figure} 
+\end{enumerate}
+
+
+\section{实验结束：云服务资源释放}
+
+\subsection*{释放MapReduce服务}
+\begin{enumerate}
+    \item 进入MRS控制台，点击集群后的删除按钮
+\end{enumerate}
+
+\subsection*{释放网络资源VPC}
+\begin{enumerate}
+    \item 进入VPC控制台界面
+    \item 删除IP:点击“弹性公网IP和带宽”，选择弹性公网IP，选中所有IP，点击释放按钮.
+    \item 删除安全组规则：点击“访问控制”，选择安全组，点击安全组名称，选择入方向规则，点击列表后的删除按钮。
+\end{enumerate}
+
+
+
+
+\section{实验总结与心得体会}
+
+在这次KV查询实验中，我通过模拟高校学生系统，在华为MRS平台上进行了HBase操作，主要包括创建表、CURD操作、创建预分region表及使用Filter过滤器等内容。整个实验过程让我深刻理解了HBase的基础操作以及在实际应用中的重要性。
+
+首先，实验准备阶段，我体验了从申请弹性公网IP到创建虚拟私有云的完整过程。在此过程中，我通过华为云控制台完成了相关配置，成功购买了弹性公网IP和虚拟私有云。这不仅让我熟悉了华为云平台的操作，也让我认识到在大数据处理环境中，网络资源的配置和管理是基础且关键的一步。通过这一过程，我深刻体会到了云计算资源的灵活性和便捷性，同时也学会了如何高效地管理和使用这些资源。
+
+在购买MapReduce服务并配置集群时，我进一步加深了对大数据处理框架的理解。通过配置集群并进入MRS Manager，我了解了集群管理的基本操作。这一步骤让我认识到，合理配置和管理集群对于大数据处理的效率和性能至关重要。在实际操作中，我学会了如何根据实验要求配置集群参数，以及如何通过MRS Manager进行集群管理和监控。
+
+实验二的重点是远程登录云服务器并进行HBase操作。这部分内容让我对HBase的基本操作有了全面的了解。从配置安全组、远程登录master节点到设置环境变量，再到创建表、增加数据、查询数据、删除数据等一系列操作，每一步都让我对HBase的工作原理有了更深入的理解。例如，通过创建一个简单的表并向其中添加数据，我体会到了HBase在处理大规模数据时的高效性和灵活性。此外，通过使用不同的查询命令（如scan和get），我学会了如何根据具体需求灵活查询数据。而在使用过滤器进行数据查询时，我认识到了HBase在数据过滤和查询方面的强大功能，这对于实际应用中快速定位和提取数据非常有帮助。
+
+实验三中创建预分region表的操作让我认识到在大数据处理过程中如何避免写热点问题。通过预先定义多个region并设置rowkey的起始和终止值，我们可以有效分散数据写入的压力，避免单一region过载问题。这不仅提高了数据写入的效率，也减少了region split对集群资源的消耗。通过这一操作，我深刻体会到在实际应用中，合理设计和管理数据存储结构对于提高系统性能至关重要。
+
+在实验过程中遇到的一些问题和挑战也让我受益匪浅。例如，在配置虚拟私有云时，由于对华为云平台的操作不够熟悉，我曾一度在网络配置上遇到困难。但通过查阅相关资料并不断尝试，我最终解决了这些问题。这不仅增强了我的问题解决能力，也让我对华为云平台有了更深入的了解。
+
+此外，在操作HBase时，由于对HBase的命令不够熟悉，我曾在数据查询和过滤器使用上遇到了一些问题。但通过反复练习和实验，我逐渐掌握了这些命令的使用方法。这让我认识到，在学习和掌握新技术时，动手实践和反复操作是非常重要的。
+
+通过这次实验，我不仅掌握了HBase的基本操作和使用技巧，也对大数据处理的整个流程有了更全面的理解。从申请和配置云资源，到管理和操作HBase，再到解决实际操作中遇到的问题，每一步都让我受益匪浅。这些知识和技能不仅对我今后的学习和工作非常有帮助，也让我对大数据处理技术充满了兴趣和信心。
+
+总的来说，这次KV查询实验不仅让我掌握了许多实用的技能，也让我对大数据处理技术有了更深刻的理解和认识。在未来的学习和工作中，我将继续深入学习和探索大数据处理技术，不断提升自己的专业能力和水平。通过这次实验，我深刻体会到，只有不断实践和总结，才能真正掌握和运用所学的知识，实现自己的职业目标和价值。
+
+
+
+
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

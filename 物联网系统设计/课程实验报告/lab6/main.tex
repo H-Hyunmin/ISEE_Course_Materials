@@ -1,0 +1,207 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验介绍}
+\subsection{实验要求}
+
+实现在每晚22点向智能灯发送关灯指令，早上7点向发送开灯指令 ，随后查询灯的状态，并将灯的状态发送到相应的钉钉群中
+\subsection{实验器材}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item Arduino mega 开发板及载板
+    \item 阿里云平台
+\end{itemize}
+
+
+\section{实验过程}
+\subsection*{Iot studio操作}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 在阿里云平台Iot studio中创建一个项目
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_13-40-59.png}
+        \caption{创建项目}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在主页选择关联的产品，方便起见我直接关联了之前用于lab4，lab5的产品
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-04-05_19-10-18.png}
+        \caption{关联产品}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 同理，关联一个设备，我选择了之前用于lab5的设备
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.9\textwidth]{figures/fig/Snipaste_2024-04-05_19-12-33.png}
+        \caption{关联设备}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在主页选择业务逻辑，从模板创建
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =0.8\textwidth]{figures/fig/Snipaste_2024-04-05_13-48-31.png}
+        \caption{创建业务逻辑}
+        \label{fig:enter-label}
+    \end{figure}
+    
+    \item 选择定时关灯模板，创建一个业务逻辑
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_13-50-06.png}
+        \caption{从模板创建}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在定时触发模块设置触发条件，这里设置为每天22点触发
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-17-50.png}
+        \caption{触发条件设置}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在第一个设备框图中设置动作执行，下发数据用于关灯
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-19-17.png}
+        \caption{设置动作执行}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在第二个设备框图中设置属性查询
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-21-11.png}
+        \caption{设置属性查询}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 在钉钉机器人中设置好webhook，自定义配置，将设备状态发送到钉钉群中
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-21-47.png}
+        \caption{触发条件设置}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 钉钉机器人自定义配置如下。其中payload表示上一个节点的输出，后面的数据分别代表上一个节点查询到的设备属性。机器人将直接把这些数据发送到钉钉群中
+    \begin{lstlisting}[language={C}]
+        {
+            "msgtype": "text", 
+            "text": {
+              "content": "22点定时关灯，设备属性:ColorRed:{{payload.data[0].value}};ColorBlue:{{payload.data[1].value}};ColorGreen:{{payload.data[2].value}};Lightswitch:{{payload.data[3].value}};Temperature:{{payload.data[5].value}}"
+           }, 
+                "isAtAll": false
+          }
+        
+    \end{lstlisting}
+
+    \item 同理我们创建一个定时开灯的业务逻辑，触发条件设置为每天7点，只需要把触发条件修改为7点和动作执行的数据改为开灯即可
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-26-42.png}
+        \caption{创建的定时开灯业务逻辑}
+        \label{fig:enter-label}
+    \end{figure}
+
+\end{itemize}
+
+\subsection*{设备代码修改}
+\begin{itemize}
+    \item 由于设备查询需要返回设备的属性，我们需要添加返回属性的代码。
+    \item 设备主体代码与lab5相同，只需要在其基础上修改一下返回JSON的宏定义，并在update函数中添加返回属性的代码即可。
+    \item 修改部分的代码如下
+    \begin{lstlisting}[language=C]
+//返回属性的JSON
+#define My_JSON_PACK_1        "{\"id\":\"66666\",\"version\":\"1.0\",\"method\":\"thing.event.property.post\",\"params\":{\"Temperature\":%d.%02d,\"ColorRed\":%d,\"ColorBlue\":%d,\"ColorGreen\":%d,\"IsFlickering\":%d}}\r"
+
+//update函数中添加返回属性的代码
+len = snprintf(ATdata,BUF_LEN_DATA,My_JSON_PACK_1,zs,frac,ColorRed,ColorBlue,ColorGreen,IsFlickering);
+    \end{lstlisting}
+\end{itemize}
+
+
+
+
+\section{实验结果}
+\begin{itemize}
+    \item 开启arduino设备，连接阿里云平台，此时灯为灭的状态。(也可以使用设备模拟器调试)
+    \item 选择右上角的部署调试按键，设置时间为7点,开始调试。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-39-33.png}
+        \caption{部署调试}
+        \label{fig:enter-label}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-41-53.png}
+        \caption{运行成功}
+        \label{fig:enter-label}
+    \end{figure}
+    
+    \item 此时灯亮起，且钉钉群中收到了设备的属性信息，同理设置22点关灯，灯灭，钉钉群中也收到了设备的属性信息。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-43-30.png}
+        \caption{钉钉群接受到消息}
+        \label{fig:enter-label}
+    \end{figure}
+    \item 可以在阿里云平台的日志中查看设备的属性信息和业务逻辑的运行情况，也可以从硬件设备上看到灯的状态，不便于展示，此处不再赘述。
+    \item 之后便可以发布项目，设备便会在每天7点和22点自动开关灯，并将设备属性发送到钉钉群中
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1\textwidth]{figures/fig/Snipaste_2024-04-05_19-47-15.png}
+        \caption{发布并启用业务逻辑}
+        \label{fig:enter-label}
+    \end{figure}
+\end{itemize}
+
+
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

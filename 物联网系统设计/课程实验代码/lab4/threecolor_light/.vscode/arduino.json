@@ -1,0 +1,8 @@
+{
+    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:mega",
+    "port": "COM5",
+    "sketch": "threecolor_light.ino",
+    "output": "./build",
+    "programmer": "avrispmkii"
+}

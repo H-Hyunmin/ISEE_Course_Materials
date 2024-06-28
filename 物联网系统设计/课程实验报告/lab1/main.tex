@@ -1,0 +1,309 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验介绍}
+\subsection{实验要求}
+
+\begin{enumerate}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 在Arduino IDE的串口监视器中读取光敏电阻的读数
+    \item 在Arduino IDE的串口监视器中读取BMP280传感器的温度信息
+    \item 利用串口调试助手，向Arduino发送三色小灯的RGB参数（0~255）并解析，将三色小灯混合出不同的颜色
+\end{enumerate}
+\subsection{实验器材}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item Arduino mega 开发板及载板
+    \item BMP280传感器模块，三色灯模块，光敏电阻模块
+    \item vscode搭配Arduino平台
+\end{itemize}
+
+
+\section{任务:光敏电阻的读数}
+\subsection{实验过程}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 将模块正确连接到载板上，将开发板通过数据线连接到电脑
+    \item 打开工程文件，选择串口和开发板
+    \item 编译验证，上传代码
+    \item 打开串口监视器，设置正确的波特率，查看结果
+\end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.7\textwidth]{figures/fig/微信图片_20240304155932.jpg}
+        \caption{硬件连接}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/2.png}
+        \caption{打开串口}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/3.png}
+        \caption{设置开发板}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \begin{figure}
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/4.png}
+        \caption{编译上传代码}
+        \label{fig:enter-label}
+    \end{figure}
+\subsection{实验结果}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/5.png}
+        \caption{通过串口监视器查看返回数值}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/6.png}
+        \caption{用手电筒照射光敏电阻模块，可见返回值发生变化}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+\subsection{实验代码}
+
+\begin{lstlisting}[language=C]
+// the setup routine runs once when you press reset:
+void setup() {
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  // read the input on analog pin 0:
+  int sensorValue = analogRead(A2);
+  // print out the value you read:
+  Serial.println(sensorValue);
+  delay(1);  // delay in between reads for stability
+}
+
+\end{lstlisting}
+
+
+
+
+
+\section{任务二:BMP280传感器信息读取}
+
+\subsection{实验过程}
+\begin{itemize}[]
+    \item 打开工程文件，选择串口和开发板
+    \item 下载源码所需的库文件
+    \item 编译验证，上传代码
+    \item 打开串口监视器，设置正确的波特率，查看结果
+\end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1.1\textwidth]{figures/fig/7.png}
+        \caption{用Arduino-cli下载所需的库文件}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+\newpage
+\subsection{实验结果}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/8.png}
+        \caption{从串口监视器中可以看到BMP280传感器发送的信息}
+        \label{fig:enter-label}
+    \end{figure}
+\subsection{实验代码}
+
+\begin{lstlisting}[language=C]
+#include <Adafruit_BMP280.h>
+
+#define BMP_SCK  (13)
+#define BMP_MISO (12)
+#define BMP_MOSI (11)
+#define BMP_CS   (10)
+
+Adafruit_BMP280 bmp; // I2C
+//Adafruit_BMP280 bmp(BMP_CS); // hardware SPI
+//Adafruit_BMP280 bmp(BMP_CS, BMP_MOSI, BMP_MISO,  BMP_SCK);
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println(F("BMP280 Forced Mode Test."));
+  //if (!bmp.begin(BMP280_ADDRESS_ALT, BMP280_CHIPID)) {
+  if (!bmp.begin(0x76,0x58)) {
+    Serial.println(F("Could not find a valid BMP280 sensor, check wiring or "
+                      "try a different address!"));
+    while (1) delay(10);
+  }
+
+
+  /* Default settings from datasheet. */
+  bmp.setSampling(Adafruit_BMP280::MODE_FORCED,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
+}
+
+void loop() {
+  // must call this to wake sensor up and get new measurement data
+  // it blocks until measurement is complete
+  if (bmp.takeForcedMeasurement()) {
+    // can now print out the new measurements
+    Serial.print(F("Temperature = "));
+    Serial.print(bmp.readTemperature());
+    Serial.println(" *C");
+
+    Serial.print(F("Pressure = "));
+    Serial.print(bmp.readPressure());
+    Serial.println(" Pa");
+
+    Serial.print(F("Approx altitude = "));
+    Serial.print(bmp.readAltitude(1013.25)); /* Adjusted to local forecast! */
+    Serial.println(" m");
+
+    Serial.println();
+    delay(2000);
+  } else {
+    Serial.println("Forced measurement failed!");
+  }
+}
+\end{lstlisting}
+
+
+
+\section{任务三:}
+\subsection{实验过程}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 打开工程文件，选择串口和开发板
+    \item 编译验证，上传代码
+    \item 打开串口监视器，设置正确的波特率，发送RGB参数给三色小灯
+    \item 观察小灯颜色变化
+\end{itemize}
+
+\subsection{实验结果}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/9.png}
+        \caption{给小灯发送不同的RGB参数}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/微信图片_20240304155933.jpg}
+        \caption{小灯显示与RGB相对应的颜色}
+        \label{fig:enter-label}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/微信图片_20240304155934.jpg}
+        \caption{小灯显示与RGB相对应的颜色}
+        \label{fig:enter-label}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/微信图片_20240304155935.jpg}
+        \caption{小灯显示与RGB相对应的颜色}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+
+\subsection{实验代码}
+\begin{lstlisting}[language={C}]
+const int redPin = 8;
+const int greenPin = 7;
+const int bluePin = 9;
+
+void setup() {
+  // initialize serial:
+  Serial.begin(115200);
+  // make the pins outputs:
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+}
+
+void loop() {
+  // if there's any serial available, read it:
+  while (Serial.available() > 0) {
+
+    // look for the next valid integer in the incoming serial stream:
+    int red = Serial.parseInt();
+    // do it again:
+    int green = Serial.parseInt();
+    // do it again:
+    int blue = Serial.parseInt();
+
+    Serial.println(red);
+    Serial.println(green);
+    Serial.println(blue);
+    
+    analogWrite(redPin, red);
+    analogWrite(greenPin, green);
+    analogWrite(bluePin, blue);
+    }
+  }
+\end{lstlisting}
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

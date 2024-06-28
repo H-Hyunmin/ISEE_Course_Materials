@@ -1,0 +1,223 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{实验介绍}
+\subsection{实验要求}
+
+\begin{enumerate}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 利用XCOM串口调试助手，借助AT指令获取当前时间。
+    \item 利用XCOM模拟设备端，借助AT指令连接阿里云，描述设备端如何和阿里云进行连接的。
+    \item 执行AT指令，完成属性订阅和属性发布。监控并截图阿里云数据的格式。
+\end{enumerate}
+\subsection{实验平台}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 阿里云物联网平台
+    \item Arduino硬件平台
+    \item XCOM串口调试助手
+    \item \href{https://help.aliyun.com/document_detail/73742.html?spm=a2c4g.11186623.6.540.3f7e3e3b3z3z3z}{AT指令参考文档}
+\end{itemize}
+
+
+\section{任务一:借助AT指令获取当前时间}
+\subsection{实验过程}
+\subsection*{硬件连接}
+    将载板上的拨码开关拨成上左下左的形式，此时WIFI模块通过串口与Arduino通信。
+    将一个空的Arduino程序烧写入Arduino板，以防止之后电脑与WIFI通信串口被占用。\\
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.45\textwidth,angle=90]{figures/fig/460627bbf49bf7a7182da6b8d972fd7.jpg}
+        \caption{连接硬件}
+        \label{fig:enter-label}
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-15_18-51-13.png}
+        \caption{烧写空程序}
+        \label{fig:enter-label}
+    \end{figure}
+    先断开连接，将载板上的拨码开关拨成上左下左的形式，此时WIFI模块通过串口与电脑直接通信。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.45\textwidth,angle=90]{figures/fig/18adb66e2eac966a3a1331601309e81.jpg}
+        \caption{连接硬件}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \subsection*{串口通信}
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 打开XCOM串口调试助手，选择正确的串口和波特率
+    \item 发送AT指令，收到OK表示和WIFI模块通信正常
+    \item 发送AT+UARTE=ON，打开指令回显
+    \item 手机打开热点，发送AT+CWJAP="热点名称","密码"，WIFI模块连接上热点，
+    \item 发送AT+WEVENT=ON开启状态通知，发送AT+REBOOT重启模块
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-15_19-17-48.png}
+        \caption{发送指令连接热点}
+        \label{fig:enter-label}
+    \end{figure}    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-15_19-18-54.png}
+        \caption{发送指令连接热点}
+        \label{fig:enter-label}
+    \end{figure} 
+    
+    \item 发送AT+SNTPCFG=+8,ntp.aliyun.com，设置时区为+8，NTP服务器为阿里云
+    \item 发送AT+SNTPTIME，通过NTP服务器获取当前时间(该操作需要连接网络，因此需要先连接热点才能成功接受)
+    \item 发送AT+RTCGET，可以查看当前设备的RTC时间
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.85\textwidth]{figures/fig/Snipaste_2024-03-15_19-20-23.png}
+        \caption{借助AT指令获取当前时间}
+        \label{fig:6}
+    \end{figure}  
+
+  
+\end{itemize}
+
+
+
+
+\subsection{实验结果}
+\begin{itemize}
+    \item 通过图\ref{fig:6}，成功通过AT指令获取到了当前的时间
+\end{itemize}
+
+
+
+
+\section{任务二:利用XCOM模拟设备端，借助AT指令连接阿里云}
+
+\subsection{实验过程}
+\begin{itemize}[]
+    \item 在阿里云平台准备好对应的设备，通过三元组信息生成好相关的连接参数
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.75\textwidth]{figures/fig/Snipaste_2024-03-15_19-34-44.png}
+        \caption{准备好设备，生成连接参数}
+        \label{fig:enter-label}
+    \end{figure}
+
+    \item 开始MQTT连接：下文的参数均由生成器生成 
+    \item 输入AT+MQTTAUTH=username，password
+    \item 输入AT+MQTTCID=ClientID (主要分割符的,需要加上$\backslash$来转义 )
+    \item 输入AT+MQTTSOCK=连接域参数
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.75\textwidth]{figures/fig/Snipaste_2024-03-15_19-40-53.png}
+        \caption{使用对应的AT指令输入MQTT相关参数}
+        \label{fig:enter-label}
+    \end{figure} 
+
+    \item 输入AT+MQTTAUTOSTART=OFF 关闭上电自动连接
+    \item 输入AT+MQTTKEEPALIVE=500 设置心跳包时间
+    \item 输入AT+MQTTSTART 开始连接，可以看到返回了connet succes下信息
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/Snipaste_2024-03-15_19-41-09.png}
+        \caption{MQTT连接阿里云}
+        \label{fig:enter-label}
+    \end{figure}
+
+\end{itemize}
+\subsection*{连接过程描述}
+    首先通过串口给WiFi芯片发送AT指令，控制WIFI芯片连接上手机热点，这样WIFI芯片便可以通过手机热点访问互联网。再通过串口发送AT指令控制WiFi芯片通过MQTT协议和阿里云建立连接即可。
+
+\subsection{实验结果}
+    可以在XCOM串口助手中看到返回的消息，表示成功连接上阿里云
+
+
+
+
+
+\section{任务三:执行AT指令，完成属性订阅和属性发布}
+\subsection{sub订阅实验过程}
+
+\begin{itemize}[itemsep=-5pt, topsep=0pt, partopsep=0pt]
+    \item 输入AT+MQTTSUB=0,topic类,1 订阅物模型。其中第一个数字是订阅的消息编号，按顺序自行设置，第二个数字是选择使用QoS0 $\sim$ 协议
+    \item 在阿里云在线调试中设置参数值下发
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.95\textwidth]{figures/fig/Snipaste_2024-03-15_20-10-16.png}
+        \caption{通过AT指令进行属性订阅}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+
+\end{itemize}
+
+\subsection{sub订阅消息实验结果}
+如上图所示，当设置阿里云参数下发后，WIFI模块成功接受到了阿里云下发的数据，并在串口助手中显示了出来，串口显示的数据如图所示。
+
+
+\subsection{pub发布消息实验过程}
+
+\begin{itemize}
+    \item 首先输入AT指令设置发布信息：AT+MQTTPUB=topic类,1
+    \item 输入AT+MQTTSEND=170表示开始发布，后面的数字是$\{ \}$和内部字符个数
+    \item 输入AT+MQTTSEND马上发送要发布的json数据
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.9\textwidth]{figures/fig/Snipaste_2024-03-15_20-33-17.png}
+        \caption{通过AT指令发布消息}
+        \label{fig:enter-label}
+    \end{figure}
+
+\end{itemize}
+
+\subsection{pub发布消息实验结果}
+如上图所示，可以在设备上直接看到接受到的本地发布的数据。
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

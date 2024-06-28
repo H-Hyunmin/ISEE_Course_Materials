@@ -1,0 +1,29 @@
+Add Component: Footprint Not Found SIP-2
+Add Component: Footprint Not Found SIP-4
+Add Component: Footprint Not Found POWER PLUG5
+Add Component: Footprint Not Found SIP-2
+Add Component: Footprint Not Found SIP-2
+Add Component: Footprint Not Found SIP-4
+Add Pin To Net: Unknown Pin: Pin GND-1
+Add Pin To Net: Unknown Pin: Pin GND-2
+Add Pin To Net: Unknown Pin: Pin Ii-1
+Add Pin To Net: Unknown Pin: Pin Ii-2
+Add Pin To Net: Unknown Pin: Pin Ii-3
+Add Pin To Net: Unknown Pin: Pin Ii-4
+Add Pin To Net: Unknown Pin: Pin Power-1
+Add Pin To Net: Unknown Pin: Pin Power-3
+Add Pin To Net: Unknown Pin: Pin Power-5
+Add Pin To Net: Unknown Pin: Pin Vf-1
+Add Pin To Net: Unknown Pin: Pin Vf-2
+Add Pin To Net: Unknown Pin: Pin Vo1-1
+Add Pin To Net: Unknown Pin: Pin Vo1-2
+Add Pin To Net: Unknown Pin: Pin Vo-1
+Add Pin To Net: Unknown Pin: Pin Vo-2
+Add Pin To Net: Unknown Pin: Pin Vo-3
+Add Pin To Net: Unknown Pin: Pin Vo-4
+Add Class Member: Failed to add class member : Component GND Header 2
+Add Class Member: Failed to add class member : Component Ii Header 4
+Add Class Member: Failed to add class member : Component Power Header 5
+Add Class Member: Failed to add class member : Component Vf Header 2
+Add Class Member: Failed to add class member : Component Vo1 Header 2
+Add Class Member: Failed to add class member : Component Vo Header 4

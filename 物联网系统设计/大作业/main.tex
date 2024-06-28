@@ -1,0 +1,630 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{项目介绍}
+
+
+
+\subsection*{项目背景}
+在当今社会，随着城市化进程和生活节奏的加快，外卖服务已经成为了现代都市人生活中不可或缺的一部分。
+
+然而，随着外卖服务的普及，也出现了一系列新的问题，其中之一便是外卖送达后的管理和保温难题。当外卖送达到用户手中后，如果用户无法及时领取，食物很可能会在短时间内迅速冷却，从而影响口感。此外，经常存在用户取餐后不关门，忘记关门登现象，影响后续外卖柜的使用。
+
+
+\subsection*{项目简介}
+为了解决这一问题，智能外卖柜应运而生。智能外卖柜是一种利用物联网技术的创新项目，旨在提供一种智能化的解决方案，解决外卖送达后的保温和提醒问题。该项目通过将外卖柜与用户手机连接，实现了实时监控和远程控制功能。当外卖送达时，外卖柜能够通过手机通知用户，提醒他们尽快领取外卖，以避免食物冷却影响口感。同时，用户可以通过手机小程序随时监测外卖柜的温度和湿度情况，并根据需要进行调整，以确保外卖的质量和安全。此外，我们设置了OLED屏幕用于在设备端实时显示外卖柜状态，也为外卖柜增加了语音助手提醒用户取餐后及时关门。
+
+这种智能化的解决方案旨在提升用户体验，解决外卖送达后的管理难题，为用户提供更加便利和安心的外卖体验，同时也为外卖平台和餐饮商户提供了一种全新的管理和服务模式。
+
+相较于传统外卖柜，智能外卖柜具有多重优势：用户可以通过手机小程序实时监控外卖柜的温度和湿度情况，并通过远程控制功能调整目标温度和湿度，以确保外卖处于适宜的保存状态；外卖送达后，外卖柜会自动发送通知给用户，提醒其及时领取外卖，避免食物冷却影响口感和食品安全。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.8\textwidth]{figures/fig/d7020f9157bda80ac815774e5ac4acf.png}
+    \caption{项目流程图}
+    \label{fig:enter-label}
+\end{figure}
+
+
+
+\section{硬件架构与原理图}
+\subsection*{设计思路}
+本智能外卖柜目前处于早期演示阶段，采用快递盒进行改装。
+
+外卖柜主体采用一个去口的纸板箱，为了考虑承重和受力情况，设计了双层柜门，并在中间采用了三角结构以增强柜门的强度。为了安装风扇和布线，柜体进行了部分开孔处理。在布线过程中，我们尽量避免折线，优先选择贴边进行布线，并使用锡纸进行固定。在一些脆弱的接口处，我们采用了透明胶进行固定，以增强整体的稳固性。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.8\textwidth]{figures/fig/main.jpeg}
+    \caption{整体视图}
+    \label{fig:enter-label}
+\end{figure}
+\subsection*{顶部视图}
+顶部放置了Arduino板作为主控，使得走线最为密集。
+
+在右上方的I2C接口分别连接了红外温度传感器和OLED显示器，右侧连接了风扇、灯和12V电源（同时将12V引线连接至加热板）。左侧接口分别连接了DHT11传感器、控制语音模块的输出、控制锁和加热器继电器的输出以及锁的返回输入。此外，顶部还放置了连接语音模块的扬声器。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.8\textwidth]{figures/fig/up view.jpeg}
+    \caption{顶部视图}
+    \label{fig:enter-label}
+\end{figure}
+
+
+\subsection*{侧视与后视}
+左侧面板使用双面胶固定了语音模块和用于控制加热的继电器。左上角有一孔用于与内部走线，中间有一孔用于手动开锁便于调试。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.8\textwidth]{figures/fig/left view.jpeg}
+    \caption{左侧视图}
+    \label{fig:enter-label}
+\end{figure}
+
+右侧面板安装了OLED显示，开孔嵌入了风扇，同时走12V电源线。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.8\textwidth]{figures/fig/right view.jpeg}
+    \caption{右侧视图}
+    \label{fig:enter-label}
+\end{figure}
+后面板走用于给锁提供电源的12V电源线和用于走电源线的开孔。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.8\textwidth]{figures/fig/back view.jpeg}
+    \caption{后侧视图}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection*{内部视图}
+内部走线主要集中在底侧和后侧，以避免空间干扰并减少与加热器靠近造成的安全隐患。左侧安装了锁头。
+
+底板靠左侧设有集中走线，并与前述左侧面板的开孔相通，同时使用双面胶固定了控制锁通断的继电器。底板靠右侧固定了DHT11温湿度传感器，底部安置了加热器，顶部安装了红外温度传感器，其角度经过精心设计以直接测量加热板的温度。此外，顶部还安置了灯。风扇和传感器全部围绕加热板放置，以提高控制的精确性。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width =.8\textwidth]{figures/fig/inside view.jpeg}
+    \caption{内部视图}
+    \label{fig:enter-label}
+\end{figure}
+
+\newpage
+
+
+
+\section{嵌入式代码}
+\textbf{\large 详细源码参加附录}
+
+\subsection*{代码结构}
+
+\begin{itemize}
+  \item 代码结构如下图所示
+  \item function源文件中存放相关函数和接口
+  \item combine源文件为主文件，包括变量定义，setup初始化和主函数代码等
+  \item vscode为项目配置文件，build中为项目构建生成文件。
+\end{itemize}
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/Snipaste_2024-04-28_17-27-32.png}
+        \caption{代码结构}
+        \label{fig:enter-label}
+    \end{figure}
+
+
+
+\subsection*{宏和变量介绍}
+
+\begin{itemize}
+  \item 代码中的宏定义和变量主要分为以下几个部分：
+  \item 头文件部分
+  \item wifi和mqtt参数所需宏定义
+  \item 引脚宏定义 (所有用到的外设引脚的定义)
+  \item AT指令相关宏定义
+  \item 变量定义
+\end{itemize}
+
+宏定义相关内容参见源码，现介绍程序的主要变量：
+\begin{lstlisting}[language=C++]
+// Arduino json解析函数需要的对象
+StaticJsonDocument<300> doc;
+String data; // 存放json的string
+
+float temperature;//temperature data
+float humidity;//humidity data
+int lockStatus;//lock status, 0 is lock, 1 is unlock
+int hasTakeout;//takeout status, 0 is none, 1 is positive
+int heaterStatus;//0 is off, 1 is on
+int fanStatus;//0 is off, 1 is on
+float targetTemperature;
+float targetHumidity;
+int voiceOutput;//0 is no output,,
+int lightswitch;//0 is off, 1 is on
+unsigned long timeStart;
+//dht11传感器对象
+dht11 DHT;
+//oled对象
+U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
+//infrared temp红外传感器对象
+Adafruit_MLX90614 mlx = Adafruit_MLX90614(); 
+  
+\end{lstlisting}
+
+
+
+
+
+
+
+
+\subsection*{函数介绍}
+\subsection*{初始化函数声明如下：}
+\begin{itemize}
+  \item 该部分函数主要用于setup中对所有硬件和外设进行初始化操作
+  \item 具体函数实现可查看附录中的源码
+\end{itemize}
+
+\begin{lstlisting}[language=C++]
+
+/**
+ * @brief 初始化数据变量。
+ */
+void dataInit();
+
+/**
+ * @brief 初始化语音控制。
+ */
+void voiceInit();
+
+/**
+ * @brief 初始化灯光控制。
+ */
+void lightInit();
+
+/**
+ * @brief 初始化风扇控制。
+ */
+void fanInit();
+
+/**
+ * @brief 初始化 OLED 显示。
+ */
+void oledInit();
+
+/**
+ * @brief 初始化锁控制。
+ */
+void lockInit();
+
+/**
+ * @brief 初始化加热器控制。
+ */
+void heaterInit();
+
+/**
+ * @brief 初始化红外温度传感器。
+ */
+void itemperatureInit();
+  
+\end{lstlisting}
+
+
+\subsection*{硬件控制函数声明如下：}
+\begin{itemize}
+  \item 该部分函数主要用于操控外设
+  \item 该部分函数会在主循环中由updateDate和getData函数调用来根据参数控制相关的外设硬件。
+  \item 具体函数实现可查看附录中的源码
+\end{itemize}
+
+\begin{lstlisting}[language=C++]
+
+/**
+ * @brief 控制语音播报。
+ * 
+ * @param voice 控制语音的参数，1 表示播报。
+ */
+void voiceCtrl(int voice);
+
+/**
+ * @brief 控制灯光状态。
+ * 
+ * @param light 控制灯光的参数，1 表示打开，0 表示关闭。
+ */
+void lightCtrl(int light);
+
+/**
+ * @brief 控制风扇状态。
+ * 
+ * @param status 控制风扇的状态，1 表示打开，0 表示关闭。
+ */
+void fanCtrl(int status);
+
+/**
+ * @brief 获取 DHT11 温湿度传感器的数据。
+ */
+void getDHT11Data();
+
+/**
+ * @brief 在 OLED 显示屏上显示内容。
+ */
+void oledDisplay();
+
+/**
+ * @brief 在 OLED 显示屏上显示温湿度信息。
+ */
+void oledDisplay_th();
+
+/**
+ * @brief 控制锁的状态。
+ * 
+ * @param status 控制锁的状态，1 表示解锁，0 表示上锁。
+ */
+void lockCtrl(int status);
+
+/**
+ * @brief 检查锁的状态。
+ */
+void lockCheck();
+
+/**
+ * @brief 控制加热器状态。
+ * 
+ * @param status 控制加热器的状态，1 表示打开，0 表示关闭。
+ */
+void heaterCtrl(int status);
+
+/**
+ * @brief 读取红外温度传感器的数据。
+ */
+void itemperatureRead();
+
+  
+\end{lstlisting}
+
+\subsection*{功能函数声明和实现如下}
+\begin{itemize}
+  \item Upload，Ali$\underline{}$connect，WiFi$\underline{}$init用于连接wifi和阿里云以及上传参数，具体实现与之前的报告相似，不多赘述，完整函数实现参见附录源码。该部分函数主要用于操控外设
+\end{itemize}
+
+
+
+\begin{lstlisting}[language=C++]
+
+  /**
+ * @brief 获取所需参数值并调用控制函数。
+ */
+void getData()
+{
+    getDHT11Data();
+    itemperatureRead();
+    lockCheck();
+}
+
+/**
+ * @brief 根据设置的参数控制外设并调用控制函数。
+ */
+void updateData()
+{
+    //fan
+    if (humidity < targetHumidity - 3) {
+        fanStatus = 0;
+    } else if (humidity > targetHumidity + 3) {
+        fanStatus = 1;
+    }
+    fanCtrl(fanStatus);
+
+    //heater
+    if (temperature < targetTemperature - 3) {
+        heaterStatus = 1;
+    } else if (temperature > targetTemperature + 3) {
+        heaterStatus = 0;
+    }
+    heaterCtrl(heaterStatus);
+
+    //lock
+    if(lockStatus == 1){
+        lockCtrl(1);
+    }else{
+        lockCtrl(0);
+    }
+    //oled
+    oledDisplay_th();
+}
+/**
+ * @brief 上传参数至阿里云。
+ * 
+ * @return 返回上传是否成功的布尔值。
+ */
+bool Upload();
+
+/**
+ * @brief 连接阿里云。
+ * 
+ * @return 返回连接是否成功的布尔值。
+ */
+bool Ali_connect();
+
+/**
+ * @brief 初始化 WiFi。
+ * 
+ * @return 返回初始化是否成功的布尔值。
+ */
+bool WiFi_init();
+
+  
+\end{lstlisting}
+
+\subsection*{主函数介绍}
+\begin{itemize}
+  \item setup函数主要进行各种初始化操作。
+  \item loop函数为程序主体代码
+  \item loop持续检测阿里云下发的消息并且持续更新硬件设备的状态，定时每隔五秒向阿里云上报硬件参数。
+\end{itemize}
+
+
+\begin{lstlisting}[language=C++]
+  /**
+ * @brief 初始化串口，连接wifi和阿里云，调用函数进行参数和外设的初始化。
+ */
+void setup()
+{
+  timeStart = millis();
+  // Serial Initial
+  Serial3.begin(115200);
+  Serial.begin(115200);
+  String inString = "";
+
+  //  Pin_init();
+  Serial.println("Setup Start");
+
+  // Cloud Initial
+  while (1)
+  {
+    if (!WiFi_init())
+      continue;
+    Serial.println("WiFi Connected");
+    if (!Ali_connect())
+      continue;
+    break;
+  }
+  Serial.println("Ali Connected");
+
+  dataInit();
+  fanInit();
+  oledInit();
+  lockInit();
+  heaterInit();
+  lightInit();
+  itemperatureInit();
+  voiceInit();
+  Serial.println("dataInit Done");
+}
+
+/**
+ * @brief 主函数
+ */
+void loop()
+{
+
+  delay(10);
+  String inString = "";
+
+  //接受阿里云下发的参数
+  if (Serial3.available() > 0)
+  {
+    delay(10);
+    inString = Serial3.readString();
+    if (inString.indexOf("MQTTRECV") != -1)
+    {
+      Serial.println("==============print aliyun receive data================");
+      Serial.print("json:");
+      Serial.println(inString);
+      data = inString;
+      parse(data);
+      Serial.println("==================End====================\n\n\n");
+    }
+  }
+
+  //持续更新数据
+  if (Serial3.available() == 0)
+  {
+    updateData();
+  }
+
+//五秒上传一次数据
+  if ((millis() - timeStart) > 5000)
+  { 
+    getData();
+    Upload();
+    timeStart = millis();
+  }
+}
+
+\end{lstlisting}
+
+
+
+
+\newpage
+
+\section{前端小程序}
+前端小程序页面排布如下图所示，主要分为主页面，存件页面和取件页面。
+取件页面可以查看当前外卖柜的温度和湿度，以及设置温度和湿度，操控风扇和加热器，打开和关闭灯光，解锁和上锁外卖柜等外设操作。
+
+移动应用基于阿里云Iot Studio开发，通过阿里云Iot Studio提供的API接口实现与硬件设备的通信，实现了远程监控和控制功能。用户可以通过手机小程序随时随地监测外卖柜的温度和湿度情况，并根据需要进行调整，以确保外卖的质量和安全。同时，用户还可以通过手机小程序远程控制外卖柜的风扇、加热器、灯光等外设。
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{.3\textwidth}
+    \centering
+    \includegraphics[width=.85\linewidth]{figures/fig/Snipaste_2024-04-28_20-26-15.png}
+    \caption{\small 主页面}
+    \label{fig:image1}
+  \end{minipage}%
+  \begin{minipage}{.3\textwidth}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/fig/Snipaste_2024-04-28_20-26-50.png}
+    \caption{\small 存件页面}
+    \label{fig:image2}
+  \end{minipage}
+  \begin{minipage}{.3\textwidth}
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/fig/Snipaste_2024-04-28_20-31-18.png}
+    \caption{\small 取件页面}
+    \label{fig:image3}
+  \end{minipage}
+\end{figure}
+
+\newpage
+
+\section{阿里云后端}
+
+本项目的后端基于阿里云平台，
+\begin{itemize}
+  \item 阿里云设备和产品
+  \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/Snipaste_2024-04-28_20-51-16.png}
+        \caption{阿里云设备和产品}
+        \label{fig:enter-label}
+  \end{figure}
+  \item 产品物模型参数
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/Snipaste_2024-04-28_20-51-16.png}
+        \caption{产品物模型参数}
+        \label{fig:enter-label}
+  \end{figure}
+  \item 移动应用开发
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =.8\textwidth]{figures/fig/Snipaste_2024-04-28_20-55-26.png}
+        \caption{基于阿里云Iot Studio开发的移动应用}
+        \label{}
+  \end{figure}
+\end{itemize}
+\newpage
+
+\section{项目制作过程和结果展示}
+  \subsection*{制作过程}
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}{0.46\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428230617.jpg}
+    \caption{硬件装配1}
+  \end{minipage}
+  \begin{minipage}{0.46\textwidth}
+    \includegraphics[width=0.73\textwidth,angle=90]{./figures/fig/微信图片_20240428230707.jpg}
+    \caption{硬件装配2}
+  \end{minipage}
+  \begin{minipage}{0.46\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428230711.jpg}
+    \caption{硬件装配3}
+  \end{minipage}
+  \begin{minipage}{0.46\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428230715.jpg}
+    \caption{硬件装配4}
+  \end{minipage}
+  \centering
+  \begin{minipage}{0.46\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428230603.png}
+    \caption{软件开发}
+  \end{minipage}
+  \begin{minipage}{0.46\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428230549.png}
+    \caption{git记录}
+  \end{minipage}
+\end{figure}
+\newpage
+
+  \subsection*{成果展示}
+  部分成果展示，详细过程参见视频
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428234925.png}
+    \caption{成果展示}
+  \end{minipage}
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428234937.png}
+    \caption{成果展示}
+  \end{minipage}
+  \begin{minipage}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428234940.png}
+    \caption{成果展示}
+  \end{minipage}
+  \begin{minipage}{0.46\textwidth}
+    \includegraphics[width=\textwidth]{./figures/fig/微信图片_20240428235042.png}
+    \caption{成果展示}
+  \end{minipage}
+
+\end{figure}
+
+
+
+
+\newpage
+
+
+\appendix
+\section{附录}
+项目相关资料已开源至GitHub仓库：
+\url{https://github.com/cyc-987/lotFinal_arduinoCode}
+
+
+演示视频见提交附件，也已上传到B站：
+\url{https://www.bilibili.com/video/BV1nb421a7qJ/?vd_source=dbfe1e12112250bef05c381df34391a0}
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

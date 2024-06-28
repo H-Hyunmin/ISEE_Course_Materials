@@ -1,0 +1,7 @@
+{
+    "port": "COM5",
+    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:mega",
+    "programmer": "avrisp",
+    "sketch": "串口控制三色灯\\ASCIITable\\ASCIITable.ino"
+}

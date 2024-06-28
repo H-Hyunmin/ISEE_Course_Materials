@@ -1,0 +1,146 @@
+Added Component: Designator=B1(Beep)
+Added Component: Designator=C1(C 0805_L)
+Add component (AddParameter): Name = "BOM名称"; Value = "无极性贴片电容"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Add Component: Footprint Not Found LCD1602
+Added Component: Designator=P1(HDR3X1_A)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P2(HDR6X1_B2)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P3(PH2.0-10P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P4(PH2.0-8P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P5(PH2.0-8P)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=P6(HDR6X1_B2)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=R1(AXIAL0.4-1/4W)
+Add component (AddParameter): Name = "BOM名称"; Value = "贴片电阻"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=RP1(RM065)
+Add component (AddParameter): Name = "BOM名称"; Value = "插件电位器"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "学习资源"; Value = "www.ooocke.com"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "版权归属"; Value = "源创客"; VariantName = "[No Variations]"
+Added Component: Designator=S1(SW_PB4_A1)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "PackageReference"; Value = "SPST-2"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Published"; Value = "24-Mar-1999"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=S2(SW_PB4_A1)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "PackageReference"; Value = "SPST-2"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Published"; Value = "24-Mar-1999"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Component: Designator=S3(SW_PB4_A1)
+Add component (AddParameter): Name = "LatestRevisionDate"; Value = "17-Jul-2002"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "LatestRevisionNote"; Value = "Re-released for DXP Platform."; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "PackageReference"; Value = "SPST-2"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Published"; Value = "24-Mar-1999"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Limited"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=3.3V Pin=P5-4
+Added Net: Name=3.3V
+Added Pin To Net: NetName=5V Pin=C1-2
+Added Pin To Net: NetName=5V Pin=P1-3
+Added Pin To Net: NetName=5V Pin=P2-1
+Added Pin To Net: NetName=5V Pin=P3-8
+Added Pin To Net: NetName=5V Pin=P5-2
+Added Pin To Net: NetName=5V Pin=P5-5
+Added Pin To Net: NetName=5V Pin=R1-2
+Added Pin To Net: NetName=5V Pin=RP1-1
+Added Pin To Net: NetName=5V Pin=S1-2
+Added Pin To Net: NetName=5V Pin=S1-3
+Added Pin To Net: NetName=5V Pin=S2-2
+Added Pin To Net: NetName=5V Pin=S2-3
+Added Pin To Net: NetName=5V Pin=S3-2
+Added Pin To Net: NetName=5V Pin=S3-3
+Added Net: Name=5V
+Added Pin To Net: NetName=A0 Pin=P6-1
+Added Pin To Net: NetName=A0 Pin=S1-1
+Added Pin To Net: NetName=A0 Pin=S1-4
+Added Net: Name=A0
+Added Pin To Net: NetName=A1 Pin=P6-2
+Added Pin To Net: NetName=A1 Pin=S2-1
+Added Pin To Net: NetName=A1 Pin=S2-4
+Added Net: Name=A1
+Added Pin To Net: NetName=A2 Pin=P6-3
+Added Pin To Net: NetName=A2 Pin=S3-1
+Added Pin To Net: NetName=A2 Pin=S3-4
+Added Net: Name=A2
+Added Pin To Net: NetName=A3 Pin=P1-2
+Added Pin To Net: NetName=A3 Pin=P6-4
+Added Net: Name=A3
+Added Pin To Net: NetName=A4 Pin=P6-5
+Added Net: Name=A4
+Added Pin To Net: NetName=A5 Pin=P6-6
+Added Net: Name=A5
+Added Pin To Net: NetName=D0 Pin=P4-1
+Added Net: Name=D0
+Added Pin To Net: NetName=D1 Pin=P4-2
+Added Net: Name=D1
+Added Pin To Net: NetName=D2 Pin=P4-3
+Added Net: Name=D2
+Added Pin To Net: NetName=D3 Pin=P4-4
+Added Net: Name=D3
+Added Pin To Net: NetName=D4 Pin=P4-5
+Added Net: Name=D4
+Added Pin To Net: NetName=D5 Pin=P4-6
+Added Net: Name=D5
+Added Pin To Net: NetName=D6 Pin=P4-7
+Added Net: Name=D6
+Added Pin To Net: NetName=D7 Pin=P4-8
+Added Net: Name=D7
+Added Pin To Net: NetName=D8 Pin=P2-5
+Added Pin To Net: NetName=D8 Pin=P3-1
+Added Net: Name=D8
+Added Pin To Net: NetName=D9 Pin=P2-4
+Added Pin To Net: NetName=D9 Pin=P3-2
+Added Net: Name=D9
+Added Pin To Net: NetName=D10 Pin=P2-3
+Added Pin To Net: NetName=D10 Pin=P3-3
+Added Net: Name=D10
+Added Pin To Net: NetName=D11 Pin=P3-4
+Added Net: Name=D11
+Added Pin To Net: NetName=D12 Pin=P3-5
+Added Net: Name=D12
+Added Pin To Net: NetName=D13 Pin=B1-1
+Added Pin To Net: NetName=D13 Pin=P3-6
+Added Net: Name=D13
+Added Pin To Net: NetName=GND Pin=B1-2
+Added Pin To Net: NetName=GND Pin=C1-1
+Added Pin To Net: NetName=GND Pin=P1-1
+Added Pin To Net: NetName=GND Pin=P2-2
+Added Pin To Net: NetName=GND Pin=P3-7
+Added Pin To Net: NetName=GND Pin=P5-6
+Added Pin To Net: NetName=GND Pin=P5-7
+Added Pin To Net: NetName=GND Pin=RP1-3
+Added Net: Name=GND
+Added Pin To Net: NetName=NetLCD1_3 Pin=RP1-2
+Added Net: Name=NetLCD1_3
+Added Pin To Net: NetName=NetLCD1_15 Pin=R1-1
+Added Net: Name=NetLCD1_15
+Added Pin To Net: NetName=RES Pin=P5-3
+Added Net: Name=RES
+Added Pin To Net: NetName=SCL Pin=P3-10
+Added Net: Name=SCL
+Added Pin To Net: NetName=SDA Pin=P3-9
+Added Net: Name=SDA
+Added Pin To Net: NetName=VIN Pin=P5-8
+Added Net: Name=VIN
+Added Class: Name=Arduino_clock
