@@ -5,3 +5,4 @@
 zjuer可参考我的98帖子
 
 # 其它资源链接
+我同学搭建的电科资源&经验集合站，欢迎各位去提PR建设https://github.com/ZJUISEELab/EE-Archive
