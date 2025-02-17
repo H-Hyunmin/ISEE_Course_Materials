@@ -9,7 +9,7 @@ zjuer可参考我的98帖子https://www.cc98.org/topic/6111749
 # 其它资源链接
 我同学搭建的电科资源&经验集合站，欢迎各位去提PR建设https://github.com/ZJUISEELab/EE-Archive
 
-浙江大学课程攻略共享计划ZJUhttps://github.com/QSCTech/zju-icicles
+浙江大学课程攻略共享计划https://github.com/QSCTech/zju-icicles
 
 其它ISEE学长学姐的一些仓库：
 
