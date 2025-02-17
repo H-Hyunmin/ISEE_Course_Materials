@@ -1,0 +1,7 @@
+; ImagePrepare.def : Declares the module parameters for the DLL.
+
+LIBRARY      "ImagePrepare"
+DESCRIPTION  'ImagePrepare Windows Dynamic Link Library'
+
+EXPORTS
+    ; Explicit exports can go here

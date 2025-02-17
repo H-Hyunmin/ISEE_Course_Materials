@@ -1,0 +1,158 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Computer Organization and Design   } % 页眉
+\rhead{3220103462}
+\title{HOMEWORK \#8} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Computer Organization and Design } % 课程信息
+
+\studentinfo{Name: \textit{黄贤敏}  \quad  \quad Student ID: \textit{3220103462}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+\begin{problem}
+
+
+\begin{enumerate}
+  \item [a] Why is the cost of a page fault in virtual memory considered very high? 
+  \item [b] What are the typical advantages of having larger page size?
+  \item [c] Write one advantage and one disadvantage of a virtually tagged cache?
+  \item [d] Which type of parallel computing architecture is no longer commonly encountered in machines today (MIMD, MISD, SIMD, SISD)?
+\end{enumerate}
+\end{problem}
+
+
+\begin{solution}
+  \quad
+  \begin{enumerate}
+    \item [a] The cost of a page fault in virtual memory is considered very high because it involves accessing the disk, which is significantly slower than accessing the main memory. This can lead to substantial delays in program execution.
+    \item [b] The typical advantages of having larger page size include reduced page table size and lower page fault rate, as more data can be transferred in a single page.
+    \item [c] One advantage of a virtually tagged cache is that it can reduce the cache access time since the virtual address is used directly. One disadvantage is that it can lead to issues with synonym problems, where different virtual addresses map to the same physical address.
+    \item [d] MISD (Multiple Instruction, Single Data) is the type of parallel computing architecture that is no longer commonly encountered in machines today.
+  \end{enumerate}
+\end{solution}
+
+
+\begin{problem}
+
+
+An important advantage of interrupts over polling is the ability of the processor to perform other tasks while waiting for 
+communication from an I/O device. Suppose that a 2GHz processor needs to read 1000 bytes of data from a particular I/O device. 
+The I/O device supplies 1 bytes of data every 0.01ms. The code to process the 1000 bytes data and store it in a buffer takes 2000 cycles.
+
+  \begin{enumerate}
+    \item a.If the processor detects that a byte of data is ready through polling, and a polling iteration takes 40 cycles, how many cycles does the entire operation take?
+    \item b.If instead, the processor is interrupted when a byte is ready, and the processor spends the time between interrupts on another task, how many cycles of this other task can the processor complete 
+    while the I/O communication is taking place? The overhead for handling an interrupt is 100 cycles.
+  \end{enumerate}
+\end{problem}
+
+
+
+
+\begin{solution}
+  \quad
+  a. If the processor detects that a byte of data is ready through polling, and a polling iteration takes 40 cycles, the entire operation in polling takes $1000 \times 40 = 40000$ cycles.
+  and process the 1000 bytes data and store it in a buffer takes 2000 cycles. So the total time in polling and processing is $40000 + 2000 = 42000$ cycles.
+
+  considering the the I/O device supplies 1 bytes of data every 0.01ms, the processor needs to poll during  $1000 \times 0.01 = 10$ ms. So the total time in polling is 0.01s * 2GHz = 20,000,000 cycles.
+  and the total time in processing is 2000 cycles. So the total time in polling and processing is $20,000,000 + 2000 = 20,002,000$ cycles.
+
+  b. the I/O device supplies 1 bytes of data every 0.01ms, the cycles needed to supply 1 byte of data is $0.01 \times 10^-3 \times 2 \times 10^9 = 20000$ cycles. the interrupt overhead is 100 cycles, so 20000-100 = 19900 cycles can be used to process other tasks. the total time cycles of this other task can the processor complete while the I/O communication is taking place is $1000 \times 19900 = 19900000$ cycles.
+
+\end{solution}
+
+
+
+
+
+
+
+%------------------------------%
+
+
+%------------------------------%
+\end{document}
+

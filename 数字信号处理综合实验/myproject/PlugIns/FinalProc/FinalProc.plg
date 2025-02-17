@@ -1,0 +1,46 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: FinalProc - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/FinalProc.res" /d "_DEBUG" /d "_AFXDLL" "C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\PLUGINS\FinalProc\FinalProc.rc"" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPA8BE.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /Fp"Debug/FinalProc.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\PLUGINS\FinalProc\FinalProc.cpp"
+]
+Creating command line "cl.exe @D:\HUANGX~1\Temp\RSPA8BE.tmp" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPA8BF.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /Fp"Debug/FinalProc.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\PLUGINS\FinalProc\StdAfx.cpp"
+]
+Creating command line "cl.exe @D:\HUANGX~1\Temp\RSPA8BF.tmp" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPA8C0.tmp" with contents
+[
+ImageProc.lib TraceFeature.lib /nologo /subsystem:windows /dll /incremental:yes /pdb:"Debug/PZ_FinalProc.pdb" /debug /machine:I386 /def:".\FinalProc.def" /out:"../../Debug/Plugin/PZ_FinalProc.dll" /implib:"Debug/PZ_FinalProc.lib" /pdbtype:sept /libpath:"../../" 
+".\Debug\FinalProc.obj"
+".\Debug\StdAfx.obj"
+".\Debug\FinalProc.res"
+]
+Creating command line "link.exe @D:\HUANGX~1\Temp\RSPA8C0.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+FinalProc.cpp
+Linking...
+   Creating library Debug/PZ_FinalProc.lib and object Debug/PZ_FinalProc.exp
+PZ_FinalProc.exp : warning LNK4070: /OUT:FinalProc.dll directive in .EXP differs from output filename "../../Debug/Plugin/PZ_FinalProc.dll"; ignoring directive
+
+
+
+<h3>Results</h3>
+PZ_FinalProc.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

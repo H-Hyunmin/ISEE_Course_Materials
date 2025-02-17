@@ -1,0 +1,410 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    basicstyle=\small\ttfamily % 设置代码块的基本字体样式
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{项目介绍}
+在本次编程训练中，将从软硬件协同设计的思想出发，利用拓展指令实现特
+定程序的优化。你的任务是根据拓展指令集，完成仿真器编码、译码与执行过程
+中的拓展内容，从而得到一个功能完整的指令集仿真器。然后，在此基础上，修
+改汇编代码添加拓展指令，利用仿真器进行仿真，比较拓展指令减少的指令条目，
+优化性能。
+
+\section{项目任务与要求}
+
+\subsection*{任务1:仿真器拓展}
+完成以下 R-Type 指令的拓展：
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image1.png}
+      \caption{R-Type 拓展指令}
+  \end{figure}
+
+\subsection*{任务2:优化 SM3 加密算法}
+SM3 算法是散列算法的一种，是我国国家密码管理局编制的商用算法。 为
+满足电子认证服务系统等应用的需求，国家密码管理局在 2010 年 12 月发布了
+SM3 算法，用于密码应用中的数字签名和验证、消息认证码的生成与验证以及随
+机数的生成，可满足多种密码应用的安全需求。
+
+在 /work/task2 文件夹中提供了实现 SM3 算法的 c 文件 sm3.c，汇
+编文件 sm3.s。
+
+项目具体任务如下：
+
+
+\begin{enumerate}
+    \item 利用拓展指令 rotleft、 rotright、 reverse、 notand，对照 sm3.c 
+修改 sm3.s 汇编文件，将原来汇编文件中的部分指令等价转换为拓展指令，对
+SM3 算法实现指令级的优化， 并将修改后的结果保存到 sm3opt.s 中。实验重
+点关注 sm3\_str\_summ()函数。
+    \item 在对比过程中， 你需要分别输入”Zhejiang University”、 ”COD”、 你的学
+号，计算其哈希值，在验证你汇编的正确性同时比较优化效果。
+    \item 最后，需要按照此前的设计思路， 在已提供的五条拓展指令以外， 至少
+自主设计并完成一条拓展指令， 同时对仿真器和哈希加密的汇编文件进行修改，
+从而实现程序的进一步优化。
+\end{enumerate}
+
+
+
+
+\section{项目实现过程}
+\subsection{任务1:仿真器拓展}
+根据文档说明，直接修改task1文件夹下的代码即可完成任务1。具体流程如下：
+\begin{itemize}
+    \item instforms指令编码部分：仿真器在 instforms.hpp 文件中针对不同指令类型构建了用于编码和译码
+的结构体，需要在 instforms.cpp 中实现对应的编码函数
+    \item 如下图git diff所示，参考cube指令的实现，在 instforms.cpp 中实现对应的编码函数，只需要修改func3字段即可
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image2.png}
+      \caption{增加指令编码部分}
+  \end{figure}
+
+    \item decode指令译码部分：本部分实现了仿真器的译码功能.
+    \item 参照 cube 及其他指令格式，在 InstEntry.cpp 和 InstId.hpp 中添加其他四条拓展指令内容，
+并及时修改 InstId.hpp 中 maxId 的值。
+    \item 如下图git diff所示，InstId.hpp的枚举中添加了拓展指令
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image3.png}
+      \caption{添加拓展指令声明}
+  \end{figure}
+      \item 如下图git diff所示，在InstEntry.cpp中添加了拓展指令的条目。只需要修改InstId枚举字段和指令编码部分即可。
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image4.png}
+      \caption{添加拓展指令条目}
+  \end{figure}
+
+
+    \item Hart指令执行：Hart 是 Hardware Thread 的缩写，本pro主要关注从 Hart.cpp 文件 979 
+行开始的内容，即指令的执行过程
+    \item 参照 cube指令的实现完成其他四条拓展指令的执行过程。
+    \item 如下图git diff所示，指令的实现直接参照图1中的指令格式用C++实现即可。
+    \item 图中notand指令的实现有误，在git后一个commit中已经修正。
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image5.png}
+      \caption{指令执行部分的具体实现}
+  \end{figure}
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image6.png}
+      \caption{notand指令修正}
+  \end{figure}
+
+
+    \item 最后，需要参照 cube 指令在 Hart.cpp 文件 5442 行开始
+的 execute函数中添加拓展指令的 label 以及相应的跳转执行
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image7.png}
+      \caption{execute函数中添加拓展指令的label和跳转}
+  \end{figure}
+
+\end{itemize}
+
+\textbf{测试结果:}
+
+make\_build 编译模拟器，之后测试新旧指令集。测试结果如下：
+
+可以看到，新旧指令集测试均通过，仿真器拓展基本没有问题。
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image8.png}
+      \caption{测试结果}
+  \end{figure}
+
+\subsection{任务2:优化 SM3 加密算法}
+\textcolor{red}{\textbf{该部分我进行了多个版本的实现，
+v1：仅使用拓展指令优化数据操作部分的汇编。
+v2：在v1基础上重写了几个调用最多的函数，在数据存储层面上优化了汇编。
+v3：使用自定义的大小端转换拓展指令，进一步优化。
+v4：在c源码嵌入汇编，函数内联，使用编译器等进行极致的优化。}}
+
+\textbf{准备工作：}
+
+首先，根据sm3.s的内容，不难推断sm3.s是sm3.c的汇编版本。
+手动用gcc编译sm3.c，得到sm3-O0.s，然后对比sm3.s,发现是一样的。如下图：
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image9.png}
+      \caption{sm3-O0.s与sm3.s对比}
+  \end{figure}
+
+  打开gcc的汇编注释选项-fverbose-asm，得到带注释的汇编文件sm3opt.s方便阅读。
+  在makefile中写好几个测试用例，方便测试。
+  接着初始化git仓库，开始任务2的实现。
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image10.png}
+      \caption{准备工作}
+  \end{figure}
+
+\newpage
+
+\subsubsection{v1版本}
+\textbf{实现过程：}
+
+首先修改long\_to\_str函数。本函数本质是实现大小端转换，将原来的lbu指令单独取byte再存储的复杂方式，改为用reverse依次取出4个byte，用临时寄存器进行移位和与操作，最后再存储到内存中。如下图：
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image11.png}
+      \caption{long\_to\_str函数优化}
+  \end{figure}
+
+  然后修改str\_to\_long函数。该函数也是实现大小端转换，同理进行修改即可，如下图：
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image12.png}
+      \caption{str\_to\_long函数优化}
+  \end{figure}
+
+    然后修改group\_a函数中，$x[5] = P1(x[0],x[1],x[2],x[3],x[4])$这一步，即下图703line开始的部分。
+
+    P1宏展开如下图所示，将原来循环移位的方式，改为用rotright和rotleft指令进行移位即可
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image14.png}
+      \caption{P1宏展开}
+  \end{figure}
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image13.png}
+      \caption{P1宏优化}
+  \end{figure}
+
+
+
+    修改$C[2] = TT1(FF1(A[0],A[1],A[2]),A[3],C[0],A[0],A[4],T1,j);$
+对应的汇编代码，即下图1400line开始的部分。同理，将原来的循环移位的方式，改为用rotright和rotleft指令进行移位即可
+
+
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image16.png}
+      \caption{C[2] = TT1(FF1(A[0],A[1],A[2]),A[3],C[0],A[0],A[4],T1,j) 宏展开}
+  \end{figure}
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image15.png}
+      \caption{C[2] = TT1(FF1(A[0],A[1],A[2]),A[3],C[0],A[0],A[4],T1,j) 宏优化}
+  \end{figure}
+
+    下一条$C[3] = TT2(GG1(A[4],A[5],A[6]),A[7],C[1],A[0],A[4],T1,j)$同理，不多赘述。
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image17.png}
+      \caption{C[3] = TT2(GG1(A[4],A[5],A[6]),A[7],C[1],A[0],A[4],T1,j) 宏优化}
+  \end{figure}
+
+    之后有两个ROTL宏，同样用rotright和rotleft指令进行优化即可。
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image18.png}
+      \caption{ROTL宏优化}
+  \end{figure}
+
+  目前已经优化了下图红框内的部分，接下来优化下图绿框内的部分。
+  完全和上述步骤一样，用rotright和rotleft指令进行优化即可，
+  其中有一个notand指令，用notand指令进行优化即可。
+  具体内容见sm3opt\_v1.s中源码，不多赘述
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image19.png}
+      \caption{优化部分对应的源c代码}
+  \end{figure}
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image20.png}
+      \caption{notand优化处}
+  \end{figure}
+\newpage
+\textbf{v1测试结果:}
+  如图，使用makefile中的测试用例测试三个字符串的哈希值进行比较，结果均正确。
+相比原始版本，优化后的版本减少了3k条左右的指令，性能有所提升。
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image21.png}
+      \caption{notand优化处}
+  \end{figure}
+
+  \newpage
+\subsubsection{v2版本:重写部分函数}
+\textbf{实现过程：}
+经过测试发现，v1版本的优化效果并不是很明显，因此我决定重写一些调用最多的函数，优化数据存储层面的汇编代码。
+
+经常测试会发现long\_to\_str和str\_to\_long函数调用次数最多，v2版本是对这两个函数进行重写。
+
+如下图，直接把所有栈操作去掉，直接用参数寄存器和临时寄存器进行操作，减少了大量的指令条目。
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image22.png}
+      \caption{long\_to\_str函数重写}
+  \end{figure}
+
+另一个函数str\_to\_long同理，如下图：
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image23.png}
+      \caption{str\_to\_long函数重写}
+  \end{figure}
+
+\textbf{v2测试结果:}
+  如图，现在变成6w条左右的指令，性能有所提升。
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image24.png}
+      \caption{v2测试结果}
+  \end{figure}
+
+\newpage
+
+\subsubsection{v3版本:增加自定义大小端转换指令}
+
+\textbf{实现过程：}
+因为这两个函数调用次数最多，且两个函数都是实现大小端转换，因此自定义一个大小端转换的指令，用于优化这两个函数。
+
+具体操作在任务一中已经详细说明，这里不再赘述，仅介绍hart.cpp中的实现。
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image25.png}
+      \caption{增加自定义大小端转换指令}
+  \end{figure}
+
+然后把汇编中的有关的函数调用全部改为一条指令，如下图：
+具体修改查看源码中的git commit记录。
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image26.png}
+      \caption{函数调用改为一条指令}
+  \end{figure}
+
+\textbf{v3测试结果:}
+  如图，一下子减少到了5w条左右的指令。说明这两个函数是主要的瓶颈。
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image27.png}
+      \caption{v3测试结果}
+  \end{figure}
+
+\subsubsection{v4版本:爆改源码，极致优化}
+  源汇编代码没有任何编译器优化，导致指令条目过多，其它部分的性能也有待提升。
+于是直接从源码上手，借助编译器进行优化。
+
+操作一：将宏改成函数调用，函数内联，函数直接用拓展指令汇编实现，如下图：
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width =1.0\textwidth]{figures/fig/image28.png}
+      \caption{宏改成函数调用}
+  \end{figure}
+
+  操作二：将两个大小端转换函数改成内联函数，并用自定义的大小端转换指令进行优化，函数也直接用拓展指令汇编实现，如下图：
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1.0\textwidth]{figures/fig/image29.png}
+        \caption{大小端转换函数改成内联函数}
+    \end{figure}
+
+  操作三：将其余部分调用到long\_to\_str和str\_to\_long函数的函数直接改成汇编实现，如下图：
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1.0\textwidth]{figures/fig/image30.png}
+        \caption{函数直接改成汇编实现}
+    \end{figure}
+
+    详细修改见源码中的git commit记录。
+    
+    最后使用v4/makefile中的脚本进行编译，得到sm3opt\_v4.s，这里直接开启了-O3优化，得到了最后的优化版本。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1.0\textwidth]{figures/fig/image31.png}
+        \caption{makefile脚本}
+    \end{figure}
+
+\textbf{v4测试结果:}
+    如图，对比原始版本，哈希值计算结果均正确，
+    指令条目爆减到2.9w条左右。
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width =1.0\textwidth]{figures/fig/image32.png}
+        \caption{v4测试结果}
+    \end{figure}
+
+\section{项目总结}
+
+\textcolor{red}{最终v4版本的优化效果最好，指令条目从原始版本的7.3w左右减少到了2.9w条左右，性能有了极大的提升。}
+
+
+\textcolor{red}{
+可以再进一步优化，比如设计使用更多的拓展指令来替换c源码中的一些操作，
+或者直接用汇编实现源码中的一些函数和过程，进一步提升性能。预计还能减少几千条指令。
+不过懒得再写，就这样了。
+}
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

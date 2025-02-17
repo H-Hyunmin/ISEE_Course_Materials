@@ -1,0 +1,7 @@
+; FinalProc.def : Declares the module parameters for the DLL.
+
+LIBRARY      "FinalProc"
+DESCRIPTION  'FinalProc Windows Dynamic Link Library'
+
+EXPORTS
+    ; Explicit exports can go here

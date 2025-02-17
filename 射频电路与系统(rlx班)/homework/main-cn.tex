@@ -1,0 +1,1012 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Computer Organization and Design   } % 页眉
+\rhead{3220103462}
+\title{HOMEWORK} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Radio Frequency Circuits and Systems } % 课程信息
+
+\studentinfo{Name: \textit{黄贤敏}  \quad  \quad Student ID: \textit{3220103462}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+
+14.1 The Iridium satellite communication system was designed with a link margin of 16 dB, and was originally advertised as being capable of providing service to users with hand-held phones in vehicles,
+buildings, and urban areas. Today, after bankruptcy and restructuring of the company, it is recommended that Iridium phones be used outdoors, with a line of sight to the satellites. Find some
+estimates of the link margins (due to fading) required for L-band communications into vehicles and
+buildings. Do you think the Iridium system would have operated reliably in these environments? If
+not, why was the system designed with a 16 dB link margin?
+
+
+
+
+\begin{solution}
+The link margin required for L-band communication is typically around 20–25 dB in vehicles and 30–40 dB in buildings due to signal attenuation from metal and building materials. 
+So, I think the Iridium system, designed with a 16 dB link margin, would struggle to operate 
+reliably in these environments, as the margin is insufficient 
+to overcome the significant fading caused by obstructions. 
+
+The system was originally intended for outdoor use with line-of-sight to satellites, 
+which is why the 16 dB margin was deemed adequate for those conditions.
+That is why the system was designed with a 16 dB link margin.
+
+\end{solution}
+
+\newpage
+14.2 An antenna has a radiation pattern function given by \( F_\theta(\theta, \phi) = A \sin^2 \theta \cos \phi \). Find the main beam
+position, the 3 dB beamwidths in the principal planes, and the directivity (in dB) for this antenna.
+What is the polarization of this antenna?
+
+\begin{solution}
+
+
+Given the radiation pattern function \( F_\theta(\theta, \phi) = A \sin^2 \theta \cos \phi \), we need to find the main beam position, the 3 dB beamwidths in the principal planes, the directivity (in dB), and the polarization of the antenna.
+
+\subsection*{Step 1: Main Beam Position}
+The main beam position is where \( F_\theta(\theta, \phi) \) achieves its maximum value. Since \( A \) is a constant, we maximize \( \sin^2 \theta \cos \phi \).
+
+- \( \sin^2 \theta \) is maximized at \( \theta = \frac{\pi}{2} \).
+- \( \cos \phi \) is maximized at \( \phi = 0 \).
+
+Thus, the main beam position is at \( \theta = \frac{\pi}{2} \) and \( \phi = 0 \).
+
+\subsection*{Step 2: 3 dB Beamwidths in the Principal Planes}
+The 3 dB beamwidth is the angle over which the radiation pattern function drops to half its maximum value.
+
+\subsubsection*{E-plane (θ = constant)}
+In the E-plane, \( \theta = \frac{\pi}{2} \) and \( F_\theta\left(\frac{\pi}{2}, \phi\right) = A \cos \phi \).
+
+To find the 3 dB beamwidth:
+\[ A \cos \phi = \frac{A}{\sqrt{2}} \]
+\[ \cos \phi = \frac{1}{\sqrt{2}} \]
+\[ \phi = \pm \frac{\pi}{4} \]
+
+Thus, the 3 dB beamwidth in the E-plane is:
+\[ \Delta \phi = \frac{\pi}{2} \]
+
+\subsubsection*{H-plane (φ = constant)}
+In the H-plane, \( \phi = 0 \) and \( F_\theta(\theta, 0) = A \sin^2 \theta \).
+
+To find the 3 dB beamwidth:
+\[ A \sin^2 \theta = \frac{A}{\sqrt{2}} \]
+\[ \sin^2 \theta = \frac{1}{\sqrt{2}} \]
+\[ \sin \theta = \frac{1}{\sqrt[4]{2}} \]
+\[ \theta = \sin^{-1}\left(\frac{1}{\sqrt[4]{2}}\right) \approx 0.927 \text{ radians} \]
+
+Thus, the 3 dB beamwidth in the H-plane is:
+\[ \Delta \theta = 1.854 \text{ radians} \]
+
+\subsection*{Step 3: Directivity (in dB)}
+The directivity \( D \) is given by:
+\[ D = \frac{\text{Maximum value of } F_\theta^2}{\text{Average value of } F_\theta^2} \]
+
+The maximum value of \( F_\theta^2 \) is \( A^2 \). The average value is:
+\[ \text{Average value of } F_\theta^2 = \frac{1}{4\pi} \int_0^{2\pi} \int_0^\pi A^2 \sin^4 \theta \cos^2 \phi \sin \theta \, d\theta \, d\phi \]
+
+First, integrate with respect to \( \phi \):
+\[ \int_0^{2\pi} \cos^2 \phi \, d\phi = \pi \]
+
+Next, integrate with respect to \( \theta \):
+\[ \int_0^\pi \sin^5 \theta \, d\theta = \frac{16}{15} \]
+
+Thus, the average value is:
+\[ \text{Average value of } F_\theta^2 = \frac{A^2 \pi \frac{16}{15}}{4\pi} = \frac{4A^2}{15} \]
+
+The directivity is:
+\[ D = \frac{A^2}{\frac{4A^2}{15}} = \frac{15}{4} = 3.75 \]
+
+In dB, the directivity is:
+\[ D_{\text{dB}} = 10 \log_{10}(3.75) \approx 5.74 \text{ dB} \]
+
+\subsection*{Step 4: Polarization}
+The given radiation pattern function suggests that the antenna is linearly polarized. The presence of \( \cos \phi \) indicates a horizontal polarization component, while the absence of a \( \sin \phi \) term suggests no vertical polarization component.
+
+Thus, the antenna is horizontally polarized.
+
+\section*{Final Answer}
+\[
+\boxed{
+\begin{aligned}
+&\text{Main beam position: } \theta = \frac{\pi}{2}, \phi = 0 \\
+&\text{3 dB beamwidth in E-plane: } \frac{\pi}{2} \\
+&\text{3 dB beamwidth in H-plane: } 1.854 \text{ radians} \\
+&\text{Directivity: } 5.74 \text{ dB} \\
+&\text{Polarization: Horizontal}
+\end{aligned}
+}
+\]
+  
+\end{solution}
+
+\newpage
+
+
+
+14.3 A monopole antenna on a large ground plane has a far-field pattern function 
+given by \[ F_\theta(\theta, \phi) = A \sin \theta \quad \text{for} \quad 0 \leq \theta \leq 90^\circ \]. 
+and the radiated field is zero for \( 90^\circ \leq \theta \leq 180^\circ \). Find the directivity (in dB)
+of this antenna.
+\begin{solution}
+
+\section*{Directivity Calculation for a Monopole Antenna}
+
+Given the far-field pattern function of a monopole antenna on a large ground plane:
+\[ F_\theta(\theta, \phi) = A \sin \theta \quad \text{for} \quad 0 \leq \theta \leq 90^\circ \]
+and the radiated field is zero for \( 90^\circ \leq \theta \leq 180^\circ \).
+
+\subsection*{Step 1: Maximum Value of the Radiation Pattern Function}
+The maximum value of \( F_\theta(\theta, \phi) \) occurs at \( \theta = 90^\circ \), where \( \sin 90^\circ = 1 \). Thus, the maximum value is \( A \).
+
+\subsection*{Step 2: Average Value of the Radiation Pattern Function}
+The average value is given by the integral of the square of the radiation pattern function over all directions, divided by the solid angle \( 4\pi \):
+\[ \text{Average value} = \frac{1}{4\pi} \int_0^{2\pi} \int_0^\pi F_\theta^2(\theta, \phi) \sin \theta \, d\theta \, d\phi \]
+
+Since \( F_\theta(\theta, \phi) = A \sin \theta \) for \( 0 \leq \theta \leq 90^\circ \) and zero otherwise, the integral simplifies to:
+\[ \text{Average value} = \frac{1}{4\pi} \int_0^{2\pi} \int_0^{\frac{\pi}{2}} (A \sin \theta)^2 \sin \theta \, d\theta \, d\phi \]
+\[ = \frac{A^2}{4\pi} \int_0^{2\pi} d\phi \int_0^{\frac{\pi}{2}} \sin^3 \theta \, d\theta \]
+
+The integral with respect to \( \phi \) is:
+\[ \int_0^{2\pi} d\phi = 2\pi \]
+
+The integral with respect to \( \theta \) is:
+\[ \int_0^{\frac{\pi}{2}} \sin^3 \theta \, d\theta = \int_0^{\frac{\pi}{2}} \sin \theta (1 - \cos^2 \theta) \, d\theta \]
+
+Let \( u = \cos \theta \), then \( du = -\sin \theta \, d\theta \), and the limits of integration change from \( \theta = 0 \) to \( \theta = \frac{\pi}{2} \) to \( u = 1 \) to \( u = 0 \):
+\[ \int_0^{\frac{\pi}{2}} \sin^3 \theta \, d\theta = \int_1^0 - (1 - u^2) \, du = \int_0^1 (1 - u^2) \, du \]
+\[ = \left[ u - \frac{u^3}{3} \right]_0^1 = 1 - \frac{1}{3} = \frac{2}{3} \]
+
+Therefore, the average value is:
+\[ \text{Average value} = \frac{A^2}{4\pi} \cdot 2\pi \cdot \frac{2}{3} = \frac{A^2}{3} \]
+
+\subsection*{Step 3: Directivity}
+The directivity \( D \) is the ratio of the maximum value of the radiation pattern function to the average value:
+\[ D = \frac{\text{Maximum value}}{\text{Average value}} = \frac{A^2}{\frac{A^2}{3}} = 3 \]
+
+In dB, the directivity is:
+\[ D_{\text{dB}} = 10 \log_{10}(3) \approx 4.77 \text{ dB} \]
+
+\section*{Final Answer}
+\[ \boxed{4.77 \text{ dB}} \]
+\end{solution}
+
+\newpage
+
+
+
+14.4A DBS reflector antenna operating at 12.4 GHz has a diameter of 18 inches. If the aperture efficiency
+is 65\%, find the directivity.
+\begin{solution}
+\section*{Directivity Calculation for DBS Reflector Antenna}
+
+Given a DBS reflector antenna operating at 12.4 GHz with a diameter of 18 inches and an aperture efficiency of 65\%, we need to find the directivity.
+
+\subsection*{Step 1: Calculate the Area of the Antenna Aperture}
+The area \( A \) of a circular aperture is given by:
+\[ A = \pi \left( \frac{d}{2} \right)^2 \]
+where \( d \) is the diameter of the antenna. Given \( d = 18 \) inches, we convert this to meters (since 1 inch = 0.0254 meters):
+\[ d = 18 \times 0.0254 = 0.4572 \text{ meters} \]
+Therefore, the area is:
+\[ A = \pi \left( \frac{0.4572}{2} \right)^2 = \pi \left( 0.2286 \right)^2 = \pi \times 0.05225796 = 0.1642 \text{ square meters} \]
+
+\subsection*{Step 2: Calculate the Effective Area Considering the Aperture Efficiency}
+The effective area \( A_{\text{eff}} \) is the product of the physical area and the aperture efficiency:
+\[ A_{\text{eff}} = A \times \text{aperture efficiency} = 0.1642 \times 0.65 = 0.10673 \text{ square meters} \]
+
+\subsection*{Step 3: Calculate the Directivity}
+The directivity \( D \) of a reflector antenna is given by:
+\[ D = \frac{4\pi A_{\text{eff}}}{\lambda^2} \]
+where \( \lambda \) is the wavelength of the operating frequency. The wavelength \( \lambda \) is calculated using the speed of light \( c \) (approximately \( 3 \times 10^8 \) meters per second) and the frequency \( f \) (12.4 GHz or \( 12.4 \times 10^9 \) Hz):
+\[ \lambda = \frac{c}{f} = \frac{3 \times 10^8}{12.4 \times 10^9} = 0.0242 \text{ meters} \]
+Therefore, the directivity is:
+\[ D = \frac{4\pi \times 0.10673}{(0.0242)^2} = \frac{4\pi \times 0.10673}{0.00058564} = \frac{1.341}{0.00058564} \approx 2289 \]
+
+\subsection*{Step 4: Convert the Directivity to Decibels (dB)}
+The directivity in decibels \( D_{\text{dB}} \) is given by:
+\[ D_{\text{dB}} = 10 \log_{10}(D) = 10 \log_{10}(2289) \approx 33.6 \text{ dB} \]
+
+\section*{Final Answer}
+\[ \boxed{33.6 \text{ dB}} \]
+
+
+\end{solution}
+\newpage
+
+14.5 A reflector antenna used for a cellular base station backhaul radio link operates at 38 GHz, with a gain
+of 39 dB, a radiation efficiency of 90\%, and a diameter of 12 inches. (a) Find the aperture efficiency
+of this antenna. (b) Find the half-power beamwidth, assuming the beamwidths are identical in the
+two principal planes
+
+\begin{solution}
+\subsection*{Part (a): Aperture Efficiency}
+
+1. Calculate the wavelength \( \lambda \) at 38 GHz:
+\[ \lambda = \frac{c}{f} = \frac{3 \times 10^8 \text{ m/s}}{38 \times 10^9 \text{ Hz}} = \frac{3}{38} \times 10^{-1} \text{ m} = 0.007895 \text{ m} \]
+
+2. Convert the diameter from inches to meters:
+\[ d = 12 \text{ inches} \times 0.0254 \text{ m/inch} = 0.3048 \text{ m} \]
+
+3. Calculate the area \( A \) of the antenna:
+\[ A = \pi \left( \frac{d}{2} \right)^2 = \pi \left( \frac{0.3048}{2} \right)^2 = \pi \left( 0.1524 \right)^2 = \pi \times 0.02322576 = 0.0729 \text{ m}^2 \]
+
+4. Calculate the effective area \( A_{\text{eff}} \) using the gain and the wavelength:
+\[ G = \frac{4\pi A_{\text{eff}}}{\lambda^2} \]
+\[ A_{\text{eff}} = \frac{G \lambda^2}{4\pi} \]
+Given \( G = 39 \text{ dB} \), we convert this to a linear gain:
+\[ G_{\text{linear}} = 10^{39/10} = 10^{3.9} \approx 7943 \]
+Therefore:
+\[ A_{\text{eff}} = \frac{7943 \times (0.007895)^2}{4\pi} = \frac{7943 \times 0.00006232}{4\pi} = \frac{0.4946}{4\pi} \approx 0.0392 \text{ m}^2 \]
+
+5. Calculate the aperture efficiency \( \eta \):
+\[ \eta = \frac{A_{\text{eff}}}{A} = \frac{0.0392}{0.0729} \approx 0.538 \text{ or } 53.8\% \]
+
+\subsection*{Part (b): Half-Power Beamwidth}
+
+1. Use the formula for the half-power beamwidth \( \theta_{\text{HP}} \) of a reflector antenna:
+\[ \theta_{\text{HP}} \approx \frac{70 \lambda}{d} \]
+Substituting the values:
+\[ \theta_{\text{HP}} \approx \frac{70 \times 0.007895}{0.3048} \approx \frac{0.55265}{0.3048} \approx 1.813^\circ \]
+
+\section*{Final Answers}
+\[ \boxed{53.8\%} \]
+\[ \boxed{1.813^\circ} \]
+\end{solution}
+\newpage
+
+
+
+
+14.6 A high-gain antenna array operating at 2.4 GHz is pointed toward a region of the sky for which the
+background can be assumed to be at a uniform temperature of 5 K. A noise temperature of 105 K is
+measured for the antenna temperature. If the physical temperature of the antenna is 290 K, what is
+its radiation efficiency?
+
+\begin{solution}
+Given a high-gain antenna array operating at 2.4 GHz, with a noise temperature of 105 K, a physical temperature of 290 K, and a background temperature of 5 K, we need to find the radiation efficiency.
+
+The formula for the radiation efficiency \( \eta \) is:
+\[ \eta = 1 - \frac{T_{\text{noise}} - T_{\text{env}}}{T_{\text{ant}} - T_{\text{env}}} \]
+
+Substituting the given values:
+\[ T_{\text{noise}} = 105 \text{ K} \]
+\[ T_{\text{ant}} = 290 \text{ K} \]
+\[ T_{\text{env}} = 5 \text{ K} \]
+
+We get:
+\[ \eta = 1 - \frac{105 - 5}{290 - 5} = 1 - \frac{100}{285} = 1 - 0.3509 = 0.6491 \]
+
+Therefore, the radiation efficiency is:
+\[ \eta = 0.6491 \text{ or } 64.91\% \]
+
+\section*{Final Answers}
+\[
+\boxed{64.91\%}
+\]
+
+\end{solution}
+\newpage
+
+
+14.7 Derive equation (14.20) by treating the antenna and lossy line as a cascade of two networks whose
+equivalent noise temperatures are given by (14.18) and (10.15).
+
+
+
+\begin{solution}
+  1. **Identify the noise temperatures of the antenna and the lossy line:**
+   - The noise temperature of the antenna is given by equation (14.18):
+     \[
+     T_A = \eta_{\text{rad}} T_b + (1 - \eta_{\text{rad}})T_p.
+     \]
+   - The noise temperature of the lossy line is given by equation (10.15):
+     \[
+     T_e = (L - 1)T_p.
+     \]
+
+2. **Combine the noise temperatures of the antenna and the lossy line:**
+   - The total noise temperature \( T_S \) of the cascade of the antenna and the lossy line can be found by considering the noise contributions from both the antenna and the lossy line. The noise temperature of the cascade is given by:
+     \[
+     T_S = \frac{T_A}{L} + \frac{T_e}{L}.
+     \]
+   - Substitute the expressions for \( T_A \) and \( T_e \) into the equation:
+     \[
+     T_S = \frac{\eta_{\text{rad}} T_b + (1 - \eta_{\text{rad}})T_p}{L} + \frac{(L - 1)T_p}{L}.
+     \]
+
+   - so, the derived equation (14.20) is:
+     \[
+     T_S = \frac{1}{L}[\eta_{\text{rad}} T_b + (1 - \eta_{\text{rad}})T_p] + \frac{L-1}{L}T_p.
+     \]
+
+
+\end{solution}
+\newpage
+
+14.8Consider the replacement of a DBS dish antenna with a microstrip array antenna. A microstrip array
+offers an aesthetically pleasing flat profile, but suffers from relatively high dissipative loss in its feed
+network, which leads to a high noise temperature. If the background noise temperature is TB = 50 K,
+with an antenna gain of 33.5 dB and a receiver LNB noise figure of 1.1 dB, find the overall G/T for
+the microstrip array antenna and the LNB if the array has a total loss of 2.5 dB. Assume the antenna
+is at a physical temperature of 290 K.
+
+
+
+\begin{solution}
+  \section*{Calculation of Overall G/T for the Microstrip Array Antenna and LNB}
+
+\textbf{Given:}
+\begin{itemize}
+    \item Background noise temperature: \( T_B = 50 \, \text{K} \)
+    \item Antenna gain: \( G_{\text{antenna}} = 33.5 \, \text{dB} \)
+    \item Receiver LNB noise figure: \( NF_{\text{LNB}} = 1.1 \, \text{dB} \)
+    \item Total system loss: \( L_{\text{total}} = 2.5 \, \text{dB} \)
+    \item Physical temperature of antenna: \( T_0 = 290 \, \text{K} \)
+\end{itemize}
+
+\textbf{1. Convert Antenna Gain to Linear Units}
+
+\[
+G_{\text{antenna,linear}} = 10^{\frac{G_{\text{antenna,dB}}}{10}} = 10^{\frac{33.5}{10}} = 2238.72
+\]
+
+\textbf{2. Convert Total Loss to Linear Units}
+
+\[
+L_{\text{total,linear}} = 10^{\frac{L_{\text{total,dB}}}{10}} = 10^{\frac{2.5}{10}} = 1.778
+\]
+
+\textbf{3. Effective Antenna Gain After Loss}
+
+\[
+G_{\text{effective}} = \frac{G_{\text{antenna,linear}}}{L_{\text{total,linear}}} = \frac{2238.72}{1.778} = 1259.4
+\]
+
+\textbf{4. Calculate LNB Noise Temperature}
+
+The LNB noise temperature is related to the noise figure as follows:
+
+\[
+T_{\text{LNB}} = \left(10^{\frac{NF_{\text{LNB}}}{10}} - 1\right) \times T_0
+\]
+
+Substituting the given values:
+
+\[
+T_{\text{LNB}} = \left(10^{\frac{1.1}{10}} - 1\right) \times 290 = (1.290 - 1) \times 290 = 0.290 \times 290 = 84.1 \, \text{K}
+\]
+
+\textbf{5. Total System Temperature}
+
+The total system temperature is the sum of the background noise temperature, the antenna temperature, and the LNB noise temperature:
+
+\[
+T_{\text{sys}} = T_B + T_{\text{LNB}} = 50 \, \text{K}  + 84.1 \, \text{K} = 134.1 \, \text{K}
+\]
+
+\textbf{6. G/T Calculation}
+
+Finally, the overall G/T ratio is:
+
+\[
+\frac{G}{T} = \frac{G_{\text{effective}}}{T_{\text{sys}}} = 10 \log_{10}\left(\frac{1259.4}{134.1}\right) = 10 \log_{10}(9.4) = 9.7 \, \text{dB}
+\]
+
+\textbf{Final Answer:}
+
+\[
+\boxed{2.97 \, \text{K}^{-1}}
+\]
+\end{solution}
+\newpage
+
+14.9 At a distance of 300 m from an antenna operating at 5.8 GHz, the radiated power density in the main
+beam is measured to be 7.5 × 10−3 W/m2. If the input power to the antenna is known to be 85 W,
+find the gain of the antenna.
+
+
+
+
+\begin{solution}
+  To find the gain of the antenna, we can use the formula for power density \( S \) at a distance \( r \) from the antenna, which is given by:
+\[
+S = \frac{P_{\text{input}} \cdot G}{4\pi r^2}
+\]
+where \( P_{\text{input}} \) is the input power to the antenna, \( G \) is the gain of the antenna, and \( r \) is the distance from the antenna.
+
+We are given:
+- \( S = 7.5 \times 10^{-3} \text{ W/m}^2 \)
+- \( P_{\text{input}} = 85 \text{ W} \)
+- \( r = 300 \text{ m} \)
+
+We need to solve for \( G \). Rearranging the formula to solve for \( G \), we get:
+\[
+G = \frac{S \cdot 4\pi r^2}{P_{\text{input}}}
+\]
+
+Substituting the given values into the equation:
+\[
+G = \frac{7.5 \times 10^{-3} \cdot 4\pi \cdot (300)^2}{85}
+\]
+
+Calculating the value step by step:
+\[
+G = \frac{7.5 \times 10^{-3} \cdot 4\pi \cdot 90000}{85}
+\]
+\[
+G = \frac{7.5 \times 10^{-3} \cdot 360000\pi}{85}
+\]
+\[
+G = \frac{2700\pi}{85}
+\]
+\[
+G \approx \frac{8482.30}{85}
+\]
+\[
+G \approx 99.79 \approx 20  \text{ dB}
+\]
+
+
+Therefore, the gain of the antenna is:
+\[
+\boxed{20 \text{ dB}}
+\]
+\end{solution}
+\newpage
+
+
+14.10 A cellular base station is to be connected to its Mobile Telephone Switching Office located 5 km
+away. Two possibilities are to be evaluated: (1) a radio link operating at 28 GHz, with Gt = Gr =
+25 dB, and (2) a wired link using coaxial line having an attenuation of 0.05 dB/m, with four 30 dB
+repeater amplifiers along the line. If the minimum required received power level for both cases is the
+same, which option will require the smallest transmit power?
+
+\begin{solution}
+
+For the radio link, we use the Friis transmission equation:
+\[ P_r = P_t + G_t + G_r - L \]
+where:
+- \( P_r \) is the received power,
+- \( P_t \) is the transmit power,
+- \( G_t \) is the transmit antenna gain,
+- \( G_r \) is the receive antenna gain,
+- \( L \) is the path loss.
+
+The path loss \( L \) for a radio link can be calculated using the formula:
+\[ L = 20 \log_{10} \left( \frac{4\pi d f}{c} \right) \]
+where:
+- \( d \) is the distance between the transmitter and receiver (5 km = 5000 m),
+- \( f \) is the frequency $(28 GHz = 28 \times 10^9 Hz),$
+- \( c \) is the speed of light $(3 \times 10^8 m/s).$
+
+First, calculate the path loss \( L \):
+\[ L = 20 \log_{10} \left( \frac{4\pi \times 5000 \times 28 \times 10^9}{3 \times 10^8} \right) \]
+\[ L = 20 \log_{10} (586430.67) \]
+\[ L \approx 20 \times 5.768 \]
+\[ L \approx 135.36 \text{ dB} \]
+
+Now, using the Friis transmission equation:
+\[ P_t = P_r - G_t - G_r + L \]
+Assuming the minimum required received power level \( P_r \) is the same for both cases, let's denote it as \( P_r \). Then:
+\[ P_t = P_r - 25 - 25 + 135.36 \]
+\[ P_t = P_r + 85.36 \]
+
+Wired Link Calculation
+
+For the wired link, the total attenuation is the sum of the attenuation of the coaxial line and the gain of the repeater amplifiers:
+\[ \text{Total Attenuation} = \text{Attenuation of Coaxial Line} - \text{Gain of Repeaters} \]
+The attenuation of the coaxial line is:
+\[ \text{Attenuation of Coaxial Line} = 0.05 \text{ dB/m} \times 5000 \text{ m} = 250 \text{ dB} \]
+The gain of the repeaters is:
+\[ \text{Gain of Repeaters} = 4 \times 30 \text{ dB} = 120 \text{ dB} \]
+So, the total attenuation is:
+\[ \text{Total Attenuation} = 250 - 120 = 130 \text{ dB} \]
+
+Using the same Friis transmission equation for the wired link:
+\[ P_r = P_t - \text{Total Attenuation} \]
+\[ P_t = P_r + \text{Total Attenuation} \]
+\[ P_t = P_r + 130 \]
+
+
+Comparing the transmit power required for both links:
+- Radio Link: \( P_t = P_r + 85.36 \text{ dB} \)
+- Wired Link: \( P_t = P_r + 130 \text{ dB} \)
+
+The radio link requires less transmit power. Therefore, the option that will require the smallest transmit power is the radio link.
+
+The final answer is:
+\[
+\boxed{\text{Radio Link}}
+\]
+\end{solution}
+\newpage
+14.11 A GSM cellular telephone system operates at a downlink frequency of 935–960 MHz, with a channel
+bandwidth of 200 kHz, and a base station that transmits with an EIRP of 20 W. The mobile receiver
+has an antenna with a gain of 0 dBi and a noise temperature of 450 K, and the receiver has a noise
+figure of 8 dB. Find the maximum operating range if the required minimum SNR at the output of the
+receiver is 10 dB, and a link margin of 30 dB is required to account for propagation into vehicles,
+buildings, and urban areas.
+
+\begin{solution}
+  \section*{Maximum Operating Range Calculation for GSM Cellular System}
+
+Given:
+\begin{itemize}
+  \item Downlink frequency: 935--960 MHz
+  \item Channel bandwidth: 200 kHz
+  \item EIRP of base station: 20 W
+  \item Mobile receiver antenna gain: 0 dBi
+  \item Noise temperature: 450 K
+  \item Noise figure: 8 dB
+  \item Minimum SNR required: 10 dB
+  \item Link margin: 30 dB
+\end{itemize}
+
+\subsection*{Step 1: Noise Power Calculation}
+
+\begin{align*}
+ & \quad T_{\text{sys}} = T_A + T_R = T_A + (F_R - 1)T_0 = 450 + (6.31 - 1)(290) = 1990 \, \text{K} \\
+ & \quad N_0 = kT_{\text{sys}}B = (1.38 \times 10^{-23})(1990)(200 \times 10^3) = 5.5 \times 10^{-15} \, \text{W} = -112.6 \, \text{dBm} \quad \text{(at 100 m input)} \\
+ & \quad S_0(\text{dBm}) = \left(\frac{S_0}{N_0}\right) + N_0 + LM = 10 - 112.6 + 30 = -72.6 \, \text{dBm} = 5.5 \times 10^{-11} \, \text{W} \\
+ & \quad R = \sqrt{\frac{P_t G_t G_r \lambda^2}{(4\pi)^2 S_0}} = \sqrt{\frac{(20)(1)(1.317)^2}{(4\pi)^2(5.5 \times 10^{-11})}} = 15.2 \, \text{km}
+\end{align*}
+
+The maximum operating range of the GSM cellular system is approximately:
+
+\[
+\boxed{12.9 \, \text{km}}
+\]
+\end{solution}
+\newpage
+
+14.12 Consider the GPS receiver system shown below. The guaranteed minimum L1 (1575 MHz) carrier
+power received by an antenna on Earth having a gain of 0 dBi is Si = −160 dBW. A GPS receiver is
+usually specified as requiring a minimum carrier-to-noise ratio, relative to a 1 Hz bandwidth, of C/N
+(Hz). If the receiver antenna actually has a gain G A and a noise temperature TA, derive an expression
+for the maximum allowable amplifier noise figure F, assuming an amplifier gain G and a connecting
+line loss L. Evaluate this expression for C/N = 32 dB-Hz, G A = 5 dB, TA = 300 K, G = 10 dB,
+and L = 25 dB.
+
+\begin{solution}
+
+Given Parameters:
+\begin{itemize}
+    \item Minimum carrier power received \( S_i = -160 \text{ dBW} \)
+    \item Antenna gain \( G_A = 5 \text{ dB} \)
+    \item Noise temperature \( T_A = 300 \text{ K} \)
+    \item Amplifier gain \( G = 10 \text{ dB} \)
+    \item Line loss \( L = 25 \text{ dB} \)
+    \item Minimum \( C/N = 32 \text{ dB-Hz} \)
+\end{itemize}
+
+\textbf{Step 1:} Convert Gains and \( C/N \) to Linear Scale
+\[
+\begin{array}{l}
+G_A = 10^{5/10} = 3.162 \\
+G = 10^{10/10} = 10 \\
+\frac{C}{N} = 10^{32/10} = 1580
+\end{array}
+\]
+
+\textbf{Step 2:} Calculate the System Noise Temperature \( T_{\text{sys}} \)
+\[
+T_{\text{sys}} = T_A + (F - 1)T_0 + \frac{(L - 1)T_0}{G}
+\]
+where \( T_0 = 290 \text{ K} \) (standard temperature).
+
+\textbf{Step 3:} Calculate the Noise Power \( N_0 \)
+\[
+N_0 = kT_{\text{sys}}B
+\]
+where \( k = 1.38 \times 10^{-23} \text{ J/K} \) and \( B = 1 \text{ Hz} \).
+
+\textbf{Step 4:} Calculate the Signal Power \( S_0 \)
+\[
+S_0 = S_i + \frac{G_A G}{L}
+\]
+
+\textbf{Step 5:} Derive the Expression for \( F \)
+\[
+F = 1 + \frac{T_e}{T_0} - \frac{T_A}{T_0} - \frac{(L - 1)}{G}
+\]
+where \( T_e = T_A + (F - 1)T_0 + \frac{(L - 1)T_0}{G} \).
+
+\textbf{Step 6:} Evaluate \( F \)
+
+$F = 1 + \frac{(1 \times 10^{-16})(3.16)}{(1.38 \times 10^{-23})(290)(1.58 \times 10^3)} - \frac{300}{290} - \frac{(316.2-1)}{10} = 18.4 = 12.6 \text{ dB}$
+\end{solution}
+\newpage
+14.13 A key premise in many science fiction stories is the idea that radio and TV signals from Earth
+can travel through space and be received by listeners in another star system. Show that this is a fallacy by calculating the maximum distance from Earth where a signal could be received with a
+SNR of 0 dB. Specifically, assume TV channel 4, broadcasting at 67 MHz, with a 4 MHz bandwidth, a transmitter power of 1000 W, transmit and receive antenna gains of 4 dB, a cosmic background noise temperature of 4 K, and a perfectly noiseless receiver. How much would this distance decrease if an SNR of 30 dB is required at the receiver? (30 dB is a typical value for good
+reception of an analog video signal.) Relate these distances to the nearest planet in our solar
+system.
+\begin{solution}
+  \subsection*{Parameters}
+\begin{align*}
+f &= 67 \text{ MHz}, \\
+B &= 4 \text{ MHz}, \\
+P_E &= 1000 \text{ W}, \\
+G &= 4 \text{ dB} = 2.51 \text{ (linear)}, \\
+T_B &= 4 \text{ K}, \\
+k &= 1.38 \times 10^{-23} \text{ J/K}.
+\end{align*}
+
+\subsection*{Wavelength}
+\[ \lambda = \frac{c}{f} = \frac{3 \times 10^8 \text{ m/s}}{67 \times 10^6 \text{ Hz}} \approx 4.48 \text{ m} \]
+
+\subsection*{SNR of 0 dB}
+For SNR of 0 dB, \( P_R = N_0 \):
+\[ N_0 = k T_B B = (1.38 \times 10^{-23})(4)(4 \times 10^6) = 2.208 \times 10^{-16} \text{ W} \]
+\[ R = \sqrt{\frac{P_E G^2 \lambda^2}{16 \pi^2 k T_B B}} = \sqrt{\frac{(1000)(2.51)^2 (4.48)^2}{16 \pi^2 (1.38 \times 10^{-23})(4)(4 \times 10^8)}} \approx 1.9 \times 10^9 \text{ m} \]
+
+\subsection*{SNR of 30 dB}
+For SNR of 30 dB, \( S_0 = 1000 N_0 \):
+\[ S_0 = 1000 \times 2.208 \times 10^{-16} = 2.208 \times 10^{-13} \text{ W} \]
+\[ R = \sqrt{\frac{P_E G^2 \lambda^2}{16 \pi^2 S_0}} = \sqrt{\frac{(1000)(2.51)^2 (4.48)^2}{16 \pi^2 (2.208 \times 10^{-13})}} \approx 6.0 \times 10^7 \text{ m} \]
+
+\subsection*{Comparison to the Nearest Planet}
+The distance to Venus, the nearest planet to Earth, is approximately \( 4.2 \times 10^8 \text{ m} \), so the signal will not even reach the nearest planet.
+\end{solution}
+\newpage
+
+14.14 The Mariner 10 spacecraft used to explore the planet Mercury in 1974 used BPSK with Pb = 0.05
+(Eb/n0 = 1.4 dB) to transmit image data back to Earth (a distance of about 1.6 × 108 km). The
+spacecraft transmitter operated at 2.295 GHz, with an antenna gain of 27.6 dB and a carrier power
+of 16.8 W. The ground station had an antenna with a gain of 61.3 dB and an overall system noise
+temperature of 13.5 K. Find the maximum possible data rate.
+\begin{solution}
+  \section*{Maximum Data Rate for Mariner 10 Spacecraft}
+
+Given parameters:
+\begin{itemize}
+    \item \( P_b = 0.05 \)
+    \item \( \frac{E_b}{N_0} = 1.4 \text{ dB} \)
+    \item \( R = 1.6 \times 10^8 \text{ km} \)
+    \item \( f = 2.295 \text{ GHz} \)
+    \item \( G_t = 27.6 \text{ dB} \)
+    \item \( P_t = 16.8 \text{ W} \)
+    \item \( G_r = 61.3 \text{ dB} \)
+    \item \( T_{\text{sys}} = 13.5 \text{ K} \)
+\end{itemize}
+
+Calculate wavelength \( \lambda \):
+\[ \lambda = \frac{3 \times 10^8 \text{ m/s}}{2.295 \times 10^9 \text{ Hz}} \approx 0.1307 \text{ m} \]
+
+Calculate free space path loss \( L_0 \):
+\[ L_0 = 20 \log_{10}(4\pi R/\lambda) =263.7 \text{ dB} \]
+
+Calculate the received power \( P_r \):
+\[
+P_r = P_t + G_t - L_0 + G_r = -162.6 \text{ dBW} = 5.56 \times 10^{-17} \text{ W}.
+\]
+
+Calculate noise power \( N_0 \):
+\[ N_0 = (1.38 \times 10^{-23}) T_{\text{sys}} B \]
+
+Calculate the noise power \( N_0 \):
+\[
+N_0 = k T_{\text{sys}}.
+\]
+
+calculate the data rate \( R_b \):
+\[
+R_b = \left(\frac{P_r}{N_0}\right) \left(\frac{N_0}{E_b}\right) = \frac{5.56 \times 10^{-17}}{(1.38 \times 10^{-23})(13.5)} \left(\frac{1}{1.38}\right) = 216 \text{ kbps}.
+\]
+
+\end{solution}
+\newpage
+
+14.15 Derive the radar equation for the bistatic case where the transmit and receive antennas have gains of
+Gt and Gr, and are at distances Rt and Rr from the target, respectively.
+
+\begin{solution}
+  Given parameters:
+\begin{itemize}
+    \item Transmit antenna gain \( G_t \)
+    \item Receive antenna gain \( G_r \)
+    \item Distance from transmit antenna to target \( R_t \)
+    \item Distance from target to receive antenna \( R_r \)
+\end{itemize}
+
+\subsection*{Power Density Incident on the Target}
+The power density \( S \) incident on the target is:
+\[ S = \frac{P_t G_t}{4\pi R_t^2} \]
+
+\subsection*{Scattered Power Density at the Receiver}
+The scattered power density \( S_r \) at the receiver is:
+\[ S_r = \frac{P_t G_t G_r \sigma}{(4\pi)^2 R_t^2 R_r^2} \]
+
+\subsection*{Received Power}
+The received power \( P_r \) can be found using:
+\[ P_r = P_t \frac{G_t G_r \lambda^2 \sigma}{(4\pi)^3 R_t^2 R_r^2} \]
+
+\end{solution}
+\newpage
+
+14.16 A pulse radar has a pulse repetition frequency fr = 1/Tr. Determine the maximum unambiguous
+range of the radar. (Range ambiguity occurs when the round-trip time of a return pulse is greater than
+the pulse repetition time, so it becomes unclear as to whether a given return pulse belongs to the last
+transmitted pulse or some earlier transmitted pulse.)
+\begin{solution}
+  Given the pulse repetition frequency \( f_r = \frac{1}{T_r} \), we determine the maximum unambiguous range of the radar.
+
+\subsection*{Round-Trip Time}
+The round-trip time \( T \) for a pulse return is:
+\[ T = \frac{2R}{c} \]
+where \( R \) is the range to the target, and \( c \) is the speed of light.
+
+\subsection*{Maximum Unambiguous Range}
+The maximum unambiguous range \( R_{\text{max}} \) is:
+\[ R_{\text{max}} = \frac{cT_r}{2} = \frac{c}{2f_r} \]
+\end{solution}
+\newpage
+
+14.17 A Doppler radar operating at 12 GHz is intended to detect target velocities ranging from 1 to
+20 m/sec. What is the required passband of the Doppler filter?
+\begin{solution}
+  Given parameters:
+\begin{align*}
+f_0 &= 12 \text{ GHz} = 12 \times 10^9 \text{ Hz}, \\
+v_{\text{MIN}} &= 1 \text{ m/s}, \\
+v_{\text{MAX}} &= 20 \text{ m/s}, \\
+c &= 3 \times 10^8 \text{ m/s}.
+\end{align*}
+
+Calculate the minimum Doppler frequency:
+\[ f_{d(\text{MIN})} = \frac{2 v_{\text{MIN}} f_0}{c} = \frac{2 \times 1 \times 12 \times 10^9}{3 \times 10^8} = 80 \text{ Hz} \]
+
+Calculate the maximum Doppler frequency:
+\[ f_{d(\text{MAX})} = \frac{2 v_{\text{MAX}} f_0}{c} = \frac{2 \times 20 \times 12 \times 10^9}{3 \times 10^8} = 1600 \text{ Hz} \]
+
+The required passband of the Doppler filter is:
+\[ \boxed{80 \text{ Hz} \text{ to } 1600 \text{ Hz}} \]
+\end{solution}
+\newpage
+
+14.18 A pulse radar operates at 2 GHz and has a per-pulse power of 1 kW. If it is to be used to detect
+a target with σ = 20 m2 at a range of 10 km, what should be the minimum isolation between the
+transmitter and receiver so that the leakage signal from the transmitter is at least 10 dB below the
+received signal? Assume an antenna gain of 30 dB.
+\begin{solution}
+  Given parameters:
+\begin{align*}
+f &= 2 \text{ GHz}, \\
+P_t &= 1 \text{ kW} = 1000 \text{ W}, \\
+R &= 10 \text{ km} = 10^4 \text{ m}, \\
+\sigma &= 20 \text{ m}^2, \\
+G &= 30 \text{ dB} = 10^3.
+\end{align*}
+
+Calculate the wavelength \( \lambda \):
+\[ \lambda = \frac{c}{f} = \frac{3 \times 10^8 \text{ m/s}}{2 \times 10^9 \text{ Hz}} = 0.15 \text{ m} \]
+
+Calculate the received power \( P_r \):
+\[ P_r = P_t \frac{G^2 \lambda^2 \sigma}{(4\pi)^3 R^4} = 1000 \frac{(10^3)^2 (0.15)^2 (20)}{(4\pi)^3 (10^4)^4} = 2.27 \times 10^{-11} \text{ W} = -76 \text{ dBm} \]
+
+Calculate the transmitter power in dBm:
+\[ P_t \text{ in dBm} = 10 \log_{10}(10^3) + 30 = 70 \text{ dBm} \]
+
+Calculate the required isolation \( I \):
+\[ I = P_t \text{ in dBm} - P_r \text{ in dBm} + 10 \text{ dB} = 70 \text{ dBm} - (-76 \text{ dBm}) + 10 \text{ dB} = 156 \text{ dB} \]
+
+The minimum isolation required is:
+\[ \boxed{156 \text{ dB}} \]
+\end{solution}
+\newpage
+
+14.19 An antenna having a gain G is shorted at its terminals. What is the minimum monostatic radar cross
+section in the direction of the main beam?
+\begin{solution}
+  Assume an incident plane wave with power density \( S_t \). The received power of the antenna is:
+\[ P_e = S_t A_e = S_t \frac{\lambda^2 G}{4\pi} \]
+where \( A_e \) is the effective area of the antenna, \( \lambda \) is the wavelength, and \( G \) is the gain of the antenna.
+
+Because of the short-circuit termination, all of this power is re-transmitted (assuming a lossless antenna), giving a radiated power in the main beam direction of:
+\[ P_s = G P_e \]
+
+Then the Radar Cross-Section (RCS) can be found :
+\[ \sigma = \frac{P_s}{S_t} = \frac{\lambda^2 G^2}{4\pi} \]
+\end{solution}
+\newpage
+
+
+14.20 Consider the radiometer antenna shown below, where the antenna is at a physical temperature Tp
+and has a radiation efficiency ηrad, and an impedance mismatch  at its terminals. If TS is the apparent temperature seen by the radiometer, show that  TS/Ttrue is equal to the product of radiation efficiency and mismatch loss, by applying two background temperatures, TB = Tp and TB =
+T2 	= Tp.   
+\begin{solution}
+  Consider the radiometer antenna shown below, where the antenna is at a physical temperature \( T_P \) and has a radiation efficiency \( \eta_{\text{rad}} \), and an impedance mismatch \( \Gamma \) at its terminals. If \( T_S \) is the apparent temperature seen by the radiometer, we need to show that \( \frac{T_S}{T_{\text{TRUE}}} \) is equal to the product of radiation efficiency and mismatch loss.
+
+\subsection*{Step 1: Define the True Temperature Change}
+The true temperature change \( \Delta T_{\text{TRUE}} \) is the difference between the two background temperatures:
+\[ \Delta T_{\text{TRUE}} = T_P - T_2 \]
+
+\subsection*{Step 2: Define the Apparent Temperature Change}
+The apparent temperature \( T_S \) seen by the radiometer is given by:
+\[ T_S = (1-\Gamma^2)\left[\eta_{\text{rad}} T_B + (1-\eta_{\text{rad}})T_P\right] \]
+
+The change in apparent temperature \( \Delta T_S \) when the background temperature changes from \( T_B = T_1 \) to \( T_B = T_2 \) is:
+\[ \Delta T_S = T_S\bigg|_{T_B=T_1} - T_S\bigg|_{T_B=T_2} \]
+
+\subsection*{Step 3: Calculate the Apparent Temperature at Each Background Temperature}
+For \( T_B = T_1 \):
+\[ T_S(T_1) = (1 - \Gamma^2) \left[ \eta_{\text{rad}} T_1 + (1 - \eta_{\text{rad}}) T_P \right] \]
+
+For \( T_B = T_2 \):
+\[ T_S(T_2) = (1 - \Gamma^2) \left[ \eta_{\text{rad}} T_2 + (1 - \eta_{\text{rad}}) T_P \right] \]
+
+\subsection*{Step 4: Calculate the Change in Apparent Temperature}
+\[ \Delta T_S = (1-\Gamma^2)\left[\eta_{\text{rad}} T_P + (1-\eta_{\text{rad}}) T_P\right] - (1-\Gamma^2)\left[\eta_{\text{rad}} T_2 + (1-\eta_{\text{rad}}) T_P\right] \]
+\[ \Delta T_S = (1-\Gamma^2) \eta_{\text{rad}} (T_P - T_2) \]
+
+\subsection*{Step 5: Calculate the Ratio of Apparent to True Temperature Change}
+\[ \frac{\Delta T_S}{\Delta T_{\text{TRUE}}} = \frac{(1-\Gamma^2)\eta_{\text{rad}}(T_P - T_2)}{T_P - T_2} = (1-\Gamma^2)\eta_{\text{rad}} \]
+\end{solution}
+\newpage
+
+
+14.21 The atmosphere does not have a definite thickness since it gradually thins with altitude, with a consequent decrease in attenuation. However, if we use a simplified “orange peel” model and assume that
+the atmosphere can be approximated by a uniform layer of fixed thickness, we can estimate the background noise temperature seen through the atmosphere. Thus, let the thickness of the atmosphere
+be 4000 m, and find the maximum distance  to the edge of the atmosphere along the horizon, as
+shown in the figure below (the radius of Earth is 6400 km). Now assume an average atmospheric
+attenuation of 0.005 dB/km, with a background noise temperature beyond the atmosphere of 4 K,
+and find the noise temperature seen on Earth by treating the cascade of the background noise with
+the attenuation of the atmosphere. Do this for an ideal antenna pointing toward the zenith, and toward
+the horizon.
+\begin{solution}
+  Given parameters:
+\begin{itemize}
+    \item Thickness of the atmosphere \( l = 4000 \text{ m} = 4 \text{ km} \)
+    \item Earth's radius \( R = 6400 \text{ km} \)
+    \item Average atmospheric attenuation \( \alpha = 0.005 \text{ dB/km} \)
+    \item Background noise temperature \( T_0 = 4 \text{ K} \)
+\end{itemize}
+
+\subsection*{Maximum Distance to the Edge of the Atmosphere Along the Horizon}
+\[ d = \sqrt{(R+4)^2 - R^2} = \sqrt{6404^2 - 6400^2} = 226 \text{ km} \]
+
+\subsection*{Line Loss at Zenith and Horizon}
+\[ L_{\text{zenith}} = (0.005 \text{ dB/km}) \times 4 \text{ km} = 0.02 \text{ dB} =1.0046 \]
+\[ L_{\text{horizon}} = (0.005 \text{ dB/km}) \times 226 \text{ km} = 1.13 \text{ dB} =1.297 \]
+
+\subsection*{Noise Temperature at Zenith and Horizon}
+At zenith:
+\[ T_{e,\text{zenith}} = \frac{4}{L_{\text{zenith}}} +(L_{\text{zenith}}-1) * T_0 = \frac{4}{1.0046} + 0.0046 \times 290 =5.3 \text{ K} \]
+
+At the horizon:
+\[ T_{e,\text{horizon}} = \frac{4}{L_{\text{horizon}}} +(L_{\text{horizon}}-1) * T_0 = \frac{4}{1.297} + 0.297 \times 290 = 89.2 \text{ K} \]
+\end{solution}
+\newpage
+
+
+14.22 A 28 GHz radio link uses a tower-mounted reflector antenna with a gain of 32 dB and a transmitter power of 5 W. (a) Find the minimum distance within the main beam of the antenna for which
+the U.S-recommended safe power density limit of 10 mW/cm2 is not exceeded. (b) How does this
+distance change for a position within the sidelobe region of the antenna if we assume a worst-case
+sidelobe level of 10 dB below the main beam? (c) Are these distances in the far-field region of the
+antenna? (Assume a circular reflector, with an aperture efficiency of 60\%.)
+\begin{solution}
+  Given parameters:
+\begin{itemize}
+    \item Frequency \( f = 28 \text{ GHz} \)
+    \item Antenna gain \( G = 32 \text{ dB} =1585 \)
+    \item Transmitter power \( P_t = 5 \text{ W} \)
+    \item Safe power density limit \( S = 10 \text{ mW/cm}^2 \)
+    \item Sidelobe level \( \Delta G = -10 \text{ dB} \)
+    \item Aperture efficiency \( \eta = 60\% \)
+\end{itemize}
+
+\subsection*{(a)}
+\[ R = \sqrt{\frac{P_t G}{4\pi S}} = \sqrt{\frac{5 \times 1585}{4\pi \times 0.01}} \approx 251 \text{ cm} = 2.51 \text{ m} \]
+
+\subsection*{(b)}
+\[G_{\text{sidelobe}}= G + \Delta G = 22 \text{dB} = 158.5 \]
+\[ R_{\text{sidelobe}} = \sqrt{\frac{P_t G_{\text{sidelobe}}}{4\pi S}} = \sqrt{\frac{5  \times 158.5}{4\pi \times 0.01}} \approx 79.5 \text{ cm} = 0.795 \text{ m} \]
+
+\subsection*{(c)}
+\[ D = \frac{G}{\eta} \approx 2641 \]
+\[ d = \sqrt{\frac{\lambda^2 D}{\pi^2}} =0.175\text{m}\] 
+\[ R_{\text{far}} = \frac{2 d^2}{\lambda} \approx 5.7 \text{ m} \]
+\end{solution}
+\newpage
+
+14.23 On a clear day, with the sun directly overhead, the received power density from sunlight is about
+1300 W/m2. If we make the simplifying assumption that this power is transmitted via a singlefrequency plane wave, find the resulting amplitude of the incident electric and magnetic fields.
+\begin{solution}
+  Given the power density from sunlight:
+\[ S = 1300 \text{ W/m}^2 \]
+
+Calculate the magnitude of the electric field \( E \):
+\[ |\mathbf{E}| = \sqrt{2 \eta_0 S} = \sqrt{2\times377\times1300} = 990 \, \text{V/m} \]
+
+Calculate the magnitude of the magnetic field \( H \):
+\[ |\mathbf{H}| = \sqrt{\frac{2S}{\eta_0}} = \sqrt{\frac{2 \times 1300}{377}} = 2.6 \, \text{A/m} \]
+\end{solution}
+\newpage
+
+
+%------------------------------%
+
+
+%------------------------------%
+\end{document}
+

@@ -1,0 +1,54 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ImageProc - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/ImageProc.res" /d "_DEBUG" /d "_AFXDLL" "C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\ImageProc.rc"" 
+Creating temporary file "D:\HUANGX~1\Temp\RSP85FC.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "../" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/ImageProc.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\ImageProc.cpp"
+]
+Creating command line "cl.exe @D:\HUANGX~1\Temp\RSP85FC.tmp" 
+Creating temporary file "D:\HUANGX~1\Temp\RSP85FD.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "../" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/ImageProc.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\StdAfx.cpp"
+]
+Creating command line "cl.exe @D:\HUANGX~1\Temp\RSP85FD.tmp" 
+Creating temporary file "D:\HUANGX~1\Temp\RSP85FE.tmp" with contents
+[
+/nologo /subsystem:windows /dll /incremental:yes /pdb:"Debug/ImageProc.pdb" /debug /machine:I386 /def:".\ImageProc.def" /out:"../Debug/ImageProc.dll" /implib:"Debug/ImageProc.lib" /pdbtype:sept /libpath:"../../" 
+".\Debug\ImageProc.obj"
+".\Debug\StdAfx.obj"
+".\Debug\ImageProc.res"
+]
+Creating command line "link.exe @D:\HUANGX~1\Temp\RSP85FE.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+ImageProc.cpp
+C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\ImageProc.cpp(300) : warning C4018: '<' : signed/unsigned mismatch
+C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\ImageProc.cpp(303) : warning C4018: '>=' : signed/unsigned mismatch
+C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\ImageProc.cpp(310) : warning C4018: '<' : signed/unsigned mismatch
+C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\ImageProc.cpp(313) : warning C4018: '>=' : signed/unsigned mismatch
+C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\ImageProc.cpp(319) : warning C4018: '<' : signed/unsigned mismatch
+C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\ImageProc\ImageProc.cpp(320) : warning C4018: '<' : signed/unsigned mismatch
+Linking...
+   Creating library Debug/ImageProc.lib and object Debug/ImageProc.exp
+Creating command line "bscmake.exe /nologo /o"Debug/ImageProc.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\ImageProc.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+ImageProc.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

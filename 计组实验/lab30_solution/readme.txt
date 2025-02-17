@@ -1,0 +1,5 @@
+top_v0为基础的流水线CPU的.v源代码
+top_v1是在v0基础上实现了拓展要求中的lhlb等指令的版本
+top_v2是研究思考题中实现的Br数据转发的版本
+RISC5CPU_vivadopro是top_v0的用于验收的vivado工程
+详情可参考报告

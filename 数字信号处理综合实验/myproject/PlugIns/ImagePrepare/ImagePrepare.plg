@@ -1,0 +1,46 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: ImagePrepare - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/ImagePrepare.res" /d "_DEBUG" /d "_AFXDLL" "C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\PLUGINS\ImagePrepare\ImagePrepare.rc"" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPD942.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /Fp"Debug/ImagePrepare.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\PLUGINS\ImagePrepare\ImagePrepare.cpp"
+]
+Creating command line "cl.exe @D:\HUANGX~1\Temp\RSPD942.tmp" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPD943.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "../../" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /D "_MBCS" /D "_USRDLL" /Fp"Debug/ImagePrepare.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\PLUGINS\ImagePrepare\StdAfx.cpp"
+]
+Creating command line "cl.exe @D:\HUANGX~1\Temp\RSPD943.tmp" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPD944.tmp" with contents
+[
+ImageProc.lib TraceFeature.lib /nologo /subsystem:windows /dll /incremental:yes /pdb:"Debug/PA_ImagePrepare.pdb" /debug /machine:I386 /def:".\ImagePrepare.def" /out:"../../Debug/Plugin/PA_ImagePrepare.dll" /implib:"Debug/PA_ImagePrepare.lib" /pdbtype:sept /libpath:"../../" 
+".\Debug\ImagePrepare.obj"
+".\Debug\StdAfx.obj"
+".\Debug\ImagePrepare.res"
+]
+Creating command line "link.exe @D:\HUANGX~1\Temp\RSPD944.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+ImagePrepare.cpp
+Linking...
+   Creating library Debug/PA_ImagePrepare.lib and object Debug/PA_ImagePrepare.exp
+PA_ImagePrepare.exp : warning LNK4070: /OUT:ImagePrepare.dll directive in .EXP differs from output filename "../../Debug/Plugin/PA_ImagePrepare.dll"; ignoring directive
+
+
+
+<h3>Results</h3>
+PA_ImagePrepare.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

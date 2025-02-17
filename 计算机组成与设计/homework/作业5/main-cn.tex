@@ -1,0 +1,380 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Computer Organization and Design   } % 页眉
+\rhead{3220103462}
+\title{HOMEWORK \#5} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Computer Organization and Design } % 课程信息
+
+\studentinfo{Name: \textit{黄贤敏}  \quad  \quad Student ID: \textit{3220103462}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+\begin{problem}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=1\textwidth]{./figures/image1.png}
+  \label{fig:pro1}
+\end{figure}
+
+\end{problem}
+
+
+
+
+\begin{solution}
+
+
+
+\subsection*{a) Clock cycle time in a pipelined and non-pipelined processor}
+
+\textbf{Non-pipelined processor:}  
+The clock cycle time of a non-pipelined processor is the sum of the latencies of all stages:  
+\[
+T_{\text{non-pipelined}} = \text{IF} + \text{ID} + \text{EX} + \text{MEM} + \text{WB}
+\]  
+Substitute the values:  
+\[
+T_{\text{non-pipelined}} = 250 \, \text{ps} + 400 \, \text{ps} + 150 \, \text{ps} + 350 \, \text{ps} + 200 \, \text{ps} = 1350 \, \text{ps}
+\]
+
+\textbf{Pipelined processor:}  
+The clock cycle time of a pipelined processor is determined by the stage with the maximum latency:  
+\[
+T_{\text{pipelined}} = \max(\text{IF}, \text{ID}, \text{EX}, \text{MEM}, \text{WB})
+\]  
+Substitute the values:  
+\[
+T_{\text{pipelined}} = \max(250 \, \text{ps}, 400 \, \text{ps}, 150 \, \text{ps}, 350 \, \text{ps}, 200 \, \text{ps}) = 400 \, \text{ps}
+\]
+
+\subsection*{b) Total latency of an LW instruction}
+
+\textbf{Non-pipelined processor:}  
+no matter pipelined or non-pipelined, the total latency of an LW 
+instruction is the sum of the latencies of all the stages that the instruction passes through:
+
+\textbf{because the LW instruction passes through all stages, the total latency is the same as the clock cycle time:}\[
+\text{Latency}_{\text{non-pipelined, LW}} = T_{\text{non-pipelined}} = 1350 \, \text{ps}
+\]
+
+\textbf{Pipelined processor:}  
+\[
+\text{Latency}_{\text{pipelined, LW}} = T_{\text{non-pipelined}} = 1350 \, \text{ps}
+\]  
+
+\subsection*{c) Splitting one stage to reduce clock cycle time}
+
+\textbf{Selecting the stage to split:}  
+we choose the stage with the maximum latency, which is the \(\text{ID}\) stage (400 ps).
+
+If we split the \(\text{ID}\) stage (400 ps) into two stages with half the latency each (200 ps), the new maximum stage latency becomes:  
+
+\[
+T_{\text{new-pipelined}} = \max(\text{IF}, \text{ID/2}, \text{EX}, \text{MEM}, \text{WB})=400 \, \text{ps}
+\]  
+
+\textbf{New clock cycle time:}  
+\[
+T_{\text{new-pipelined}} = 350 \, \text{ps}
+\]
+
+
+
+
+
+
+
+\end{solution}
+\newpage
+
+
+
+%------------------------------%
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image2.png}
+    \label{fig:pro1}
+  \end{figure}
+
+
+
+\end{problem}
+
+
+
+\begin{solution}
+\subsection*{Identification of Hazards}
+1. \textbf{Between Instructions 1 and 2:}  
+   - Instruction 2 requires the value of \texttt{t0}, which is produced in the \textbf{EX} stage of Instruction 1 .
+   But  in the \textbf{ID} stage of Instruction 2, the value of \texttt{t0} is not yet write back to the register file.
+
+
+2. \textbf{Between Instructions 1 and 3:}  
+   - Instruction 3 also requires the value of \texttt{t0}, which is produced in the \textbf{EX} stage of Instruction 1 .
+   but  in the \textbf{ID} stage of Instruction 3, the value of \texttt{t0} is not yet write back to the register file.
+
+\subsection*{Resolving Hazards Using Forwarding}
+
+Forwarding allows the processor to bypass the pipeline register and directly use the result from an earlier stage. Here's how forwarding resolves these hazards:
+
+1. \textbf{Instruction 1 → Instruction 2:}  
+   - Forward the result of \texttt{t0} from the end of \textbf{EX} stage of Instruction 1 to the \textbf{EX} stage of Instruction 2.  
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.71\textwidth]{./figures/forward1.png}
+    \label{fig:pro1}
+  \end{figure}
+
+
+2. \textbf{Instruction 1 → Instruction 3:}  
+   - Forward the result of \texttt{t0} from the end of \textbf{MEM} stage of Instruction 1 to the \textbf{ID} stage of Instruction 3.  
+
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.71\textwidth]{./figures/forward2.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{solution}
+\newpage
+
+
+%------------------------------%
+
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image3.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{problem}
+
+
+
+\begin{solution}
+\textcolor{red}{Assume the register files are read after write in the same clock cycle, so we don't need to consider the 3rd data hazard between
+ Instruction 1 and Instruction 4.
+ Oherwise, we need to insert one more NOP to prevent data hazards.}
+
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.71\textwidth]{./figures/forward3.png}
+    \label{fig:pro1}
+    \caption{the 3rd data hazard between Instruction 1 and Instruction 4}
+  \end{figure}
+
+\subsection*{Code Sequence}
+\begin{verbatim}
+1. add x5, x2, x1
+2. lw x3, 4(x5)
+3. or x3, x5, x3
+4. lw x2, 0(x2)
+5. sw x3, 0(x5)
+\end{verbatim}
+
+\subsection*{(1) No Forwarding or Hazard Detection}
+
+\textbf{Hazard Analysis:}
+\begin{itemize}
+    \item \textbf{Instruction 1 → Instruction 2}: data hazard on \texttt{x5}.
+    \item \textbf{Instruction 2 → Instruction 3}: data hazard on \texttt{x3}.
+    \item \textbf{Instruction 4 → Instruction 5}: data hazard on \texttt{x3}.
+\end{itemize}
+
+\textbf{Resulting Code with NOPs:}
+\begin{verbatim}
+1. add x5, x2, x1
+2. NOP
+3. NOP
+4. lw x3, 4(x5)
+5. NOP
+6. NOP
+7. or x3, x5, x3
+8. lw x2, 0(x2)
+9. NOP
+10. sw x3, 0(x5)
+\end{verbatim}
+
+\subsection*{(2) Reordering Instructions with Temporary Register}
+
+
+the instruction 1,2,3,5 can't be reordered because of the data dependencies.
+we can only reorder the instruction 4.
+
+\textcolor{red}{But no matter how we reorder the instruction 4, we can't eliminate the NOPs.
+so we can't eliminate the NOPs by reordering instructions.
+}
+
+but we can avoid the data hazards between Instruction 2 and Instruction 3
+by reordering the instruction 3 and 4.
+\begin{verbatim}
+1. add x5, x2, x1
+2. lw x3, 4(x5)
+3. lw x2, 0(x2)
+4. or x3, x5, x3
+5. sw x3, 0(x5)
+\end{verbatim}
+
+\subsection*{(3) Forwarding Without Hazard Detection}
+
+When the instruction following a load uses the result of the load,
+the hazard is happening.
+
+the original code has a hazard between Instruction lw x3, 4(x5) and or x3, x5, x3.
+
+so the code execution will be wrong.
+
+\end{solution}
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image4.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{problem}
+
+\begin{solution}
+1. \textbf{Pipeline Flush Cost:}  
+   - A misprediction causes the pipeline to be flushed, with the dependent instruction replayed.  
+   - The flush penalty is \textbf{3 cycles}.
+
+2. \textbf{Predictor Accuracy Threshold:}  
+   - Let \( p \) be the probability of a correct prediction (predictor accuracy).  
+   - On a correct prediction, a 1-cycle stall is avoided.  
+   - On a misprediction, a 3-cycle flush penalty occurs.
+
+\subsection*{Performance Analysis}
+To calculate the required accuracy \( p \), we compare the average cycle costs with and without speculation.
+
+\subsubsection*{Cost Without Speculation}
+\[
+\text{Cost}_{\text{no speculation}} = 1 \quad \text{(1-cycle stall)}
+\]
+
+\subsubsection*{Cost With Speculation}
+\[
+\text{Cost}_{\text{speculation}} = p \cdot 0 + (1 - p) \cdot 3 = 3(1 - p)
+\]
+
+The predictor improves performance if:
+\[
+\text{Cost}_{\text{speculation}} < \text{Cost}_{\text{no speculation}}
+\]
+
+\subsubsection*{Solving the Inequality}
+\[
+3(1 - p) < 1
+\]
+\[
+3 - 3p < 1
+\]
+\[
+3p > 2
+\]
+\[
+p > \frac{2}{3}
+\]
+
+\subsection*{Conclusion}
+The load-zero predictor must have an accuracy of at least:
+\[
+\boxed{\frac{2}{3} \, (66.67\%)}
+\]
+to improve pipeline performance.
+\end{solution}
+
+\end{document}
+
+

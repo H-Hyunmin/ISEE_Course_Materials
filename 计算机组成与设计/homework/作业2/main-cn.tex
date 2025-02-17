@@ -1,0 +1,295 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Computer Organization and Design   } % 页眉
+\rhead{3220103462}
+\title{HOMEWORK \#2} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Computer Organization and Design } % 课程信息
+
+\studentinfo{Name: \textit{黄贤敏}  \quad  \quad Student ID: \textit{3220103462}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+\begin{problem}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=1\textwidth]{./figures/image1.png}
+  \caption{pro1}
+  \label{fig:pro1}
+\end{figure}
+
+\end{problem}
+
+
+
+
+\begin{solution}
+  \quad
+  The code calculates the sum of all odd numbers from 1 to n.
+  \begin{lstlisting}[language=C, caption=Code for Problem 1, label=code:example, frame=single, numbers=left, numberstyle=\tiny, breaklines=true, backgroundcolor=\color{lightgray}]
+  begin: addi t0, x0, 0   // t0 = sum = 0
+  addi t1, x0, 1          // t1 = i = 1
+  loop: slt t2, a0, t1    // if i < n
+  bne t2, x0, finish      // goto finish
+  add t0, t0, t1          // sum += i
+  addi t1, t1, 2          // i += 2
+  j loop                  // goto loop for next iteration
+  finish: add a0, t0, x0  // a0 = sum
+  \end{lstlisting}
+
+\end{solution}
+%------------------------------%
+\begin{problem}
+  \quad
+Write a loop that reverses order of the bits of an 8-bit number in s0 and stores the result in s1.
+RISC-V registers have 4 bytes, but in this problem, the higher 24 bits of s0 are always 0. For
+example, if the lower 8 bits of s0 are 00001101, the lower 8 bites s1 should be 10110000.
+\end{problem}
+
+\begin{solution}
+  \quad
+  \begin{lstlisting}[language=C, caption=Code for Problem 2, label=code:example, frame=single, numbers=left, numberstyle=\tiny, breaklines=true, backgroundcolor=\color{lightgray}]
+  _start:
+      li t0, 8          # 设置循环计数器 t0 为 8
+      li s1, 0          # 将 s1 初始化为 0
+      li t1, 1          # t1 用于提取 s0 中的每一位
+      li t2, 128        # t2 用于设置 s1 中的每一位
+
+  reverse_loop:
+      beqz t0, end_loop # 如果 t0 为 0，跳转到 end_loop
+      and t3, s0, t1    # 提取 s0 中的当前位
+      beqz t3, skip_set # 如果当前位为 0，跳过设置 
+      or s1, s1, t2     # 设置 s1 中的当前位
+
+  skip_set:
+      srli s0, s0, 1    # 右移 s0
+      srli t2, t2, 1    # 右移 t2
+      addi t0, t0, -1   # 递减 t0
+      j reverse_loop    # 跳转到 reverse_loop
+
+  end_loop:
+      # 结束程序
+      li a7, 10         # ecall 10 系统调用结束程序
+      ecall
+  \end{lstlisting}
+
+\end{solution}
+\newpage
+
+\begin{problem}
+  \quad
+Assume we have an array in memory that contains int* arr = {1,2,3,4,5,6,0}. Let the values of arr 
+be a multiple of 4 and stored in register s0. What do the snippets of RISC-V code do? Assume that 
+all the instructions are run one after the other in the same context.
+  \begin{lstlisting}[language=C, caption=Code for Problem 2, label=code:example, frame=single, numbers=left, numberstyle=\tiny, breaklines=true, backgroundcolor=\color{lightgray}]
+a)  lw t0, 8(s0)
+b)  slli t1, t0, 2
+    add t2, s0, t1
+    lw t3, 0(t2)
+    addi t3, t3, 1
+    sw t3, 0(t2)
+c)  lw t0, 16(s0)
+    xori t0, t0, 0xFFF 
+    addi t0, t0, 1
+  \end{lstlisting}
+  
+\end{problem}
+
+\begin{solution}
+  \quad
+
+\begin{itemize}
+  \item \textbf{Snippet a:} \textbf{t0=arr[2]=3;}
+  \begin{itemize}
+    \item \texttt{lw t0, 8(s0)} \\
+    t0=arr[2]=3
+  \end{itemize}
+
+  \item \textbf{Snippet b:} \textbf{arr[3]++;}
+  \begin{itemize}
+    \item \texttt{slli t1, t0, 2} \\
+    t1=t0<<2, so \texttt{t1} will be set to \texttt{3 << 2 = 12}.
+    \item \texttt{add t2, s0, t1} \\
+    t2=s0+t1=s0+12
+    \item \texttt{lw t3, 0(t2)} \\
+    equivalent to \texttt{lw t3, 12(s0)}, t3=arr[3]=4
+    \item \texttt{addi t3, t3, 1} \\
+    t3=t3+1=5
+    \item \texttt{sw t3, 0(t2)} \\
+    equivalent to \texttt{sw t3, 12(s0)}, arr[3]=5
+  \end{itemize}
+
+  \item \textbf{Snippet c:}\textbf{t0=-arr[4];} 
+  
+  \begin{itemize}
+    \item \texttt{lw t0, 16(s0)} \\
+    t0=arr[4]=5
+    \item \texttt{xori t0, t0, 0xFFF} \\
+    t0=t0$\oplus$0xFFF=5$\oplus$0xFFF=0xFFA
+    \item \texttt{addi t0, t0, 1} \\
+    t0=t0+1=0xFFB
+  \end{itemize}
+\end{itemize}
+
+\end{solution}
+
+
+\begin{problem}
+  \quad
+Write a function sumSquare in RISC-V that, when given an integer n, returns the summation 
+below. If n is not positive, then the function returns 0.
+\begin{equation}
+  \Sigma_{i=1}^{n} i^2
+\end{equation}
+For this problem, you are given a RISC-V function called square that takes in an integer and 
+returns its square. Implement sumSquare using square as a subroutine
+\end{problem}
+
+\begin{solution}
+  \quad
+
+  \begin{lstlisting}[language=C, caption=Code for Problem 2, label=code:example, frame=single, numbers=left, numberstyle=\tiny, breaklines=true, backgroundcolor=\color{lightgray}]
+.globl sumSquare
+.text
+sumSquare:
+    // YOUR CODE BEGIN
+    // 保存上下文
+    addi sp, sp, -16
+    sw ra, 12(sp)
+    sw s0, 8(sp)
+    sw s1, 4(sp)
+    sw s2, 0(sp)
+    // 检查 n 是否为正数
+    blez a0, return_zero
+    // 初始化累加器 sum 为 0
+    li s0, 0
+    // 初始化循环变量
+    mv s1, a0
+loop:
+    // 将当前 n 的值传递给 square 函数
+    mv a0, s1
+    jal ra, square
+    // 将平方值加到累加器 sum 中
+    add s0, s0, a0
+    // 减少 n 的值
+    addi s1, s1, -1
+    // 如果 n > 0，继续循环
+    bgtz s1, loop
+    // 将累加器 sum 的值放入 a0 寄存器中作为返回值
+    mv a0, s0
+    j end
+return_zero:
+    // 返回 0
+    li a0, 0
+end:
+    // 恢复上下文
+    lw ra, 12(sp)
+    lw s0, 8(sp)
+    lw s1, 4(sp)
+    lw s2, 0(sp)
+    addi sp, sp, 16
+    // YOUR CODE END
+    ret
+.end
+
+
+  \end{lstlisting}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=1\textwidth]{./figures/result.png}
+  \caption{result}
+  \label{fig:pro1}
+\end{figure}
+
+
+\end{solution}
+
+
+
+%------------------------------%
+\end{document}
+
+

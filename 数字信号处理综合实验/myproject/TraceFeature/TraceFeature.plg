@@ -1,0 +1,48 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: TraceFeature - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x804 /fo"Debug/TraceFeature.res" /d "_DEBUG" /d "_AFXDLL" "C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\TraceFeature\TraceFeature.rc"" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPE674.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "../" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/TraceFeature.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\TraceFeature\TraceFeature.cpp"
+]
+Creating command line "cl.exe @D:\HUANGX~1\Temp\RSPE674.tmp" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPE675.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /I "../" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /FR"Debug/" /Fp"Debug/TraceFeature.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\Huang Xianmin\Desktop\DSPLAB\myproject\TraceFeature\StdAfx.cpp"
+]
+Creating command line "cl.exe @D:\HUANGX~1\Temp\RSPE675.tmp" 
+Creating temporary file "D:\HUANGX~1\Temp\RSPE676.tmp" with contents
+[
+ImageProc.lib /nologo /subsystem:windows /dll /incremental:yes /pdb:"Debug/TraceFeature.pdb" /debug /machine:I386 /def:".\TraceFeature.def" /out:"../Debug/TraceFeature.dll" /implib:"Debug/TraceFeature.lib" /pdbtype:sept /libpath:"../" 
+".\Debug\StdAfx.obj"
+".\Debug\TraceFeature.obj"
+".\Debug\TraceFeature.res"
+]
+Creating command line "link.exe @D:\HUANGX~1\Temp\RSPE676.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+TraceFeature.cpp
+Linking...
+   Creating library Debug/TraceFeature.lib and object Debug/TraceFeature.exp
+Creating command line "bscmake.exe /nologo /o"Debug/TraceFeature.bsc"  ".\Debug\StdAfx.sbr" ".\Debug\TraceFeature.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+TraceFeature.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

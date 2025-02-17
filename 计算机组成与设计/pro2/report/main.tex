@@ -1,0 +1,790 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{subcaption} % 在导言区添加这个包
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    basicstyle=\small\ttfamily % 设置代码块的基本字体样式
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{项目介绍}
+实现一个跟踪驱动的缓存模拟器，并使用它来评估不同的缓存体系结构特性的性能。
+
+\section{项目任务与要求}
+
+\subsection*{任务1:实现trace-driven cache simulator}
+
+高速缓存模拟器将可以根据命令行中给出的参数进行配置，并且必须支持以下功能：
+
+\begin{itemize}
+    \item Total cache size
+    \item Block size
+    \item Unified vs. split I- and D-caches
+    \item Associativity
+    \item Write back vs. write through
+    \item Write allocate vs. write no allocate
+  
+\end{itemize}
+
+模拟器必须跟踪：
+
+
+\begin{itemize}
+     \item  Number of instruction references
+     \item  Number of data references
+     \item  Number of instruction misses
+     \item  Number of data misses
+     \item  Number of words fetched from memory
+     \item  Number of words copied back to memory
+\end{itemize}
+
+\newpage
+
+\subsection*{任务2:评估不同的高速缓存体系结构特性的性能}
+
+\begin{itemize}
+    \item characterize the working set size of the three
+sample traces given.
+    \item evaluate the Impact of Block Size on performance
+    \item evaluate the Impact of Associativity on performance
+    \item evaluate the Impact of Memory Bandwidth on performance
+\end{itemize}
+
+
+
+
+
+\newpage
+
+
+\section{任务1:trace-driven cache simulator具体实现}
+
+
+\subsection{cache初始化}
+
+先实现cache的初始化，命令行参数获取和设置代码框架已经给出，
+只需要在cache.c中实现init\_cache函数即可。
+
+具体代码实现如下图所示，这里先考虑最简单的情况，即i-d统一，直接映射，写回，写分配的cache。
+该函数的功能是初始化cache，根据cache.c中已经设置好的静态变量，
+初始化c1结构体中的各个参数并分配内存。
+同时初始化统计信息的结构体cache\_stat\_inst和cache\_stat\_data。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image1.png}
+    \caption{cache初始化}
+\end{figure}
+
+\subsection{基础功能的cache实现}
+
+接下来实现perform\_access函数，该函数对cache进行仿真，根据访问的地址和类型，更新cache的状态。
+
+具体代码实现如下图所示：
+
+同样先实现unify cache的情况，
+
+先根据address计算出tag和index，然后根据index找到对应的cache组，
+如果缓存组为空，说明没有命中，需要动态分配一个cache块，同时更新统计信息。
+
+否则缓存组不为空，根据双向链表的数据结构，遍历链表，找到对应的cache块，(目前associativity为1，即直接映射代码尚未实现)。
+如果命中，则更新cache块的状态，同时更新统计信息。
+如果未命中，则根据写策略和写分配策略，更新cache块的状态，同时更新统计信息。
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image2.png}
+    \caption{cache实现}
+\end{figure}
+
+
+\subsection{增加可变关联性功能}
+
+接下来实现可变关联性的cache，即set-associative cache。
+
+
+
+如下图3所示：首先在初始分配cache组的时候，需要加上cache结构体中对每组的cache块的有效条目数和总的条目数的设置。
+
+如下图4所示：增加遍历cache组的功能，寻找对应的cache块。然后判断是否命中，更新cache块的状态和统计信息。
+如果未命中，还要判断组是否已满，如果未满，则动态分配一个cache块，否则根据LRU替换策略，选择一个cache块替换。然后更新cache的统计信息。
+
+这里的LRU替换就是将最近使用的cache块放在链表的头部，最久未使用的cache块放在链表的尾部，每次替换时，将链表尾部的cache块替换掉。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image3.png}
+    \caption{可变关联性cache}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image4.png}
+    \caption{可变关联性cache}
+\end{figure}
+
+
+\subsection{增加数据写和指令读的统计}
+
+目前的cache只能实现对data的读取，接下来需要增加对指令的读取和数据写的统计。(目前默认按照write back和write allocate的策略先进行实现)
+
+如下图5所示：首先在分配cache块的时候，需要加上对cache块的dirty标志位的设置。
+判断是否是数据写，如果是数据写，需要将dirty标志位置为1。
+在更新统计信息的时候，需要根据访问的类型，更新对应的统计信息。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image5.png}
+    \caption{增加数据写和指令读的统计}
+\end{figure}
+
+如下图6，在cache命中后，增加了数据写和指令读的统计信息。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image6.png}
+    \caption{增加数据写和指令读的统计}
+\end{figure}
+
+如下图7，在cache未命中后，增加了数据写和指令读的统计信息。
+并且增加了对dirty标志位的判断，如果dirty标志位为1，说明需要将cache块的数据写回到内存中，
+更新write back和replace的统计信息。
+同时在替换cache块的时候，需要根据访问类型，选择是否设置dirty标志位。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image7.png}
+    \caption{增加数据写和指令读的统计}
+\end{figure}
+
+\subsection*{增加flush功能}
+
+在增加写入和读取的统计信息后，需要增加flush功能，
+即在cache模拟结束后，将cache清空，同时将dirty标志位为1的cache块写回到内存中。并更新统计信息。
+
+如下图8所示：flush函数只需要遍历cache，将dirty标志位为1的cache块写回到内存中，同时更新统计信息。
+然后释放分配的内存。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image8.png}
+    \caption{增加flush功能}
+\end{figure}
+
+\subsection*{BUG修复}
+经过测试，发现replace和write back的统计信息有问题。经过调试，发现
+了没有更新LRU链表和统计信息时候没有判断LRU链表是否已满的bug
+
+如下图9所示：在每次访问后，需要更新LRU链表，将访问的cache块放在链表的头部。 在统计信息时，需要判断LRU链表是否已满，只要已满，才要进行替换，增加replace和writeback的统计信息。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image9.png}
+    \caption{BUG修复}
+\end{figure}
+
+\subsection{增加split cache功能}
+
+之后增加split cache功能，即将i-d cache分开，分别对指令和数据分别进行cache。
+
+\textcolor{red}{这里的实现思路和unify cache的实现思路基本一致，
+只是需要根据访问的类型选择对应的cache进行访问即可，其余的逻辑基本一致。
+实现的思路和前面的unify cache的实现思路基本一致，这里不再赘述。
+详细过程参考源码。
+}
+\subsection{增加write through和write no allocate策略}
+\subsection*{增加write through}
+
+之后增加write through的功能，即写直达策略。写直达策略和写回策略的主要区别在于，
+写直达策略在写操作时，直接将数据写回到内存中，
+而写回策略在写操作时，只是将数据写回到cache中，只有在cache块被替换时，才会将数据写回到内存中。
+
+如下图10所示：其实现非常简单，只要在之前代码的基础上，增加对写直达策略的判断即可：
+
+在分配第一个cache块的时候，如果为数据写类型访问且是write through策略，不需要再设置dirty标志位，同时直接增加write back的统计信息。
+
+在cache命中后，如果为数据写类型访且write through策略，需要清除dirty标志位设置为0，同时增加write back的统计信息。
+
+在cache未命中后，如果为数据写类型访问且write through策略，直接增加write back的统计信息，且分配的cache块也不需要设置dirty标志位。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image10.png}
+    \caption{增加write through}
+\end{figure}
+
+\subsection*{增加write no allocate}
+
+
+最后增加write no allocate的功能，即写不分配策略。写不分配策略和写分配策略的主要区别在于，
+写不分配策略在写操作时，如果cache未命中，则直接将数据写回到内存中，而不分配cache块。
+而写分配策略在写操作时，如果cache未命中，则分配一个cache块，并将数据写回到cache块中。
+
+
+如下图11所示：首先在初始分配cache块的时候，如果为写数据写类型访问且是write no allocate策略，
+则直接跳过分配cache块的过程，直接将数据写回到内存中，同时增加write back的统计信息。
+
+接着在统计信息时，如果为数据写类型访问且write no allocate策略，直接增加write back，同时不需要demand fetch的统计信息。
+
+后续在cache未命中时，也是类似的操作，直接将数据写回到内存中，增加write back，同时不需要demand fetch，replace等的统计信息。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image11.png}
+    \caption{增加write no allocate}
+\end{figure}
+
+\textbf{测试结果:}
+写了一个测试脚本进行测试，测试结果如下：
+对比表中的实际值，成功通过测试。说明cache模拟器功能正确实现。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image14.png}
+    \caption{测试脚本}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image13.png}
+    \caption{测试结果}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/fig/image12.png}
+    \caption{实际值}
+\end{figure}
+
+
+
+
+
+\section{任务2:评估不同的高速缓存体系结构特性的性能}
+
+\subsection*{Working Set Characterization}
+
+\subsubsection*{任务要求:}
+使用缓存模拟器，将缓存的命中率绘制为缓存大小的函数。
+从4个字节的缓存大小开始，然后增加大小（每次增加2倍），直到命中率对缓存大小保持不敏感。
+使用拆分缓存组织，以便您可以分别描述指令和数据引用的行为
+（即，每个示例跟踪将有两个图—一个用于指令，一个用于数据）。
+通过*总是”使用完全关联的缓存来排除冲突遗漏的影响。
+此外，请始终将块大小设置为4个字节，使用回写缓存，并使用写分配策略。
+
+写了一个python脚本，用于自动测试不同的cache大小，得到不同cache大小下的命中率。详情见源码。
+
+最终得到的结果如下图所示：
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image15.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image16.png}
+    \end{minipage}
+    \caption{spice.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image17.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image18.png}
+    \end{minipage}
+    \caption{cc.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image19.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image20.png}
+    \end{minipage}
+    \caption{tex.trace测试结果}
+\end{figure}
+
+\subsubsection*{回答问题:}
+\begin{enumerate}
+    \item 解释一下这个实验在做什么，以及它是如何工作的。此外，请解释命中率与缓存大小图中的特性的重要性。
+
+    \item 这三个样本跟踪的总指令工作集大小和数据工作集大小是多少？
+\end{enumerate}
+
+\textbf{问题1回答:}
+\textbf{实验目的和工作原理}
+本实验的目的是通过模拟不同缓存大小对命中率的影响，来评估缓存的工作集大小。工作集是指在一定时间内被频繁访问的内存块集合。通过增加缓存大小，我们可以观察到命中率的变化，从而推断出工作集的大小。当缓存大小增加到一定程度，命中率不再显著提高时，表明当前的工作集已经可以被完全包含在缓存中，进一步增加缓存大小不会带来性能上的提升。
+
+实验的工作原理是使用缓存模拟器模拟不同大小的缓存，并记录每次访问时的命中和未命中情况。从4字节的缓存大小开始，每次翻倍增加，直到命中率的变化不再显著。通过这种方式，我们可以确定在不同工作负载下，缓存的最佳大小。
+
+\textbf{命中率与缓存大小图表的意义}
+\begin{itemize}
+  \item \textbf{初始快速上升}：在缓存大小较小时，命中率随着缓存大小的增加而迅速上升，这表明工作集大小较小，增加缓存可以显著提高命中率。
+  \item \textbf{逐渐平缓}：随着缓存大小的继续增加，命中率的提升速度逐渐减慢，这表明工作集大小正在接近当前缓存大小。
+  \item \textbf{趋于平稳}：当缓存大小增加到一定程度后，命中率趋于平稳，这表明工作集已经被完全包含在缓存中，进一步增加缓存大小不会提高命中率。
+\end{itemize}
+
+
+\textbf{问题2回答:}
+根据上面的分析可知：当缓存大小增加到一定程度后，命中率趋于平稳，这表明工作集已经被完全包含在缓存中，进一步增加缓存大小不会提高命中率。
+因此，当命中率趋于平稳时，工作集的大小即为当前缓存大小。因此，我们可以通过观察命中率与缓存大小图表的特性来推断工作集的大小。
+
+从上面的三张图片可以看出，
+spice.trace的数据工作集大小约为$2^14 Bytes = 16KB$ ，指令工作集大小也约为$2^14 Bytes = 16KB$
+
+cc.trace的数据工作集大小约为$2^14=3 Bytes = 16==8KB$ ，指令工作集大小约为$2^14 Bytes = 16KB$
+
+tex.trace的数据工作集大小约为$2^6 Bytes = 128B$ ，指令工作集大小约为$2^9 Bytes = 512B$
+
+
+\subsection*{Impact of Block Size}
+
+
+\subsubsection*{任务要求:}
+将缓存模拟器设置为拆分的i缓存组织，每个大小为8k字节。将关联性设置为2，使用回写缓存，并使用写分配策略。将高速缓存的命中率绘制为块大小的函数。在4字节和4k字节之间改变块大小，幂为2。对这三个轨迹执行此操作，并为指令和数据引用创建一个单独的绘图。
+
+
+
+使用python脚本，自动测试不同的block size，得到不同block size下的命中率并绘制图表。详情见源码。
+最终得到的结果如下图所示：
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image21.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image22.png}
+    \end{minipage}
+    \caption{spice.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image23.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image24.png}
+    \end{minipage}
+    \caption{cc.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image25.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image26.png}
+    \end{minipage}
+    \caption{tex.trace测试结果}
+\end{figure}
+
+\subsubsection*{回答问题:}
+\begin{enumerate}
+    \item 解释命中率与块大小图的形状。特别是，解释空间局部性与这条曲线的形状的相关性。
+    \item 每个跟踪的最佳块大小是多少（分别考虑指令和数据引用）？
+    \item 指令和数据引用的最佳块大小是否不同？这告诉你关于指令引用和数据引用的性质是什么？
+\end{enumerate}
+
+
+\textbf{问题1回答:}
+\begin{itemize}
+    \item 初始上升阶段：当缓存块大小从较小的值开始增加时，命中率迅速上升。这是因为较小的块大小能够更精细地映射内存区域，使得缓存能够更好地捕捉到程序的空间局部性。如果程序访问了一块内存区域，那么相邻的内存区域很可能也会被访问，小的块大小使得这些相邻区域更有可能被一起加载到缓存中。
+\item 平台期：随着块大小的进一步增加，命中率的增长速度开始放缓，进入一个平台期。在这个阶段，缓存块大小已经足够大，能够覆盖程序的大部分空间局部性需求。即使块大小继续增加，对命中率的提升也不再显著，因为缓存已经能够有效地利用空间局部性。
+
+\item 下降阶段：当块大小增加到一定程度后，命中率开始下降。这是因为过大的块大小可能会导致缓存中存储的块包含许多不相关的内存区域，这些区域可能不会被程序访问，从而导致缓存空间的浪费。此外，大的块大小可能会覆盖多个可能被独立访问的内存区域，增加了缓存冲突的可能性，降低了缓存的效率。
+
+\item 曲线的拐点：曲线的拐点通常出现在块大小足以覆盖程序的典型空间局部性范围时。在这个点之前，增加块大小可以提高命中率，因为更大的块可以包含更多的局部性区域。在这个点之后，增加块大小反而可能导致命中率下降，因为块内包含的不相关内存区域增多，减少了缓存的有效性。
+
+\end{itemize}
+分析六张图，他们都大致呈现了上述的特性，但是曲线的形状和
+拐点位置不同，说明不同程序的空间局部性不同，对块大小的需求也不同，所以导致了不同的曲线形状。
+
+\textbf{问题2回答:}
+通过分析每个轨迹的命中率与块大小的关系图，我们可以确定每个轨迹的最佳块大小，即在该块大小下，缓存命中率达到最高或接近最高。
+
+\subsection{spice.trace}
+\begin{itemize}
+  \item \textbf{指令引用}：从图中可以看出，当块大小达到1024字节时，命中率接近最高，之后随着块大小的增加，命中率略有下降。
+  \item \textbf{数据引用}：数据引用的命中率在块大小为32字节时达到最高，之后随着块大小的增加，命中率开始下降。
+\end{itemize}
+
+\subsection{cc.trace}
+\begin{itemize}
+  \item \textbf{指令引用}：对于指令引用，块大小为2048字节时，命中率最高
+  \item \textbf{数据引用}：数据引用的命中率在块大小为32字节时达到最高,之后随着块大小的增加，命中率略有下降。
+\end{itemize}
+
+\subsection{tex.trace}
+\begin{itemize}
+  \item \textbf{指令引用}：在块大小为4字节到2048字节之间，命中率基本保持稳定，没有明显的变化，但在块大小为4096字节时，命中率开始下降。
+  \item \textbf{数据引用}：数据引用的命中率在块大小为128字节时达到最高，之后随着块大小的增加，命中率开始下降。
+\end{itemize}
+
+
+
+\textbf{问题3回答:}
+
+通过分析每个轨迹的命中率与块大小的关系图，我们可以确定指令引用和数据引用的最佳块大小。结果显示，指令引用和数据引用的最佳块大小确实不同。
+
+这些结果表明，指令引用和数据引用的性质存在显著差异。指令引用通常具有较强的空间局部性，因为程序的指令通常是顺序执行的，因此较大的块大小可以更好地利用这种局部性。而数据引用则可能更加分散，具有较弱的空间局部性，因此较小的块大小更适合数据引用，以减少缓存空间的浪费和缓存冲突的可能性。
+
+\newpage
+
+\subsection*{Impact of Associativity}
+\subsubsection*{任务要求:}
+将缓存模拟器设置为拆分的缓存组织，每个大小为8k字节。
+将块大小设置为128字节，使用回写缓存，并使用写分配策略。
+绘制高速缓存的命中率作为关联性的函数。改变1和64之间的结合性，幂次为2。
+对这三个轨迹执行此操作，并为指令和数据引用创建一个单独的绘图。
+
+使用python脚本,自动测试不同的associativity，得到不同associativity下的命中率并绘制图表。详情见源码。
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image27.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image28.png}
+    \end{minipage}
+    \caption{spice.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image29.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image30.png}
+    \end{minipage}
+    \caption{cc.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image31.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image32.png}
+    \end{minipage}
+    \caption{tex.trace测试结果}
+\end{figure}
+
+
+
+\subsubsection*{回答问题:}
+\begin{enumerate}
+    \item 解释为什么hit rate vs. associativity的图表具有这样的形状。
+    \item 指令和数据的图之间是否有区别？这告诉了你什么，关于associativity对指令和数据引用的影响的差异？
+\end{enumerate}
+
+
+
+\textbf{问题1回答:}
+
+
+
+\subsubsection*{命中率与关联度关系图的形状解释}
+命中率与关联度的关系图展示了缓存命中率随关联度变化的趋势。这种趋势的形状与缓存的组织结构和程序的内存访问模式密切相关。
+
+\subsubsection*{初始上升阶段}subsubsection*
+在关联度较低时，命中率随着关联度的增加而迅速上升。这是因为较低的关联度意味着缓存中的块冲突较多，增加关联度可以减少这些冲突，从而提高命中率。
+
+\subsubsection*{平台期}
+当关联度增加到一定程度后，命中率的提升速度开始放缓，进入一个平台期。在这个阶段，缓存已经能够较好地减少冲突，进一步增加关联度对命中率的提升效果有限。
+
+\subsubsection*{某些情况出现下降阶段}
+在某些情况下，当关联度继续增加超过某个阈值后，命中率可能会略有下降。这可能是由于缓存结构的复杂性增加，导致缓存管理的开销增大，或者在某些极端情况下，过大的关联度可能导致缓存的利用率降低。
+
+\subsubsection*{其它特殊情况：}
+如tex.trace的icache图，命中率随着关联度几乎保持在100\%，说明该程序的指令引用具有很好的空间局部性，无论关联度如何，都能被缓存很好地覆盖。
+
+\subsubsection*{结论}
+缓存的关联度对命中率有显著影响。合理选择关联度对于优化缓存性能至关重要。在实际应用中，需要根据程序的特性和访问模式来调整关联度，以达到最佳的缓存效率。
+\newpage
+\textbf{问题2回答:}
+
+\subsubsection*{差异分析}
+\begin{itemize}
+  \item \textbf{上升阶段}：对于指令和数据引用，命中率随着关联度的增加而上升，但上升的速率和开始平稳的点可能不同。
+  \item \textbf{平台期}：在达到一定关联度后，命中率的提升趋于平缓，这个点对于指令和数据引用可能有所不同。
+  \item \textbf{下降阶段}：在某些情况下，过高的关联度可能导致命中率略有下降，这在指令和数据引用中的表现可能不一致。
+\end{itemize}
+
+\subsubsection*{差异意义}
+关联度对指令和数据引用的影响差异反映了两者在缓存行为上的不同：
+\begin{itemize}
+  \item \textbf{指令引用}：由于指令访问通常具有较好的空间局部性，适当的关联度可以显著提高命中率。
+  \item \textbf{数据引用}：数据访问模式可能更加随机，因此关联度对命中率的影响可能不如指令引用明显。
+\end{itemize}
+
+\subsubsection*{结论}
+关联度对指令和数据引用的命中率有不同的影响。指令引用可能更受益于较高的关联度，而数据引用在达到一定关联度后，命中率的提升可能有限。这表明在设计缓存时，需要考虑不同类型内存访问的特性，以优化缓存性能。
+
+\newpage
+
+\subsection*{Memory Bandwidth}
+
+\subsubsection*{任务要求1:}
+使用缓存模拟器，比较通写缓存和回写缓存生成的总内存流量。使用拆分的高速缓存组织。模拟一些合理的缓存大小（如8K字节和16K字节）、合理的块大小（如64和128字节）以及合理的关联性（如2和4）。现在，请使用无写分配策略。总共运行4或5个不同的模拟。
+
+\subsubsection*{回答问题:}
+\begin{enumerate}
+    \item 哪个缓存具有较小的内存流量，通写缓存或回写缓存？为什么 
+    \item 在什么情况下，你对上面的问题的回答会翻转吗？解释。
+\end{enumerate}
+
+使用python脚本,自动测试不同的cache size, block size, associativity, write policy，得到不同参数下的内存流量并绘制图表。得到如下结果：
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image33.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image34.png}
+    \end{minipage}
+    \caption{spice.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image35.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image36.png}
+    \end{minipage}
+    \caption{cc.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image37.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image38.png}
+    \end{minipage}
+    \caption{tex.trace测试结果}
+\end{figure}
+
+
+
+
+\textbf{问题1回答:}
+对比图中的damand\_fetch和copies\_back可以发现write back cache
+具有较小的内存流量。这是因为回写缓存策略下，
+只有当数据被修改时，才会将数据写回主存，而通写缓存策略下，
+每次数据修改都会立即写回主存，导致更多的写操作，从而增加内存流量。
+
+
+
+\textbf{问题2回答:}
+在以下情况下，通写缓存的内存流量可能会比回写缓存小：
+
+\begin{itemize}
+    \item \textbf{写操作频繁且数据不经常被重写}：如果程序中写操作非常频繁，并且写入的数据很少被重写，那么通写缓存可能会比回写缓存更有效。因为在回写缓存中，每次写操作都需要将数据标记为“脏”，并在替换时写回主存，这会导致额外的内存流量。而在通写缓存中，每次写操作都会立即写回主存，避免了多次写回相同数据的情况。
+    \item \textbf{数据一致性要求高}：在某些系统中，数据一致性要求很高，需要确保每次写操作后数据立即更新到主存。在这种情况下，通写缓存可以减少由于数据一致性问题而导致的额外内存流量。
+    \item \textbf{缓存替换频繁}：如果缓存替换非常频繁，回写缓存可能会导致大量的写回操作，从而增加内存流量。而通写缓存每次写操作都立即写回主存，避免了替换时的写回操作。
+\end{itemize}
+
+总的来说，当写操作频繁且数据不经常被重写，或者系统对数据一致性要求高时，通写缓存的内存流量可能会比回写缓存小。
+
+
+
+
+\subsubsection*{任务要求2:}
+现在使用相同的参数，但修复策略以进行回写。执行相同的实验，但这次比较写分配和写不分配策略。
+\subsubsection*{回答问题:}
+\begin{enumerate}
+    \item 哪个缓存具有较小的内存流量、写分配缓存或无写分配缓存？为什么
+    \item 在什么情况下，你对上面的问题的回答会翻转吗？解释。
+\end{enumerate}
+
+使用python脚本,自动测试不同的cache size, block size, associativity, write policy，得到不同参数下的内存流量并绘制图表。得到如下结果：
+
+
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image39.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image40.png}
+    \end{minipage}
+    \caption{spice.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image41.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image42.png}
+    \end{minipage}
+    \caption{cc.trace测试结果}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image43.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image44.png}
+    \end{minipage}
+    \caption{tex.trace测试结果}
+\end{figure}
+
+\textbf{问题1回答:}
+观察上面的图表可以发现：对于spice.trace和tex.spice测试结果，写不分配缓存具有较小的内存流量；
+对于tex.trace测试结果，写分配缓存具有较小的内存流量。
+通常情况下，写不分配策略可能会产生较小的内存流量。
+原因在于写不分配策略在写操作发生时不会将新的缓存行加载到缓存中，这可以减少从主存取数据的次数，从而减少内存流量。
+然而，写分配策略会在写操作时加载新的缓存行，这可能会导致更多的缓存替换和对主存的写操作，从而增加内存流量。
+但是，这种差异也取决于具体的缓存大小、块大小和程序的访问模式。
+
+\textbf{问题2回答:}
+在程序的空间局部性较高，写操作频繁且数据经常被重写的情况下，写分配缓存可能会产生较小的内存流量。
+因为写分配缓存会在写操作时加载新的缓存行，并在之后的写操作中重复使用这些缓存行，从而减少了从主存取数据的次数，减少了内存流量。
+
+
+
+
+
+
+\section{项目总结}
+
+本项目通过实现一个基于追踪的缓存模拟器，深入评估了不同缓存结构特性对性能的影响。在项目过程中，我们不仅加深了对缓存工作原理的理解，而且通过实践提高了解决复杂问题的能力。
+
+\subsection*{主要成果}
+\begin{itemize}
+    \item 成功实现了一个功能全面的缓存模拟器，支持多种缓存配置，包括缓存大小、块大小、关联度、写策略和分配策略。
+    \item 通过模拟不同的缓存配置，我们评估了工作集大小、块大小、关联度和内存带宽对缓存性能的影响。
+    \item 对比了写直达和写回策略在不同缓存配置下的内存流量，为缓存设计提供了实证数据支持。
+    \item 分析了写分配和写不分配策略在特定条件下的性能差异，进一步优化了缓存策略的选择。
+\end{itemize}
+
+\subsection*{经验与反思}
+\begin{itemize}
+    \item 项目过程中，我们遇到了一些技术挑战，如模拟器的稳定性和性能优化，通过对代码的不断调试，最终克服了这些挑战。
+    \item 实践中我们发现，缓存设计需要综合考虑程序特性和硬件限制，没有一种配置能够适用于所有场景。
+    \item 通过项目，我们更加认识到理论与实践相结合的重要性，以及持续学习和适应新技术的必要性。
+\end{itemize}
+
+
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

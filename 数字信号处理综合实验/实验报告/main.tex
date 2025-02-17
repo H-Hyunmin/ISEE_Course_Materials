@@ -1,0 +1,2762 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning}
+
+\usepackage{xcolor}
+
+
+\lstset{
+    language=C++, % 设置语言
+    backgroundcolor=\color{white}, % 代码块背景色
+    basicstyle=\ttfamily\small, % 基本字体样式
+    keywordstyle=\color{blue}, % 关键字颜色
+    commentstyle=\color{gray}, % 注释颜色
+    stringstyle=\color{red}, % 字符串颜色
+    numberstyle=\tiny\color{gray}, % 行号字体样式
+    numbers=left, % 行号位置
+    numbersep=5pt, % 行号与代码的距离
+    frame=shadowbox, % 用方框框住代码块
+    breaklines=true, % 代码过长则换行
+    rulecolor=\color{black}, % 边框颜色
+    showspaces=false, % 不显示空格
+    showstringspaces=false, % 不显示字符串中的空格
+    showtabs=false, % 不显示制表符
+    tabsize=4, % 制表符宽度
+    captionpos=b, % 标题位置
+    escapeinside={\%*}{*)}, % 特殊字符
+    morekeywords={*,...}, % 额外关键字
+    emph={int, float, double, char, void, bool, BYTE, DLL_EXP, AFX_MANAGE_STATE, BUF_STRUCT, aBYTE, FeatureVector, aRect}, % 高亮的类型和变量
+    emphstyle=\color{teal}, % 类型和变量高亮颜色
+    emph={[2]printf, scanf, cout, cin, memcpy, ReSample, CopyToRect, myHeapAllocInit, calculateHistogram, calculateCumulativeHistogram, illuminationCompensation, erode, dilate, open, close, kmeansPlusPlusInit, TwoCluster, PlayMP3, SleepyAlarm, CalGrayGravity, CalEigen, CalEigenDiff}, % 高亮的函数名
+    emphstyle={[2]\color{magenta}}, % 函数名高亮颜色
+    lineskip=-0.5em % 行间距
+}
+% \lstset{
+%     %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+%     rulesepcolor= \color{gray}, %代码块边框颜色
+%     breaklines=true,  %代码过长则换行
+%     numbers=left, %行号在左侧显示
+%     numberstyle= \small,%行号字体
+%     keywordstyle= \color{blue},%关键字颜色
+%     commentstyle=\color{gray}, %注释颜色
+%     frame=shadowbox%用方框框住代码块
+%     basicstyle=\small\ttfamily % 设置代码块的基本字体样式
+%     }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{引言}
+
+随着现代社会的发展，疲劳驾驶、疲劳工作等问题日益严重，导致了大量的交通事故和工作事故。
+为了减少这些事故的发生，开发一种能够实时监测人员疲劳状态的系统显得尤为重要。
+基于此，本实验设计并实现了一个防疲劳磕睡检测系统，通过摄像头获取视频流，对图像进行预处理、人脸检测、眼睛定位与跟踪、眨眼检测及疲劳判定，
+最终实现对驾驶员或其他需要专注工作的人员的疲劳状态监测。
+
+本系统的主要功能包括：
+\begin{itemize}
+    \item \textbf{图像预处理}：对摄像头获取的视频流进行截取和重采样，生成降采样彩色图片和灰度图片，减少计算量，提高图像处理速度。
+    \item \textbf{人脸检测与定位}：采用肤色建模和形态学处理方法，检测并定位人脸区域。
+    \item \textbf{眼睛定位与跟踪}：通过帧差法和常识性检验，定位并跟踪眼睛区域。
+    \item \textbf{眨眼检测}：提取眼睛中心区域的灰度图像的水平灰度直方图，并通过kmeans二聚类方法，提高眨眼帧的判断准确度。
+    \item \textbf{疲劳判定与报警}：基于PERCLOS测量原理，通过计算单位时间内眼睛闭合的时间，判断是否处于疲劳状态，并在检测到疲劳状态时进行报警提示。
+\end{itemize}
+
+本系统的设计和实现不仅能够有效监测人员的疲劳状态，减少事故的发生，还具有较高的实时性和准确性，适用于驾驶员、站岗警卫等需要长时间保持专注的工作场景。
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image20.png}
+        \label{fig:frame4}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/image22.png}
+        \label{fig:frame5}
+    \end{minipage}
+    \caption{疲劳检测系统实时监测效果展示}
+    \label{fig:frames}
+\end{figure}
+
+\newpage
+\section{设计要求}
+    \subsection{实验目的}
+        \begin{itemize}
+            \item 了解数字图像处理技术的应用场合、发展现状和发展前景。
+            \item 掌握图像采集、处理和显示过程，搞清数据存储、处理及传输过程。
+            \item 了解图像处理原理和算法，掌握人脸分割、眼睛定位与跟踪等算法。
+            \item 熟悉瞌睡疲劳的各种判定方法。
+        \end{itemize}
+        
+    \subsection{基本要求}
+        基于VCC++设计的防疲劳磕睡系统，其应用场合要求如下：
+        \begin{itemize}
+            \item 被监测人员从事比较专注的工作，活动空间较少，如驾驶员、站岗警卫等，且绝大多数时间能面对摄像头；
+            \item 不能遮住双眼。
+        \end{itemize}
+        主要功能要求如下：
+        \begin{enumerate}
+            \item 检测并跟踪双眼；
+            \item 根据眼睛状态判断是否要打瞌睡，若处于疲劳瞌睡状态则报警提示。
+        \end{enumerate}
+\newpage
+\section{系统设计}
+    \subsection{系统总体设计方案}
+        \subsubsection*{I本系统的实现思路与设计方案如下：}
+        \begin{enumerate}
+            \item \textbf{基本原理：}通过测量眼睛闭合运动，检测眨眼频率等眼睛状态来判断是否要打瞌睡。
+            \item 采用USB网络摄像头，输出图像格式为YUV422打包或RGB24格式。
+            \item 将采集到的视频转换为YUV422平面格式，用于图像处理。
+            \item 重采样以减少运算量，提高图像处理速度，产生1/2W*1/4H降采样彩色图片及1/4W*1/4H降采样灰度图片
+            \item 在降采样彩色图片中进行人脸检测和定位，检测出脸部区域（矩形），并存放在结构体rcnFace中。
+            \item 采用帧差法检测眼睛闭合运动，将重采样得到的1/4W*1/4H降采样灰度图片经滤波后存到图片序列中，利用帧差法判断是否眨眼。
+            \item 用BOOL变量bLastEyeChecked来标记是否已建立跟踪模型，当检测到眨眼后，定位双眼、建立跟踪特征模型并设置变量bLastEyeChecked为TRUE。
+            \item 由于头部在运动，需对双眼作跟踪。系统将双眼、鼻子当作跟踪体。当bLastEyeChecked=TRUE时，每一帧图像都进行跟踪运算，更新眼鼻位置、运动速度和特征值等参数。
+            \item 通过眨眼频率等手段判断是否要打瞌睡，若处于疲劳瞌睡状态则报警提醒。
+        \end{enumerate}
+
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}[
+                node distance=2cm and 1.5cm,
+                auto,
+                block/.style={rectangle, draw, fill=blue!20, text width=5em, text centered, rounded corners, minimum height=4em},
+                line/.style={draw, -Latex}
+            ]
+
+                % Nodes
+                \node[block] (start) {开始};
+                \node[block, right=of start, fill=red!20] (cam) {USB摄像头采集};
+                \node[block, right=of cam, fill=green!20] (convert) {转换为YUV422平面格式};
+                \node[block, right=of convert, fill=orange!20] (resample) {重采样};
+                \node[block, below=of resample, fill=yellow!20] (facedetect) {人脸检测和定位};
+                \node[block, left=of facedetect, fill=olive!20] (eyedetect) {眼睛检测和定位};
+                \node[block, left=of eyedetect, fill=olive!20] (eyetrack) {眼睛跟踪模型建立};
+                \node[block, left=of eyetrack, fill=cyan!20] (blinkdetect) {眨眼检测};
+                \node[block, below=of blinkdetect, fill=purple!20] (drowsydetect) {瞌睡判断};
+                \node[block, right=of drowsydetect, fill=magenta!20] (alert) {报警提醒};
+                \node[block, right=of alert] (stop) {结束};
+
+                % Arrows
+                \draw[line] (start) -- (cam);
+                \draw[line] (cam) -- (convert);
+                \draw[line] (convert) -- (resample);
+                \draw[line] (resample) -- (facedetect);
+                \draw[line] (facedetect) -- (eyedetect);
+                \draw[line] (eyedetect) -- (eyetrack);
+                \draw[line] (eyetrack) -- (blinkdetect);
+                \draw[line] (blinkdetect) -- (drowsydetect);
+                \draw[line] (drowsydetect) -- (alert);
+                \draw[line] (alert) -- (stop);
+
+            \end{tikzpicture}
+            \caption{系统工作流程图}
+            \label{fig:system_flowchart}
+        \end{figure}
+            
+        \subsubsection*{II图像处理部分被分为以下五个功能模块，每个模块以插件（动态链接库DLL）的形式加入程序：在后续内容中，将详细介绍每个插件的功能和实现方法。}
+        
+        \begin{enumerate}[label=\arabic*),itemsep=1ex]
+            \item \textbf{摄像头视频流图片截取及重采样等预处理插件}：负责从摄像头获取视频流，并进行必要的重采样等预处理操作。
+            \item \textbf{人脸检测及定位插件}：用于检测图像中的人脸，并确定其位置。
+            \item \textbf{眼睛、鼻子跟踪插件}：追踪眼睛和鼻子的位置，以便进行更细致的分析。
+            \item \textbf{眨眼检测及眼鼻定位插件}：检测眨眼行为，并精确定位眼睛和鼻子的特征。
+            \item \textbf{疲劳瞌睡分析及报警插件}：分析眼睛状态，判断是否出现疲劳或瞌睡，并在必要时发出报警。
+        \end{enumerate}
+       
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\textwidth]{./figures/fig/image1.png}
+            \caption{系统详细实现流程}
+            \label{fig:your_image_label}
+        \end{figure}
+
+
+
+        \subsubsection*{III下面先介绍系统使用的关键全局变量、重要的结构体。在后续的具体实现中，也会再次介绍这些变量和结构体的具体用途。}
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=\textwidth]{./figures/fig/image2.png}
+            \label{fig:your_image_label}
+        \end{figure}
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.9\textwidth]{./figures/fig/image3.png}
+            \label{fig:your_image_label}
+        \end{figure}
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.9\textwidth]{./figures/fig/image4.png}
+            \label{fig:your_image_label}
+        \end{figure}
+
+
+
+    \subsection{摄像头视频流图片截取、重采样等处理}
+        \subsubsection*{I本插件较为简单，主要作用是初始化 pImgProcBuf 向量，并为后面插件做一些准备工作，插件的具体工作流程如下:}
+
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}[
+                node distance=2cm and 1.5cm,
+                auto,
+                block/.style={rectangle, draw, fill=blue!20, text width=5em, text centered, rounded corners, minimum height=4em},
+                line/.style={draw, -Latex}
+            ]
+
+                % Nodes
+                \node[block] (start) {开始};
+                \node[block, right=of start, fill=red!20] (init) {初始化各类指针变量与全局结构体};
+                \node[block, right=of init, fill=green!20] (setVars) {初始化各类信号};
+                \node[block, right=of setVars, fill=orange!20] (initMap) {初始化肤色映射表};
+                \node[block, below=of initMap, fill=yellow!20] (initTrack) {初始化跟踪体};
+                \node[block, left=of initTrack, fill=olive!20] (initFea) {初始化特征处理中使用的全局变量};
+                \node[block, left=of initFea, fill=cyan!20] (calcMem) {计算动态内存大小};
+                \node[block, left=of calcMem, fill=purple!20] (initPtr) {初始化全局指针变量};
+                \node[block, below=of initPtr, fill=magenta!20] (setDisplay) {设置显示图片指针};
+                \node[block, right=of setDisplay, fill=blue!20] (copyColor) {复制彩色图片};
+                \node[block, right=of copyColor, fill=red!20] (sample1) {生成降采样彩色图片};
+                \node[block, right=of sample1, fill=green!20] (sample2) {生成降采样灰度图片};
+
+
+                % Arrows
+                \draw[line] (start) -- (init);
+                \draw[line] (init) -- (setVars);
+                \draw[line] (setVars) -- (initMap);
+                \draw[line] (initMap) -- (initTrack);
+                \draw[line] (initTrack) -- (initFea);
+                \draw[line] (initFea) -- (calcMem);
+                \draw[line] (calcMem) -- (initPtr);
+                \draw[line] (initPtr) -- (setDisplay);
+                \draw[line] (setDisplay) -- (copyColor);
+                \draw[line] (copyColor) -- (sample1);
+                \draw[line] (sample1) -- (sample2);
+
+
+            \end{tikzpicture}
+            \caption{初始化和图像处理流程图}
+            \label{fig:init_image_processing}
+        \end{figure}
+
+        \subsubsection*{II下面简要介绍本插件的代码实现和重要函数，对代码的说明详见注释，具体代码实现请参考工程文件和源代码。}
+
+
+        \begin{lstlisting}[caption={重采样函数}, label={lst:example}]
+/**
+* @brief 重采样函数,将源图片重采样到目标图片,支持灰度和彩色图片,支持邻近点采样和双线性内插法
+* 
+* @param ThisImage  源图片指针
+* @param Width  源图片宽度
+* @param Height  源图片高度
+* @param newWidth  目标图片宽度
+* @param newHeight  目标图片高度
+* @param InsMode  是否使用双线性内插法，true：双线性内插法，false：邻近点采样
+* @param bGray  是否为灰度图片，true：灰度图片采样，false：彩色图片采样
+* @param result  目标图片指针
+* @return DLL_EXP 
+*/
+DLL_EXP bool ReSample(aBYTE* ThisImage,int Width,int Height,
+                    int newWidth,int newHeight,
+                    bool InsMode,
+                    bool bGray,
+                    aBYTE *result
+                    )
+        \end{lstlisting}
+
+
+
+        \begin{lstlisting}[caption={图片复制函数}, label={lst:example}]
+/**
+* @brief 将一个图片复制到另一个图片的指定区域，支持灰度和彩色图片
+* 
+* @param ThisImage 源图片指针
+* @param anImage  目标图片指针
+* @param W 源图片宽度
+* @param H  源图片高度
+* @param DestW  目标图片宽度
+* @param DestH  目标图片高度
+* @param nvLeft  源图片左上角在目标图片的横坐标
+* @param nvTop  源图片左上角在目标图片的纵坐标
+* @param bGray 是否为灰度图片，true：灰度；false：彩色。
+* @return DLL_EXP 
+*/
+DLL_EXP void CopyToRect(
+            aBYTE* ThisImage,
+            aBYTE* anImage,
+            int W,int H,
+            int DestW,int DestH,
+            int nvLeft,int nvTop,
+            bool bGray
+                    )
+        \end{lstlisting}
+
+
+
+        \begin{lstlisting}[caption={插件主函数}, label={lst:example}]
+/**
+* @brief 插件运行的主函数
+* 
+* @param w yuv原始图片宽度
+* @param h yuv原始图片高度 
+* @param pYBits 图片Y分量指针
+* @param pUBits 图片U分量指针
+* @param pVBits 图片V分量指针
+* @param pBuffer char*类型的缓冲区指针,pBuffer指向的内存块中存放了pImgProcBuf向量 
+*/
+DLL_EXP void ON_PLUGINRUN(int w,int h,BYTE* pYBits,BYTE* pUBits,BYTE* pVBits,BYTE* pBuffer)
+{
+    // 模块状态切换
+    AFX_MANAGE_STATE(AfxGetStaticModuleState());
+    // 转化为BUF_STRUCT结构体指针
+    _BUF_STRUCT *pBufStruct = (_BUF_STRUCT*)pBuffer;
+    // 如果未初始,则初始化
+    if (pBufStruct->bNotInited)
+    {
+        // 初始化指针变量
+        pBufStruct->colorBmp = pBuffer + sizeof(BUF_STRUCT);
+        pBufStruct->grayBmp = pBufStruct->colorBmp;
+        pBufStruct->clrBmp_1d8 = pBufStruct->grayBmp + w * h * 2;
+        for (int i = 0; i < 8; ++i)
+        {
+            pBufStruct->pImageQueue[i] = pBufStruct->lastImageQueue1d16m8 + i * (w * h / 16);
+        }
+        .......//篇幅原因省略部分初始化代码
+
+        // 初始化变量
+        pBufStruct->W = w;
+        pBufStruct->H = h;
+        pBufStruct->cur_allocSize = 0;
+        .......//篇幅原因省略部分初始化代码
+
+        // 初始化肤色映射表
+        for (int i = 0; i <= 255; i++)
+        {
+            pBufStruct->pOtherVars->byHistMap_U[i] = 0;
+            pBufStruct->pOtherVars->byHistMap_V[i] = 0;
+        }
+        for (int i = 85; i <= 126; i++)
+        {
+            pBufStruct->pOtherVars->byHistMap_U[i] = 1;
+        }
+        for (int i = 130; i <= 165; i++)
+        {
+            pBufStruct->pOtherVars->byHistMap_V[i] = 1;
+        }
+
+        // 初始化眼鼻跟踪体
+        aRect tempaRect = {0, 0, 0, 0};
+        FeatureVector tempFeatureVector = {sizeof(FeatureVector4P) * 5, 0};
+
+        pBufStruct->pOtherVars->objNose.rcObject = tempaRect;
+        pBufStruct->pOtherVars->objNose.fvObject = tempFeatureVector;
+        pBufStruct->pOtherVars->objNose.fvObject_org = tempFeatureVector;
+        pBufStruct->pOtherVars->objNose.spdxObj = 0;
+        pBufStruct->pOtherVars->objNose.spdyObj = 0;
+        pBufStruct->pOtherVars->objNose.nMinDist = 0x7fffffff;
+        pBufStruct->pOtherVars->objNose.bBrokenTrace = false;
+        pBufStruct->pOtherVars->objNose.bSaveit = false;
+        pBufStruct->pOtherVars->objNose.nBrokenTimes = 0;
+        strcpy(pBufStruct->pOtherVars->objNose.sName, "Nose");
+        .......//省略部分初始化代码，同上
+
+        // 计算最大分配大小
+        pBufStruct->max_allocSize = w * h * 17 / 16 - sizeof(BUF_STRUCT) - sizeof(OTHER_VARS);
+        pBufStruct->bNotInited = false;
+
+        // 初始化动态内存分配
+        myHeapAllocInit(pBufStruct);
+    }
+
+    // 设置显示图片指针
+    pBufStruct->displayImage = pYBits;
+
+    // 复制彩色图片,使用memcpy函数
+    memcpy(pBufStruct->colorBmp, pYBits, w * h);
+    memcpy(pBufStruct->colorBmp + w * h, pUBits, w * h / 2);
+    memcpy(pBufStruct->colorBmp + w * h + w * h / 2, pVBits, w * h / 2);
+
+    // 调用图像处理函数，生成降采样图片
+    ReSample(pBufStruct->colorBmp, w, h, w / 2, h / 4, false, false, pBufStruct->clrBmp_1d8);
+    ReSample(pBufStruct->grayBmp, w, h, w / 4, h / 4, false, true, pBufStruct->grayBmp_1d16);
+
+    // 测试图像处理结果，将降采样图片复制到显示图片上，观察屏幕显示效果
+    if (bLastPlugin)
+    {
+        CopyToRect(pBufStruct->grayBmp_1d16, pYBits, w / 4, h / 4, w, h, 0, 0, true);
+        CopyToRect(pBufStruct->clrBmp_1d8, pYBits, w / 2, h / 4, w, h, w / 2, 0, false);
+    }
+}
+        \end{lstlisting}
+
+
+
+
+
+
+
+
+    \subsection{人脸检测与定位}
+        \subsubsection*{\textrm{I}本插件主要功能是在图片中确定人脸的位置、大小等信息。基本流程如下}
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}[
+                node distance=2cm and 1.5cm,
+                auto,
+                block/.style={rectangle, draw, fill=blue!20, text width=5em, text centered, rounded corners, minimum height=4em},
+                line/.style={draw, -Latex}
+            ]
+
+                % Nodes
+                \node[block] (start) {开始};
+                \node[block, right=of start, fill=red!20] (step1) {获取结构体中的降采样彩图};
+                \node[block, right=of step1, fill=green!20] (step2) {对彩图进行光照补偿};
+                \node[block, right=of step2, fill=orange!20] (step3) {进行肤色建模得到二值图片};
+                \node[block, below=of step3, fill=yellow!20] (step4) {进行形态学处理，去除噪声};
+                \node[block, left=of step4, fill=olive!20] (step5) {进行连通域分析，得到人脸区域};
+                \node[block, left=of step5, fill=cyan!20] (step6) {进行人脸定位和显示};
+                \node[block, left=of step6, fill=purple!20] (end) {结束};
+
+                % Arrows
+                \draw[line] (start) -- (step1);
+                \draw[line] (step1) -- (step2);
+                \draw[line] (step2) -- (step3);
+                \draw[line] (step3) -- (step4);
+                \draw[line] (step4) -- (step5);
+                \draw[line] (step5) -- (step6);
+                \draw[line] (step6) -- (end);
+
+            \end{tikzpicture}
+            \caption{人脸检测与定位流程图}
+            \label{fig:flowchart_example}
+        \end{figure}
+        人脸检测的方法较多，本实验选择利用肤色信息定位人脸，基于肤色的人脸检测的运算
+        量较低, 执行效率较高，能够满足实时性的要求；而且不依赖于面部的细节特征, 并且能较
+        好的适应头部旋转、表情变化、姿态变化等, 具有较高的实用性的鲁棒性（Robust）。
+        下面的具体实现中，将详细介绍每个步骤的具体实现方法。
+
+        \subsubsection*{\large \textbf{1. 光照补充}}
+
+        光照补偿是一种图像处理技术，用于减少或消除由于光照不均匀引起的图像亮度变化。直方图均衡化是一种常用的光照补偿方法，通过调整图像的灰度值分布，使得图像的对比度得到增强，从而实现光照补偿的效果。
+        直方图是图像中每个灰度值出现频率的统计图。计算直方图的步骤如下：
+        \begin{enumerate}
+            \item 初始化一个大小为256的数组，用于存储每个灰度值的频率。
+            \item 遍历图像中的每个像素，根据像素的灰度值更新直方图数组。
+        \end{enumerate}
+
+        用数学公式表示为：
+        \[
+        H(i) = \sum_{x=0}^{W-1} \sum_{y=0}^{H-1} \delta(I(x, y) - i)
+        \]
+        其中，$H(i)$ 表示灰度值为 $i$ 的频率，$I(x, y)$ 表示图像在位置 $(x, y)$ 的灰度值，$\delta$ 是狄拉克函数，当输入为0时输出1，否则输出0。
+
+        累积直方图是直方图的累积和，用于表示灰度值小于等于某个值的像素总数。计算累积直方图的步骤如下：
+        \begin{enumerate}
+            \item 初始化一个大小为256的数组，用于存储累积直方图。
+            \item 遍历直方图数组，计算累积和。
+        \end{enumerate}
+
+        用数学公式表示为：
+        \[
+        C(i) = \sum_{j=0}^{i} H(j)
+        \]
+        其中，$C(i)$ 表示灰度值小于等于 $i$ 的像素总数。
+
+        直方图均衡化通过将累积直方图映射到新的灰度值范围，实现图像的对比度增强。步骤如下：
+        \begin{enumerate}
+            \item 计算累积直方图。
+            \item 根据累积直方图计算新的灰度值映射表。
+            \item 使用映射表更新图像的灰度值。
+        \end{enumerate}
+
+        用数学公式表示为：
+        \[
+        LUT(i) = \left\lfloor \frac{C(i) - C_{\min}}{N - C_{\min}} \times (L - 1) \right\rfloor
+        \]
+        其中，$LUT(i)$ 表示灰度值 $i$ 的新值，$C_{\min}$ 是累积直方图中的最小非零值，$N$ 是图像中的像素总数，$L$ 是灰度值的最大值（通常为256）。
+
+
+
+        \textbf{具体的实现代码和注释如下：}
+        \begin{lstlisting}[caption={光照补偿函数}, label={lst:example}]
+// 计算直方图
+// 参数：src - 输入图像数据，histogram - 输出直方图数组，size - 图像数据大小
+void calculateHistogram(const BYTE* src, int* histogram, int size) {
+    std::memset(histogram, 0, 256 * sizeof(int));
+    for (int i = 0; i < size; ++i) {
+        histogram[src[i]]++;
+    }
+}
+
+// 计算累积直方图
+// 参数：histogram - 输入直方图数组，cumulativeHistogram - 输出累积直方图数组
+void calculateCumulativeHistogram(const int* histogram, int* cumulativeHistogram) {
+    cumulativeHistogram[0] = histogram[0];
+    for (int i = 1; i < 256; ++i) {
+        cumulativeHistogram[i] = cumulativeHistogram[i - 1] + histogram[i];
+    }
+}
+
+/**
+ * @brief  使用直方图均衡化进行光照补偿
+ * 
+ * @param src 输入图像数据
+ * @param dst  输出图像数据
+ * @param width  图像宽度
+ * @param height  图像高度
+ */
+void illuminationCompensation(BYTE* src, BYTE* dst, int width, int height) {
+    int size = width * height;
+    int histogram[256];
+    int cumulativeHistogram[256];
+
+    // 计算直方图
+    calculateHistogram(src, histogram, size);
+
+    // 计算累积直方图
+    calculateCumulativeHistogram(histogram, cumulativeHistogram);
+
+    // 计算均衡化后的像素值
+    BYTE lut[256];
+    for (int i = 0; i < 256; ++i) {
+        lut[i] = static_cast<BYTE>(255.0 * cumulativeHistogram[i] / size + 0.5);
+    }
+
+    // 应用均衡化后的像素值
+    for (int i = 0; i < size; ++i) {
+        dst[i] = lut[src[i]];
+    }
+}
+        \end{lstlisting}
+
+
+
+
+        \subsubsection*{\large \textbf{2.肤色建模}}
+
+        肤色建模是一种图像处理技术，用于在图像中检测和分割皮肤区域。通过对图像中的像素进行分析，可以识别出属于皮肤的像素，从而实现人脸检测、手势识别等应用。常用的肤色建模方法包括基于颜色空间的阈值法和直方图法。
+        本设计才用阈值法实现，在基于颜色空间的阈值法中，首先将图像转换到适合肤色检测的颜色空间，如 YUV、HSV 或 YCbCr。然后，根据经验或统计分析，确定肤色像素在该颜色空间中的范围。最后，通过阈值判断，将属于肤色范围内的像素标记为皮肤像素。
+
+        在阈值法中，通过设定 U 和 V 分量的范围，可以将图像中的像素分类为皮肤像素和非皮肤像素。具体步骤如下：
+
+        \begin{enumerate}
+            \item 获取图像的 YUV 数据指针。
+            \item 遍历图像中的每个像素，根据 U 和 V 分量的值进行阈值判断。
+            \item 如果 U 和 V 分量的值在设定的范围内，则将该像素标记为皮肤像素，否则标记为非皮肤像素。
+            \item 得到二值图片，其中肤色的像素值用 255 表示，非肤色用 0 表示
+        \end{enumerate}
+
+
+        \textbf{具体的实现代码和注释如下：}
+        \begin{lstlisting}[caption={肤色建模}, label={lst:example}]
+//获得YUV数据指针
+BYTE* pY = (aBYTE*)(((BUF_STRUCT*)pBuffer)->clrBmp_1d8);
+BYTE* pU = pY + w*h/8;
+BYTE* pV = pU + w*h/16;
+
+//二值化处理
+BYTE* tempImage = myHeapAlloc(w*h/16); //临时图像
+BYTE* tempImage = myHeapAlloc(w * h / 16); // 临时图像
+//利用之前的肤色映射表，将U和V分量的值进行与操作得到二值图像，可以加快速度
+for (int i = 0; i < w * h / 16; i++) {
+    tempImage[i] = 255 * (((BUF_STRUCT*)pBuffer)->pOtherVars->byHistMap_U[pU[i]] & ((BUF_STRUCT*)pBuffer)->pOtherVars->byHistMap_V[pV[i]]);
+}
+        \end{lstlisting}
+
+        \subsubsection*{\large \textbf{3.形态学处理}}
+
+形态学处理是一种基于形状的图像处理技术，主要用于图像的预处理和特征提取。形态学处理的基本操作包括腐蚀、膨胀、开运算和闭运算等。本文将重点介绍开运算和闭运算的原理及其应用。
+形态学处理的基本操作包括腐蚀和膨胀：
+\begin{itemize}
+    \item \textbf{腐蚀（Erosion）}：腐蚀操作会使图像中的前景物体变小，去除小的噪声点。其基本思想是用结构元素扫描图像，并将结构元素完全包含在前景物体中的像素保留。
+    \item \textbf{膨胀（Dilation）}：膨胀操作会使图像中的前景物体变大，填补小的空洞。其基本思想是用结构元素扫描图像，并将结构元素与前景物体有重叠的像素保留。
+\end{itemize}
+
+开运算是先进行腐蚀操作，再进行膨胀操作的组合。开运算可以去除小的噪声点，同时保持图像的整体形状。其定义如下：
+\[
+A \circ B = (A \ominus B) \oplus B
+\]
+其中，$A$ 是输入图像，$B$ 是结构元素，$\ominus$ 表示腐蚀操作，$\oplus$ 表示膨胀操作。
+
+开运算主要用于去除图像中的小噪声点，同时保持前景物体的整体形状。在图像预处理中，开运算常用于去除小的孤立点和细小的连接物。
+
+闭运算是先进行膨胀操作，再进行腐蚀操作的组合。闭运算可以填补小的空洞，同时保持图像的整体形状。其定义如下：
+\[
+A \bullet B = (A \oplus B) \ominus B
+\]
+其中，$A$ 是输入图像，$B$ 是结构元素，$\oplus$ 表示膨胀操作，$\ominus$ 表示腐蚀操作。
+
+闭运算主要用于填补图像中的小空洞，同时保持前景物体的整体形状。在图像预处理中，闭运算常用于连接断开的细小部分和填补小的空洞。
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{./figures/fig/image23.png}
+    \caption{开运算和闭运算示意图}
+    \label{fig:my_label}
+\end{figure}
+
+
+
+
+
+
+        \textbf{具体的实现代码和注释如下：}
+        \begin{lstlisting}[caption={腐蚀函数}, label={lst:example}]
+//腐蚀
+//NxN矩阵，N为奇数
+//src:输入图像
+//dst:输出图像
+//w:图像宽度
+//h:图像高度
+DLL_EXP void erode(aBYTE *src, aBYTE *dst, int w, int h, int N) {
+	//分配临时空间并初始化
+	BYTE* tempImage1 = myHeapAlloc(w*h);
+	BYTE* tempImage2 = myHeapAlloc(w*h);
+	memset(tempImage1, 0, w*h);
+	memset(tempImage2, 0, w*h);
+
+	//1xN行向量腐蚀
+	for (int i = 0; i < h; i++)
+	{
+		for (int j = N / 2; j < w - N / 2; j++)
+		{
+			bool flag = true;
+			for (int k = 0; k < N; k++)
+			{
+				if (src[i*w + j - N / 2 + k] == 0)
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (flag)
+			{
+				tempImage1[i*w + j] = 255;
+			}
+		}
+	}
+	//对tempImage1Nx1列向量腐蚀，结果存入tempImage2
+	for (i = N / 2; i < h - N / 2; i++)
+	{
+		for (int j = 0; j < w; j++)
+		{
+			bool flag = true;
+			for (int k = 0; k < N; k++)
+			{
+				if (tempImage1[(i - N / 2 + k)*w + j] == 0)
+				{
+					flag = false;
+					break;
+				}
+			}
+			if (flag)
+			{
+				tempImage2[i*w + j] = 255;
+			}
+		}
+	}
+    //将结果拷贝到dst
+	memcpy(dst, tempImage2, w*h);
+	myHeapFree(tempImage2);
+	myHeapFree(tempImage1);
+}
+        \end{lstlisting}
+
+
+
+
+        \begin{lstlisting}[caption={膨胀函数}, label={lst:example}]
+DLL_EXP void dilate(aBYTE *src, aBYTE *dst, int w, int h, int N) {
+	//分配临时空间并初始化
+	BYTE* tempImg1 = myHeapAlloc(w * h);
+	BYTE* tempImg2 = myHeapAlloc(w * h);
+	memset(tempImg1, 0, w*h);
+	memset(tempImg2, 0, w*h);
+
+	//NxN矩阵膨胀
+	//1xN行向量膨胀
+	for (int i = 0; i < h; i++)
+	{
+		for (int j = 0; j < w; j++)
+		{
+			bool flag = false;
+			for (int k = -N / 2; k <= N / 2; k++)
+			{
+				int x = j + k;
+				if (x >= 0 && x < w && src[i * w + x] == 255)
+				{
+					flag = true;
+					break;
+				}
+			}
+			if (flag)
+			{
+				tempImg1[i * w + j] = 255;
+			}
+		}
+	}
+	//对tempImg1Nx1列向量膨胀，结果存入tempImg2
+	for (i = 0; i < h; i++)
+	{
+		for (int j = 0; j < w; j++)
+		{
+			bool flag = false;
+			for (int k = -N / 2; k <= N / 2; k++)
+			{
+				int y = i + k;
+				if (y >= 0 && y < h && tempImg1[y * w + j] == 255)
+				{
+					flag = true;
+					break;
+				}
+			}
+			if (flag)
+			{
+				tempImg2[i * w + j] = 255;
+			}
+		}
+	}
+	memcpy(dst, tempImg2, w * h);
+	myHeapFree(tempImg2);
+	myHeapFree(tempImg1);
+}
+        \end{lstlisting}
+
+        \begin{lstlisting}[caption={开运算和闭运算函数}, label={lst:example}]
+DLL_EXP void open(aBYTE *src, aBYTE *dst, int w, int h, int N) {
+	//腐蚀
+	erode(src, dst, w, h, N);
+	//膨胀
+	dilate(src, dst, w, h, N);
+}
+DLL_EXP void close(aBYTE *src, aBYTE *dst, int w, int h, int N) {
+	//膨胀
+	dilate(src, dst, w, h, N);
+	//腐蚀
+	erode(src, dst, w, h, N);
+}
+
+        \end{lstlisting}
+
+
+
+
+        \subsubsection*{\large \textbf{4.连通域标记}}
+
+
+连通域标记（Connected Component Labeling）是一种图像处理技术，
+用于识别和标记图像中的连通区域。连通域标记在图像分割、物体检测和模式识别等领域有广泛的应用。
+
+连通域标记的目的是将图像中的每个连通区域赋予一个唯一的标签，以便后续处理。
+连通域可以是4连通或8连通，分别表示像素与其上下左右（4个方向）
+或上下左右及对角线（8个方向）相邻的像素连通。本设计采用4连通域标记。
+
+连通域标记的常用算法包括两遍扫描算法和等价表法。本设计采用等价表法。
+等价表法通过构建和维护等价表来处理连通域标记。算法步骤如下：
+
+
+\begin{enumerate}
+    \item 初始化一个临时图像数组，用于存储中间结果。
+    \item 初始化两个等价表数组，分别用于存储标签的等价关系和最终标签。
+    \item 遍历图像中的每个像素，根据其邻居像素的标签更新临时图像数组和等价表。
+    \item 整理等价表，确保每个标签对应唯一的连通域。
+    \item 重新编号连通区域
+    \item 对图片进行逐个像素代换，将临时标号代换为最终标号
+    \item 输出标记连通域后的图像
+\end{enumerate}
+
+
+
+        \textbf{具体各步骤的实现代码和注释如下：}
+        \begin{lstlisting}[caption={开运算和闭运算函数}, label={lst:example}]
+//初始化临时图像数组和等价表数组
+int * tempImage = new int[w * h ]; 
+memset(tempImage, 0, w * h *sizeof(int));
+int* LK = new int[1024];      
+int* LK1 = new int[1024];     
+for (int i = 0; i < 1024; i++) {
+    LK[i] = i; 
+    LK1[i] = 0;
+}
+            
+        \end{lstlisting}
+
+如下图，连通域临时标号即从图中建立多个并查集，用等价表来表示该并查集
+\begin{figure}[H]
+    \centering
+    \caption{连通域标记示意图}
+    \includegraphics[width=0.9\textwidth]{./figures/fig/image5.png}
+    \label{fig:your_image_label}
+\end{figure}
+
+如下图，整理等价表即从并查集的根节点开始向上查找，直到找到最小的标记，记录等价关系。
+连通区域重新编号，如果是根节点，重新编号，否则，将其映射到根节点。        
+\begin{figure}[H]
+    \centering
+    \caption{等价表即并查集}
+    \includegraphics[width=0.9\textwidth]{./figures/fig/image6.png}
+    \label{fig:your_image_label}
+\end{figure}
+        \begin{lstlisting}[caption={遍历数组，连通域临时标号}, label={lst:example}]
+int nextLabel = 1; //下一个标记
+//两个循环遍历图像中的每个像素
+for (int y = 0; y < h; y++) {
+    for (int x = 0; x < w; x++) {
+        int index = y * w + x; // 当前像素索引
+        if (src[index] == 0) {//如果当前像素为0，标记为0
+            tempImage[index] = 0;
+            continue;
+        }
+
+        // 获取邻居像素的标记
+        int leftLabel = (x > 0) ? tempImage[index - 1] : 0;
+        int topLabel = (y > 0) ? tempImage[index - w] : 0;
+
+        if (leftLabel == 0 && topLabel == 0) {
+            // 两个邻居像素都没有标记，新建一个标记
+            tempImage[index] = nextLabel;
+            nextLabel++;
+        } else if (leftLabel != 0 && topLabel == 0) {
+            // 左边有标记，上边没有标记，取左边的标记
+            tempImage[index] = leftLabel;
+        } else if (leftLabel == 0 && topLabel != 0) {
+            // 左边没有标记，上边有标记，取上边的标记
+            tempImage[index] = topLabel;
+        } else {
+            // 两个邻居像素都有标记，取左边
+            tempImage[index] = leftLabel;
+
+            // 更新等价表
+            int Lmax = leftLabel>topLabel?leftLabel:topLabel;
+            int Lmin = leftLabel<topLabel?leftLabel:topLabel;
+            if (LK[Lmax] != Lmax) {//追踪
+                int j = Lmax;
+                while (LK[j] != j) {
+                    j = LK[j];
+                }
+                if (j>Lmin) LK[j] = Lmin;
+                else LK[Lmin] = j;
+            }
+            else{//向上查找，直到找到最小的标记
+                while (LK[Lmin] != Lmin) {
+                    Lmin = LK[Lmin];
+                }
+                //记录等价关系
+                LK[Lmax] = Lmin;
+            }
+        }
+    }
+}
+        \end{lstlisting}
+
+
+
+        \begin{lstlisting}[caption={整理等价表}, label={lst:example}]
+// 整理等价表
+for ( i = 0; i < nextLabel; i++) {
+    //向上查找，直到找到最小的标记
+    int j = i;
+    while (LK[j] != j) {//追踪
+        j = LK[j];
+    }
+    //记录等价关系
+    LK[i] =j;
+}
+
+//连通区域重新编号
+int newi=1;
+for ( i=1; i<nextLabel; i++) {
+    //如果是根节点，重新编号
+    if (LK[i] == i) {
+        LK1[i] = newi;
+        newi++;
+    }
+    //否则，将其映射到根节点
+    else {
+        LK1[i] = LK1[LK[i]];
+    }
+}
+        \end{lstlisting}
+
+
+        \begin{lstlisting}[caption={图片替换}, label={lst:example}]
+//图片替换
+for ( i = 0; i < w * h; i++) {
+    tempImage[i] = LK1[tempImage[i]];
+    }
+
+            
+        \end{lstlisting}
+
+
+
+        \begin{lstlisting}[caption={开运算和闭运算函数}, label={lst:example}]
+//找到最多的标记
+int* labelCount = new int[nextLabel];
+memset(labelCount, 0, nextLabel * sizeof(int));
+for ( i = 0; i < w * h; i++) {
+    if (tempImage[i] != 0)
+    labelCount[tempImage[i]]++;
+}
+int maxLabel = 0;
+for ( i = 0; i < nextLabel; i++) {
+    if (labelCount[i] > labelCount[maxLabel]) {
+        maxLabel = i;
+    }
+}
+//将最多的标记设为255 其他设为0
+for ( i = 0; i < w * h; i++) {
+    if (tempImage[i] == maxLabel) {
+        dst[i] = 255;
+    } else {
+        dst[i] = 0;
+    }
+}
+        \end{lstlisting}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        \subsubsection*{\large \textbf{5.人脸区域定位及显示}}
+标记连通域后，统计各连通域的像素总数，找出最大连通域（脸部），该连通域像素值
+设为 255，删去最大连通域以外的内容（非脸部的连通域置 0），图片 tempImage 重新成为二
+值图。
+
+计算脸部区域矩形范围存于 rcnFace 结构体、统计脸部区域肤色像素总数存于nFacePixelNum 结构体。
+将两值化图片 tempImage 扩展到降采样彩色图片中的灰度部分。
+        
+        \textbf{具体各步骤的实现代码和插件主函数代码如下：}
+        \begin{lstlisting}[caption={找出最大连通域，二值化图像}, label={lst:example}]
+//统计各连通域的像素总数，找出最大连通域，该连通域像素值设为255二值化图像
+//找到最多的标记
+int* labelCount = new int[nextLabel];
+memset(labelCount, 0, nextLabel * sizeof(int));
+for ( i = 0; i < w * h; i++) {
+    if (tempImage[i] != 0)
+    labelCount[tempImage[i]]++;
+}
+int maxLabel = 0;
+for ( i = 0; i < nextLabel; i++) {
+    if (labelCount[i] > labelCount[maxLabel]) {
+        maxLabel = i;
+    }
+}
+//将最多的标记设为255 其他设为0
+for ( i = 0; i < w * h; i++) {
+    if (tempImage[i] == maxLabel) {
+        dst[i] = 255;
+    } else {
+        dst[i] = 0;
+    }
+}
+        \end{lstlisting}
+
+        \begin{lstlisting}[caption={人脸识别插件主函数}, label={lst:example}]
+/**主函数中调的函数均已在前面的代码中有详细说明，完整代码参考工程源文件
+*/
+DLL_EXP void ON_PLUGINRUN(int w,int h,BYTE* pYBits,BYTE* pUBits,BYTE* pVBits,BYTE* pBuffer)
+{
+//pYBits 大小为w*h
+//pUBits 和 pVBits 的大小为 w*h/2
+//pBuffer 的大小为 w*h*4
+//下面算法都基于一个假设，即w是16的倍数
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());//模块状态切换
+
+	//1光照补偿
+	illuminationCompensation (pYBits, pYBits, w, h);
+
+	//2.肤色建模
+	//获得YUV数据指针
+	BYTE* pY = (aBYTE*)(((BUF_STRUCT*)pBuffer)->clrBmp_1d8);
+	BYTE* pU = pY + w*h/8;
+	BYTE* pV = pU + w*h/16;
+	// 二值化处理
+	BYTE* tempImage = myHeapAlloc(w * h / 16); // 临时图像
+    for (int i = 0; i < w * h / 16; i++) {
+	 	tempImage[i] = 255 * (((BUF_STRUCT*)pBuffer)->pOtherVars->byHistMap_U[pU[i]] & ((BUF_STRUCT*)pBuffer)->pOtherVars->byHistMap_V[pV[i]]);
+	}
+
+	//3.形态学处理
+	open(tempImage, tempImage, w/4, h/4, 3);
+	close(tempImage, tempImage, w/4, h/4, 7);
+
+	//4.标记区域
+	connectedcomponentlabelling(tempImage, tempImage, w/4, h/4);
+
+	//5.人脸检测与定位
+	aRect faceRect;//用于绘图
+	//找到二值图255元素矩形框架
+	int minX = w / 4, minY = h / 4, maxX = 0, maxY = 0;
+	bool found = false;
+    //找联通域的左上角坐标
+	for (int y = 0; y < h / 4; ++y) {
+		for (int x = 0; x < w / 4; ++x) {
+			if (tempImage[y * (w / 4) + x] == 255) {
+				if (!found) {
+					found = true;
+				}
+				minX = (x < minX) ? x : minX;
+				minY = (y < minY) ? y : minY;
+				maxX = (x > maxX) ? x : maxX;
+				maxY = (y > maxY) ? y : maxY;
+			}
+		}
+	}
+    //找到后存入rcnFace结构体
+	if (found){
+	((BUF_STRUCT*)pBuffer)->rcnFace.left = minX * 2;
+	((BUF_STRUCT*)pBuffer)->rcnFace.top = minY;
+	((BUF_STRUCT*)pBuffer)->rcnFace.width = (maxX - minX + 1) * 2;
+	((BUF_STRUCT*)pBuffer)->rcnFace.height = maxY - minY + 1;
+	((BUF_STRUCT*)pBuffer)->nFacePixelNum = ((maxX - minX + 1) * 2) * (maxY - minY + 1);
+	}
+	else{
+	((BUF_STRUCT*)pBuffer)->rcnFace.left = 0;
+	((BUF_STRUCT*)pBuffer)->rcnFace.top = 0;
+	((BUF_STRUCT*)pBuffer)->rcnFace.width = 0;
+	((BUF_STRUCT*)pBuffer)->rcnFace.height = 0;
+	((BUF_STRUCT*)pBuffer)->nFacePixelNum = 0;
+	}
+
+	//将二值图像拓展到clrBmp_1d8
+	for(i=0;i<h/4;i++){
+		for(int j=0;j<w/4;j++){
+			((BUF_STRUCT*)pBuffer)->clrBmp_1d8[(i*w/4+j)*2] = tempImage[i*w/4+j];
+			((BUF_STRUCT*)pBuffer)->clrBmp_1d8[(i*w/4+j)*2+1] = tempImage[i*w/4+j];
+		}
+	}
+    //在视频中用方框标出脸部区域
+	faceRect.left = minX * 4;
+	faceRect.top = minY * 4;
+	faceRect.width = (maxX - minX + 1) * 4;
+	faceRect.height = (maxY - minY + 1) * 4;
+
+	DrawRectangle(((BUF_STRUCT*)pBuffer)->displayImage, w, h, faceRect, TYUV1(0, 191, 255), false);
+	myHeapFree(tempImage);
+}
+        \end{lstlisting}
+
+    \subsection{眨眼检测及眼鼻定位}
+        \subsubsection*{\textrm{I}本插件主要功能是在图片中确定人脸的位置、大小等信息。基本流程如下}
+ 
+
+
+
+
+
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}[
+                node distance=2cm and 1.5cm,
+                auto,
+                block/.style={rectangle, draw, fill=blue!20, text width=5em, text centered, rounded corners, minimum height=4em},
+                line/.style={draw, -Latex}
+            ]
+
+                % Nodes
+                \node[block] (start) {开始};
+                \node[block, right=of start, fill=red!20] (step1) {帧差法检测双眼};
+                \node[block, right=of step1, fill=green!20] (step2) {常识性检验双眼};
+                \node[block, right=of step2, fill=orange!20] (step3) {未检测到双眼或跟踪失败};
+                \node[block, below=of step3, fill=yellow!20] (step4) {复制并重采样眼鼻部位图片};
+                \node[block, below=of step4, fill=olive!20] (step5) {眼球色素校验};
+                \node[block, left=of step5, fill=cyan!20] (step6) {眼球位置校验};
+                \node[block, left=of step6, fill=purple!20] (end) {跟踪体特征提取};
+                \node[block, below=of step1, fill=purple!20] (tend) {结束};
+                % Arrows
+                \draw[line] (start) -- (step1);
+                \draw[line] (step1) -- node[midway, above] {检测成功}(step2);
+                \draw[line] (step2) -- node[midway, above] {通过}(step3);
+                \draw[line] (step3) -- node[midway, right] {是} (step4);
+                \draw[line] (step4) -- (step5);
+                \draw[line] (step5) -- node[midway, above] {通过}(step6);
+                \draw[line] (step6) -- node[midway, above] {通过}(end);
+                \draw[line] (end)   -- (tend);
+
+                \draw[line] (step1) -- node[midway, above] {失败}(tend);
+                \draw[line] (step2) -- node[midway, above] {不通过}(tend);
+                \draw[line] (step3) -- node[midway, above] {否}(tend);
+                \draw[line] (step5) -- node[midway, above] {不通过}(tend);
+                \draw[line] (step6) -- node[midway, above] {不通过}(tend);
+        
+
+            \end{tikzpicture}
+            \caption{流程图示例}
+            \label{fig:flowchart_example}
+        \end{figure}
+
+        目前眼睛的检测方法有很多种，常
+        用有模板匹配、Hough 变换、眨眼定位
+        等方法，每种方法都有一定的优势，也
+        有一定的局限性。目前并没有一种方法
+        可以适应任何的场合，所以在实际应用
+        中，应该根据不同的情况，采取不同的
+        算法。
+        
+        根据本实验的工作环境和功能要
+        求，采用眨眼定位人眼的方法较为合适。
+        眨眼方法主要在视频序列中进行人眼特
+        征的提取，因为人眼是一直在动的，所
+        以对眼睛眨动可采取分析多帧图像间的
+        运动信息的方法，对眼睛定位和跟踪。
+        同时需指出，头部运动和眼睛眨眼
+        的差别并不是很大，头部乱动且姿态经
+        常变化时，眨眼检测定位眼睛方法就有
+        可能失效。在本实验工作环境中，头部
+        运动虽然较少但也会产生由于头部轻微
+        的运动造成当前帧和下一帧的误差，所
+        以，眨眼检测及眼鼻跟踪时要尽量减少
+        这种误差造成的影响。
+
+
+        \subsubsection*{\large \textbf{1. 帧差法眨眼检测}}
+        帧差法的基本思想是通过计算连续两帧图像之间的差异，来检测图像中是否存在显著变化。对于眨眼检测而言，当眼睛从睁开到闭合或从闭合到睁开时，眼睛区域的灰度值会发生显著变化。通过计算眼睛区域的帧差图像，可以检测到眨眼行为。
+
+        帧差法的大致步骤如下：
+
+        \begin{itemize}
+            \item \textbf{图像预处理}：对输入图像进行高斯滤波，去除噪声。存入图像序列
+            \item \textbf{帧差计算}：计算当前帧与前N帧之间的差分图像。
+            \item \textbf{二值化处理}：采用直方图方法来确定阈值ret，二值化对差分图像进行二值化处理，提取显著变化区域。
+            \item \textbf{形态学处理}：对二值化图像进行形态学处理，如膨胀和腐蚀，以去除噪声和填补空洞。
+            \item \textbf{连通域分析}：对形态学处理后的图像进行连通域分析，找到眼睛区域。
+            \item \textbf{眼睛定位}：根据连通域的位置和大小，初步确定眼睛的位置及显示。
+        \end{itemize}
+
+        \textbf{具体各步骤的实现代码和注释如下：}
+
+
+        \begin{lstlisting}[caption={高斯滤波}, label={lst:example}]
+\\高斯滤波函数
+\\src-输入图像，dst-输出图像，w-图像宽度，h-图像高度
+DLL_EXP void gaosi_filter(aBYTE *src, aBYTE *dst, int w, int h) {
+    // 3x3 单位矩阵
+    float kernel[3][3] = {
+        { 0.0625, 0.125, 0.0625},
+        {0.125, 0.25, 0.125},
+        { 0.0625, 0.125,  0.0625}
+    };
+    // 分配临时变量存储滤波结果
+    aBYTE* tempImg = new aBYTE[w * h];
+    memset(tempImg, 0, w * h * sizeof(aBYTE));
+
+    // 对图像进行高斯滤波
+    for (int y = 1; y < h - 1; ++y) {
+        for (int x = 1; x < w - 1; ++x) {
+            float sum = 0;
+            for (int ky = -1; ky <= 1; ++ky) {
+                for (int kx = -1; kx <= 1; ++kx) {
+                    int pixel = src[(y + ky) * w + (x + kx)];
+                    sum += pixel * kernel[ky + 1][kx + 1];
+                }
+            }
+            tempImg[y * w + x] = static_cast<aBYTE>(sum);
+        }
+    }
+    memcpy(dst, tempImg, w * h * sizeof(aBYTE));
+    delete[] tempImg;
+}
+
+
+        \end{lstlisting}
+
+
+
+
+
+
+        \begin{lstlisting}[caption={差分图像函数}, label={lst:example}]
+
+//将高斯滤波后的图像存入图像序列
+if(pBufStruct->nImageQueueIndex == -1)
+{   //初始化
+    pBufStruct->nImageQueueIndex = 4;
+    pBufStruct->nLastImageIndex = 0;
+    for(int i = 0; i < 8; i++)
+    {
+        memcpy(pBufStruct->pImageQueue[i], pBufStruct->grayBmp_1d16, w * h /16);
+    }
+}
+else
+{
+    pBufStruct->nImageQueueIndex = (pBufStruct->nImageQueueIndex + 1) % 8;
+    pBufStruct->nLastImageIndex = (pBufStruct->nLastImageIndex + 1) % 8;
+    memcpy(pBufStruct->pImageQueue[pBufStruct->nImageQueueIndex], pBufStruct->grayBmp_1d16, w * h / 16);
+}
+
+//计算差分图像
+//lastimg-上一帧图像，thisimg-当前帧图像，dst-输出差分图像，w-图像宽度，h-图像高度
+DLL_EXP void diff_img(aBYTE *lastimg, aBYTE *thisimg, aBYTE *dst, int w, int h) {
+    for (int y = 0; y < h; ++y) {
+        for (int x = 0; x < w; ++x) {
+            int index = y * w + x;
+            if (lastimg[index] >= thisimg[index]) {
+                dst[index] = lastimg[index] - thisimg[index];
+            } else {
+                dst[index] = 0;
+            }
+        }
+    }
+}
+
+        \end{lstlisting}
+
+
+
+\begin{figure}[H]
+    \centering
+    \caption{差分图像阈值确定原理}
+    \includegraphics[width=0.9\textwidth]{./figures/fig/image7.png}
+    \label{fig:your_image_label}
+\end{figure}
+
+
+        \begin{lstlisting}[caption={确定阈值，二值化差分图像}, label={lst:example}]
+int *n = new int[256];//统计每个灰度值出现的次数
+int N0 = 40, N1=8; //参数，N0为阈值，N1为眨眼阈值
+memset(n, 0, 256 * sizeof(int)); 
+//统计每个灰度值出现的次数
+for(int i = 0; i < w * h/16; i++)
+{
+    n[pBufStruct->TempImage1d8[i]]++;
+}
+int ret = 255, sum = 0;
+
+//使用直方图方法确定阈值ret
+while(sum < N0 && ret >= 0)
+{
+    sum += n[ret];
+    ret--;
+}
+
+//阈值N1，ret<N1时，认为没有眨眼
+int blinkflag = 1;
+if(ret < N1)
+{
+    blinkflag = 0;
+}
+
+//二值化差分图像
+if (blinkflag == 1)
+{
+    for(int i = 0; i < w * h/16; i++)
+    {
+        if(pBufStruct->TempImage1d8[i] > ret)
+        {
+            pBufStruct->TempImage1d8[i] = 255;
+        }
+        else
+        {
+            pBufStruct->TempImage1d8[i] = 0;
+        }
+    }
+}
+else
+{
+    memset(pBufStruct->TempImage1d8, 0, w * h / 16);
+}
+        \end{lstlisting}
+
+
+
+形态学处理包括3×1的开运算、区域标记并计算各区域大小和重心。
+前两个步骤在前文已作详细介绍，下面重点介绍区域大小和重心的计算。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{./figures/fig/image8.png}
+    \label{fig:your_image_label}
+\end{figure}
+标号为$k$的区域，其区域大小定义由式\eqref{eq:size_k}给出，式中$MaxMarked$为最大连通域标记。
+
+\begin{equation}\label{eq:size_k}
+size[k] = \Delta x[k]^2 + \Delta y[k]^2, \quad k = 1, 2, \ldots, MaxMarked
+\end{equation}
+
+灰度重心即将区域内每个像素值当作该点的“质量”，求区域$S$的重心$(x_0, y_0)$的方法如式\eqref{eq:center}所示：
+
+\begin{align}\label{eq:center}
+x_0 &= \frac{\sum_{(x,y) \in S} x \cdot I(x,y)}{\sum_{(x,y) \in S} I(x,y)}, \\
+y_0 &= \frac{\sum_{(x,y) \in S} y \cdot I(x,y)}{\sum_{(x,y) \in S} I(x,y)}
+\end{align}
+
+式中$I(x,y)$表示点$(x,y)$处的像素值。
+
+对于二值图像，例计算图\ref{fig:region_size}所示的标号为$k$的连通域的重心，计算公式可简化为如式\eqref{eq:center_x_k}所示。
+
+\begin{equation}\label{eq:center_x_k}
+CenterX[k] = \frac{\sum_{(x,y) \in k} x}{N[k]}, \quad CenterY[k] = \frac{\sum_{(x,y) \in k} y}{N[k]}
+\end{equation}
+
+式中，$N[k]$表示连通域$k$的像素个数。
+
+
+        \begin{lstlisting}[caption={形态学处理}, label={lst:example}]
+//3X1开运算
+open_3x1(pBufStruct->TempImage1d8, pBufStruct->TempImage1d8, w/4, h/4);
+//连通域标记
+connectedcomponentlabelling(pBufStruct->TempImage1d8, pBufStruct->TempImage1d8, w/4, h/4);
+.......
+
+// 统计各个连通区域的大小和重心
+int *pixelCount = new int[nconnetedcomponent + 1]; // pixelCount[i]记录标号i的连通区域的像素个数，pixelCount[0]不用
+int *size = new int[nconnetedcomponent + 1]; // 记录每个连通区域的大小,size=x^2+y^2, x和y分别是连通区域的宽和高
+float *centerX = new float[nconnetedcomponent + 1]; // 记录每个连通区域的重心x坐标,centerX[i] = sigma(x)/pixelCount[i]
+float *centerY = new float[nconnetedcomponent + 1]; // 记录每个连通区域的重心y坐标
+
+// 初始化统计数组
+for (i = 1; i <= nconnetedcomponent; i++) {
+    pixelCount[i] = 0;
+    size[i] = 0;
+    centerX[i] = 0.0f;
+    centerY[i] = 0.0f;
+}
+
+// 统计每个连通区域的像素个数和重心
+for (y = 0; y < h; y++) {
+    for (int x = 0; x < w; x++) {
+        int label = tempImage[y * w + x];
+        if (label > 0) {
+            pixelCount[label]++;
+            centerX[label] += x;
+            centerY[label] += y;
+        }
+    }
+}
+
+// 计算每个连通区域的重心
+for (i = 1; i <= nconnetedcomponent; i++) {
+    if (pixelCount[i] > 0) {
+        centerX[i] /= pixelCount[i];
+        centerY[i] /= pixelCount[i];
+    }
+}
+
+// 找到框定每个标号的连通区域的矩形
+int *minX = new int[nconnetedcomponent + 1];
+int *minY = new int[nconnetedcomponent + 1];
+int *maxX = new int[nconnetedcomponent + 1];
+int *maxY = new int[nconnetedcomponent + 1];
+
+// 初始化矩形边界
+for (i = 1; i <= nconnetedcomponent; i++) {
+    minX[i] = w;
+    minY[i] = h;
+    maxX[i] = 0;
+    maxY[i] = 0;
+}
+
+// 计算每个连通区域的矩形边界
+for ( y = 0; y < h; y++) {
+    for (int x = 0; x < w; x++) {
+        int label = tempImage[y * w + x];
+        if (label > 0) {
+            if (x < minX[label]) minX[label] = x;
+            if (y < minY[label]) minY[label] = y;
+            if (x > maxX[label]) maxX[label] = x;
+            if (y > maxY[label]) maxY[label] = y;
+        }
+    }
+}
+
+// 计算每个连通区域的大小
+for ( i = 1; i <= nconnetedcomponent; i++) {
+    int width = maxX[i] - minX[i] + 1;
+    int height = maxY[i] - minY[i] + 1;
+    size[i] = width * width + height * height;
+}
+
+    \end{lstlisting}
+
+
+
+        \begin{lstlisting}[caption={初步定位双眼}, label={lst:example}]
+//从上述连通域定位双眼，假设连通域 i、j 符合下列几个条件，可初步认为是双眼。
+//1）两个连通域基本上在同一水平线上：|CenterY[i]- CenterY[j]|<4；
+//2) 两个连通域间距符合双眼间距：15<|CenterX[i]- CenterX[j]| <30；
+// 3）两个连通域符合眼睛大小，即不能太大：size[i]<200 和 size[j]<200
+int eye1 = -1, eye2 = -1;
+for ( i = 1; i <= nconnetedcomponent; i++) {
+    for (int j = i + 1; j <= nconnetedcomponent; j++) {
+        if ((centerY[i] - centerY[j] < 4 && centerY[i] - centerY[j] > -4) && 
+            (centerX[i] - centerX[j] > 15 || centerX[j] - centerX[i] > 15) && 
+            (centerX[i] - centerX[j] < 30 || centerX[j] - centerX[i] < 30) && 
+            size[i] < 200 && 
+            size[j] < 200) {
+            eye1 = i;
+            eye2 = j;
+            break;
+        }
+    }
+    if (eye1 != -1 && eye2 != -1) {
+        break;
+    }
+}
+
+if (eye1 != -1 && eye2 != -1) {
+    // 找到符合条件的第一对连通域
+    if (centerX[eye1] < centerX[eye2]) {
+        ptLeftEye.x = static_cast<int>(centerX[eye1]);
+        ptLeftEye.y = static_cast<int>(centerY[eye1]);
+        ptRightEye.x = static_cast<int>(centerX[eye2]);
+        ptRightEye.y = static_cast<int>(centerY[eye2]);
+    } else {
+        ptLeftEye.x = static_cast<int>(centerX[eye2]);
+        ptLeftEye.y = static_cast<int>(centerY[eye2]);
+        ptRightEye.x = static_cast<int>(centerX[eye1]);
+        ptRightEye.y = static_cast<int>(centerY[eye1]);
+    }
+    bret = true; // 找到双眼
+
+//绘制十字
+if(bret)//找到双眼
+{
+    //调用给出的绘图函数绘制双眼中心十字
+    DrawCross(pBufStruct->displayImage, w, h, ptLeftEye.x, ptLeftEye.y, 20, TYUV1(0, 191, 255), true);
+    DrawCross(pBufStruct->displayImage, w, h, ptRightEye.x, ptRightEye.y, 20, TYUV1(0, 191, 255), true);
+}
+
+}
+        \end{lstlisting}
+
+
+
+        \subsubsection*{\large \textbf{2. 常识性检验双眼}}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{./figures/fig/image9.png}
+    \label{fig:your_image_label}
+\end{figure}
+
+        常识性检验双眼的方法是通过常识性判断，对眼睛的位置和大小进行检验。
+        如果眼睛的位置和大小不符合常识，那么就认为检测失败。
+
+        如图，两眼距离nEyeDist可近似左右眼重心水平距离。一般认为眼睛宽度
+        
+        nEyeWidth为两眼距离的三分之二，眼睛高度nEyeHeight为两眼距离的二分之一。
+        检查眼睛尺寸大小是否合理。如眼睛宽度不能大于W/4或眼睛高度不能大于H/4，
+        否则认为眼睛太大。判断两个眼睛是否整个在视频图像内。
+
+
+        \textbf{具体实现代码如下：}
+        \begin{lstlisting}[caption={常识性检验双眼}, label={lst:example}]
+//2.常识性验证双眼
+bool eyecheck = false; //常识性检查标识
+//计算两眼距离、眼睛宽度和高度
+int nEyeDist=-1, nEyeWidth=-1, nEyeHeight=-1;
+int NoseWidth = -1, NoseHeight = -1;
+if(bret)
+{
+    nEyeDist = ptRightEye.x - ptLeftEye.x;
+    nEyeWidth = nEyeDist*2/3;
+    nEyeHeight = nEyeDist/2;
+}
+//检测眼睛大小是否合适
+if(bret)
+{
+    if(nEyeWidth > w/4 || nEyeHeight > h/4)
+    {
+        eyecheck = false;
+    }
+    else
+    {
+        eyecheck = true;
+    }
+}
+//检测眼睛是否在图像中
+if(bret)
+{
+    if(ptLeftEye.x < 0 || ptLeftEye.y < 0 || ptRightEye.x < 0 || ptRightEye.y < 0 || ptLeftEye.x > w || ptLeftEye.y > h || ptRightEye.x > w || ptRightEye.y > h)
+    {
+        eyecheck = false;
+    }
+    else
+    {
+        eyecheck = true;
+    }
+}
+        \end{lstlisting}
+
+        \subsubsection*{\large \textbf{3. 复制并重采样眼睛鼻部位图片}}
+        满足下面两个条件后进行复制并重采样眼睛鼻部位图片：
+        \begin{itemize}
+            \item 常识性验证双眼通过，也就是基本上验证帧差法定位双眼的正确性。
+            \item bLastEyeChecked为TRUE时或眼鼻三个跟踪体有一个跟踪失败，这表示还没建立跟踪体模型或跟踪体模型已过时。
+        \end{itemize}
+        复制并重采样眼睛鼻部位图片步骤如下：
+        \begin{itemize}
+            \item 根据上图所示的眼鼻大小及相对位置，计算左眼、右眼及鼻子在W*H图片时区域范围，并分别存入结构体rcvLeftEye，rcvRightEye和rcvNose中。
+            \item 从彩色图片colorBmp中分别复制左，右眼部位彩色图片，并重采样为32×24大小的YUV422平面格式，用于眼球色素校验。
+            \item 从彩色图片colorBmp中复制彩色鼻子图片，并重采样为32×48大小的YUV422平面格式，最后存于e向量
+        \end{itemize}
+
+
+            
+        \begin{lstlisting}[caption={复制并重采样眼睛鼻部位图片}, label={lst:example}]
+// 判断踪体模型为建立或跟踪体模型已过时。
+aRect rcvLeftEye, rcvRightEye, rcvNose;
+if(eyecheck &&  (!pBufStruct->bLastEyeChecked ||    
+    pBufStruct->pOtherVars->objLefteye.bBrokenTrace || 
+    pBufStruct->pOtherVars->objRighteye.bBrokenTrace || 
+    pBufStruct->pOtherVars->objNose.bBrokenTrace)
+)
+{
+//计算左眼、右眼及鼻子在W*H图片时区域范围，并分别存入结构体rcvLeftEye、rcvRightEye和rcvNose中
+NoseWidth = nEyeDist*3/4;
+NoseHeight = nEyeDist;
+
+//设置双眼的宽度和高度、鼻子的宽度和高度均应为4的倍数。
+nEyeWidth = (nEyeWidth/4)*4;
+nEyeHeight = (nEyeHeight/4)*4;
+NoseWidth = (NoseWidth/4)*4;
+NoseHeight = (NoseHeight/4)*4;
+
+//设置左眼区域
+rcvLeftEye.left = ptLeftEye.x - nEyeWidth/2;
+rcvLeftEye.top = ptLeftEye.y - nEyeHeight/2;
+rcvLeftEye.width = nEyeWidth;
+rcvLeftEye.height = nEyeHeight;
+//设置右眼区域
+//设置鼻子区域
+........
+
+//分配内存
+BYTE *temp_lefteyeOpen = new BYTE[nEyeWidth*nEyeHeight*2];
+BYTE *temp_righteyeOpen = new BYTE[nEyeWidth*nEyeHeight*2];
+BYTE *temp_nose = new BYTE[NoseWidth*NoseHeight*2];
+BYTE *_lefteyeOpen = new BYTE[24*32*2];
+BYTE *_righteyeOpen = new BYTE[24*32*2];
+BYTE *st_nose = new BYTE[48*32*2];
+
+//复制图片从彩色图片colorBmp中分别复制左、右眼部位彩色图片，并重采样为32×24大小的
+//YUV422平面格式，最后存于向量_lefteyeOpen，_righteyeOpen、用于眼球色素校验。
+//CopyImg函数的功能是从源图像中复制指定区域的图像到目标图像中。具体实现请参考工程文件和源代码
+CopyImg(pBufStruct->colorBmp, temp_lefteyeOpen, w, h, rcvLeftEye.left, rcvLeftEye.top, rcvLeftEye.width, rcvLeftEye.height);
+CopyImg(pBufStruct->colorBmp, temp_righteyeOpen, w, h, rcvRightEye.left, rcvRightEye.top, rcvRightEye.width, rcvRightEye.height);
+CopyImg(pBufStruct->colorBmp, temp_nose, w, h, rcvNose.left, rcvNose.top, rcvNose.width, rcvNose.height);
+//重采样
+ReSample(temp_lefteyeOpen, rcvLeftEye.width, rcvLeftEye.height, 32, 24, false, false, _lefteyeOpen);
+ReSample(temp_righteyeOpen, rcvRightEye.width, rcvRightEye.height, 32, 24, false, false, _righteyeOpen);
+ReSample(temp_nose, rcvNose.width, rcvNose.height,32,48, false, false, st_nose);
+//存储
+CopyToRect(_lefteyeOpen, pYBits,32,24,w,h,0,0,false);
+CopyToRect(_lefteyeOpen, pYBits,32,24,w,h,0,40,true);
+CopyToRect(_righteyeOpen, pYBits,32,24,w,h,40,0,false);
+CopyToRect(_righteyeOpen, pYBits,32,24,w,h,40,40,true);
+CopyToRect(st_nose, pYBits,32,48,w,h,16,80,false);}
+        \end{lstlisting}
+
+
+        \subsubsection*{\large \textbf{4. 眼球色素和眼球位置校验}}
+
+
+        眼球色素校验和眼球位置校验是用于检测和验证眼球位置和状态的图像处理技术。通过分析眼球区域的色素分布和位置，可以判断眼球是否在预期的位置，进一步检验双眼检测的准确性。
+
+        眼球色素校验的目的是进一步确认眼睛定位的准确性，主要利用眼珠部分非肤色的特点进行。具体步骤如下：
+
+        \begin{itemize}
+            \item \textbf{输入数据}：输入分别为向量 \_lefteyeOpen 和 \_righteyeOpen 中 32×24 大小的 YUV422 平面格式的双眼图片。
+            \item \textbf{初始化}：初始化存储校验结果的点结构变量 ptLeftEye\_cfm 和 ptRightEye\_cfm。
+            \item \textbf{色素校验}：调用 EyeBallCheck 函数，根据眼球色素特征，进行校验。
+            \item \textbf{结果判断}：根据校验结果判断是否通过眼球色素校验。
+            \item \textbf{存储结果}：将校验结果存储到 ptLeftEye\_cfm 和 ptRightEye\_cfm 中。
+        \end{itemize}
+
+        眼球位置校验的目的是进一步确认眼睛定位的准确性，主要利用眼球位置的特点进行。具体步骤如下：
+
+        \begin{enumerate}
+            \item \textbf{眼球中心是否在脸部内}：左、右眼中心是否全在脸部内。只要有一个在脸外，校验失败。
+            \item \textbf{眼睛水平方向校验}：左、右眼中心水平方向的距离是否在合理的脸部范围内。如果不在范围内，校验失败。
+        \end{enumerate}
+
+        \textbf{具体实现代码如下：}
+        \begin{lstlisting}[caption={眼球色素和眼球位置校验}, label={lst:example}]
+//眼球色素校验函数
+//输入：左眼、右眼图片，左右眼point结构变量
+DLL_EXP void EyeBallCheck (BYTE* _lefteyeOpen, BYTE* _righteyeOpen, POINT* ptLeftEye_cfm, POINT* ptRightEye_cfm)
+{
+    int nFacePtNum=0, nEyePtNum=0;
+    BYTE *leftU = _lefteyeOpen+32*24;
+    BYTE *leftV = _lefteyeOpen+32*24+32*24/2;
+    BYTE *rightU = _righteyeOpen+32*24;
+    BYTE *rightV = _righteyeOpen+32*24+32*24/2;
+    //统计左眼区域的肤色像素总数nFacePtNum。
+    //统计左眼球像素总数nEyePtNum。
+    for (int j = 0; j < 24; j++) {
+        for (int i = 0; i < 16; i++) {
+            if ((leftU[j * 16 + i] <= 131 && leftU[j * 16 + i] >= 124) && (leftV[j * 16 + i] <= 134 && leftV[j * 16 + i] >= 121 )) {
+                nEyePtNum++;
+            }
+            if (leftU[j * 16 + i] <= 126 && leftU[j * 16 + i] >= 85 && leftV[j * 16 + i] <= 165 && leftV[j * 16 + i] >= 130) {
+                nFacePtNum++;
+            }
+        }
+    }
+    //根据眼球色素特征，进行校验
+    if((nEyePtNum>=10 && nEyePtNum<=60) && nFacePtNum>=200 )
+    {
+        ptLeftEye_cfm->x = ptLeftEye.x;
+        ptLeftEye_cfm->y = ptLeftEye.y;
+    }
+
+    //同理进行右眼的眼球色素校验
+    nFacePtNum = 0;
+    nEyePtNum = 0;
+    for ( j = 0; j < 24; j++) {
+        for (int i = 0; i < 16; i++) {
+            if ((rightU[j * 16 + i] <= 131 && rightU[j * 16 + i] >= 124) && (rightV[j * 16 + i] <= 134 && rightV[j * 16 + i] >= 121)) {
+                nEyePtNum++;
+            }
+            if (rightU[j * 16 + i] <= 126 && rightU[j * 16 + i] >= 85 && rightV[j * 16 + i] <= 165 && rightV[j * 16 + i] >= 130) {
+                nFacePtNum++;
+            }
+        }
+    }
+    if((nEyePtNum>=10 && nEyePtNum<=60) && nFacePtNum>=200 )
+    {
+        ptRightEye_cfm->x = ptRightEye.x;
+        ptRightEye_cfm->y = ptRightEye.y;
+    }
+}
+
+
+//眼球色素校验
+//初始化
+POINT *ptLeftEye_cfm = new POINT;
+POINT *ptRightEye_cfm = new POINT;
+ptLeftEye_cfm->x = -1;
+ptLeftEye_cfm->y = -1;
+ptRightEye_cfm->x = -1;
+ptRightEye_cfm->y = -1;
+bool EyeballCheck_false = false;
+//眼球色素校验
+EyeBallCheck(_lefteyeOpen, _righteyeOpen, ptLeftEye_cfm, ptRightEye_cfm);
+//判断是否通过眼球色素校验
+if(ptLeftEye_cfm->x == -1 || ptLeftEye_cfm->y == -1 || ptRightEye_cfm->x == -1 || ptRightEye_cfm->y == -1)
+{
+    EyeballCheck_false = false;
+}
+else
+{
+    EyeballCheck_false = true;
+}
+//眼球位置校验
+bool EyeballPositionCheck_false = false;
+if(EyeballCheck_false){//眼球色素校验通过
+    //眼球位置校验
+    EyeballPositionCheck_false = true;
+    //左眼
+    int fleft = pBufStruct->rcnFace.left*2;
+    int ftop = pBufStruct->rcnFace.top*4;
+    int fwidth = pBufStruct->rcnFace.width*2;
+    int fheight = pBufStruct->rcnFace.height*4;
+    int left = fleft;
+    int right = fleft + fwidth;
+    //检测眼球中心在脸部矩形框中
+    if(ptLeftEye_cfm->x < left || ptLeftEye_cfm->x > right || 
+    ptLeftEye_cfm->y < ftop || ptLeftEye_cfm->y > ftop + fheight)
+    {
+        EyeballPositionCheck_false = false;
+    }
+    //右眼
+    if(ptRightEye_cfm->x < left || ptRightEye_cfm->x > right || 
+    ptRightEye_cfm->y < ftop || ptRightEye_cfm->y > ftop + fheight)
+    {
+        EyeballPositionCheck_false = false;
+    }
+}
+        \end{lstlisting}
+
+
+
+
+        \subsubsection*{\large \textbf{5. 跟踪体的特征的提取}}
+        跟踪体特征提取的步骤如下：
+        \begin{itemize}
+            \item 跟踪体的特征提取需计算跟踪体区域的四角灰度重心及四个子区域的四角灰度重心。
+            \item 灰度重心统计归一化到(-1024,1024)范围
+            \item 将特征值保存到对应的结构体中
+            \item 同理，分别计算右眼（开）和鼻子的特征值，保存至相应的原始特征值向量，并复制至当前特征值向量中。
+        \end{itemize}
+
+        \begin{figure}[H]
+            \centering
+            \caption{跟踪体区域标记示意图}
+            \includegraphics[width=0.4\textwidth]{./figures/fig/image10.png}
+            \label{fig:your_image_label}
+        \end{figure}
+
+        特征向量用灰度重心表示，如图所示， @所在的位置为跟踪体
+        的中心，以@为坐标原点，分别计算 4 角的灰度重
+        心坐标，存放在 nLevels=2 层次的 Vector[4]。然后
+        分别计算 0、1、2、3 四个子区域的四角灰度重心坐
+        标，存放在 nLevels=1 层次的 Vector[4]。计算子区域的四角灰度重心时，也采用@为
+        坐标原点。
+
+        首先封装一个计算灰度重心的函数，代码如下：
+        \begin{lstlisting}[caption={灰度重心计算函数}, label={lst:example}]
+//计算灰色图像中某个区域对于某个原点的灰色重心函数
+//参数：graybmp,指向灰度图像的指针
+//w,h,灰度图像的宽和高
+//x,y,原点坐标
+//left,top,区域左上角坐标
+//width,height,区域宽和高
+//outX,outY,计算出的灰度重心在graybmp上的坐标。
+//_BUF_STRUCT 用来debug
+DLL_EXP void CalGrayGravity(BYTE* graybmp, int w, int h, int x, int y, int left, int top, int width, int height, int* outX, int* outY, _BUF_STRUCT *pBufStruct) {
+    // 累加变量
+    int sumGray = 0;
+    int sumGrayX = 0;
+    int sumGrayY = 0;
+
+    // 遍历指定区域
+    for (int j = top; j < top + height; ++j) {
+        for (int i = left; i < left + width; ++i) {
+            // 获取当前像素的灰度值
+            int grayValue = graybmp[j * w + i];
+
+            // 累加灰度值和加权坐标
+            sumGray += grayValue;
+            sumGrayX += grayValue * (i - x);
+            sumGrayY += grayValue * (j - y);
+        }
+    }
+
+    // 计算相对于 (x, y) 的灰度重心坐标
+    double relativeGravityX = 0;
+    double relativeGravityY = 0;
+    if (sumGray != 0) {
+        relativeGravityX = static_cast<double>(sumGrayX) / sumGray;
+        relativeGravityY = static_cast<double>(sumGrayY) / sumGray;
+    }
+    // 转换为 graybmp 上的绝对坐标
+    int absoluteGravityX = static_cast<int>(relativeGravityX + x);
+    int absoluteGravityY = static_cast<int>(relativeGravityY + y);
+    //debug
+    // DrawCross(pBufStruct->displayImage, w, h, absoluteGravityX, absoluteGravityY, 10, TYUV1(0, 151, 120), false);
+
+    // 转换为归一化为(-1024,1024)
+    double normalizationGrayx = relativeGravityX * 1024 / (w / 2);
+    double normalizationGrayy = relativeGravityY * 1024 / (h / 2);
+
+    //舍入取整
+    *outX = static_cast<int>(normalizationGrayx + 0.5);
+    *outY = static_cast<int>(normalizationGrayy + 0.5);
+}
+        \end{lstlisting}
+
+        然后根据上述函数，计算跟踪体的特征值，代码如下：
+        \begin{lstlisting}[caption={跟踪体特征提取函数}, label={lst:example}]
+//计算特征值
+//参数：_BUF_STRUCT *pBufStruct指针
+//w,h,灰度图像的宽和高
+//left,top,区域左上角坐标
+//width,height,区域宽和高
+//fvp：FeatureVector4P指针指向特征向量处
+DLL_EXP void CalEigen(_BUF_STRUCT *pBufStruct,int w, int h,  int left, int top, int width, int height,FeatureVector4P* fvp){
+    //四个地址指针
+    FeatureVector4P* fvp_pNL_LeftTop=fvp + 1;
+    FeatureVector4P* fvp_pNL_RightTop=fvp+2;
+    FeatureVector4P* fvp_pNL_LeftBottom=fvp+3;
+    FeatureVector4P* fvp_pNL_RightBottom=fvp+4;
+    int Grayx=0,Grayy=0;//临时存储
+    //计算跟踪体左上角区域的灰度重心
+    //计算跟踪体中心
+    int centreX = left + width / 2;
+    int centreY = top + height / 2;
+    //计算左上角区域的灰度重心
+    CalGrayGravity(pBufStruct->grayBmp, w, h, centreX, centreY, left, top, width / 2, height / 2, &Grayx, &Grayy, pBufStruct);
+    fvp->Vector[0].x = Grayx;
+    fvp->Vector[0].y = Grayy;
+    //计算右上角区域的灰度重心
+    CalGrayGravity(pBufStruct->grayBmp, w, h, centreX, centreY, left + width / 2, top, width / 2, height / 2, &Grayx, &Grayy, pBufStruct);
+    fvp->Vector[1].x = Grayx;
+    fvp->Vector[1].y = Grayy;
+    //计算左下角区域的灰度重心
+    CalGrayGravity(pBufStruct->grayBmp, w, h, centreX, centreY, left, top + height / 2, width / 2, height / 2, &Grayx, &Grayy, pBufStruct);
+    fvp->Vector[2].x = Grayx;
+    fvp->Vector[2].y = Grayy;
+    //计算右下角区域的灰度重心
+    CalGrayGravity(pBufStruct->grayBmp, w, h, centreX, centreY, left + width / 2, top + height / 2, width / 2, height / 2, &Grayx, &Grayy, pBufStruct);
+    fvp->Vector[3].x = Grayx;
+    fvp->Vector[3].y = Grayy;
+    //其它参数
+    fvp->nLevels=2;
+    fvp->pNL_LeftTop=fvp_pNL_LeftTop;
+    fvp->pNL_RightTop=fvp_pNL_RightTop;
+    fvp->pNL_LeftBottom=fvp_pNL_LeftBottom;
+    fvp->pNL_RightBottom=fvp_pNL_RightBottom;
+
+    //计算左上角区域的特征值
+    centreX = left + width / 4;
+    centreY = top + height / 4;
+    //计算左上角区域的左上角区域的灰度重心
+    CalGrayGravity(pBufStruct->grayBmp, w, h, centreX, centreY, left, top, width / 4, height / 4, &Grayx, &Grayy, pBufStruct);
+    fvp_pNL_LeftTop->Vector[0].x = Grayx;
+    fvp_pNL_LeftTop->Vector[0].y = Grayy;
+    //计算左上角区域的右上角区域的灰度重心
+    CalGrayGravity(pBufStruct->grayBmp, w, h, centreX, centreY, left + width / 4, top, width / 4, height / 4, &Grayx, &Grayy, pBufStruct);
+    fvp_pNL_LeftTop->Vector[1].x = Grayx;
+    fvp_pNL_LeftTop->Vector[1].y = Grayy;
+    //计算左上角区域的左下角区域的灰度重心
+    CalGrayGravity(pBufStruct->grayBmp, w, h, centreX, centreY, left, top + height / 4, width / 4, height / 4, &Grayx, &Grayy, pBufStruct);
+    fvp_pNL_LeftTop->Vector[2].x = Grayx;
+    fvp_pNL_LeftTop->Vector[2].y = Grayy;
+    //计算左上角区域的右下角区域的灰度重心
+    CalGrayGravity(pBufStruct->grayBmp, w, h, centreX, centreY, left + width / 4, top + height / 4, width / 4, height / 4, &Grayx, &Grayy, pBufStruct);
+    fvp_pNL_LeftTop->Vector[3].x = Grayx;
+    fvp_pNL_LeftTop->Vector[3].y = Grayy;
+    //其它参数
+    fvp_pNL_LeftTop->nLevels=1;
+    fvp_pNL_LeftTop->pNL_LeftTop=fvp_pNL_LeftTop;
+    fvp_pNL_LeftTop->pNL_RightTop=fvp_pNL_RightTop;
+    fvp_pNL_LeftTop->pNL_LeftBottom=fvp_pNL_LeftBottom;
+    fvp_pNL_LeftTop->pNL_RightBottom=fvp_pNL_RightBottom;
+
+后续代码同理，篇幅原因省略。
+    //计算右上角区域的特征值
+    .......
+    //计算左下角区域的特征值
+    .......
+    //计算右下角区域的特征值
+    .......
+
+}
+        \end{lstlisting}
+
+
+
+    \subsection{眼睛及鼻子跟踪}
+
+        \subsubsection*{I本插件在检测到眼睛区域的基础上，实现对眼睛及鼻子的跟踪以保证长期稳定的对眼部区域进行定位和检测}
+
+        由于本系统需同时对左眼、右眼及鼻子等多个目标进行摄像机镜头位置固定的静态跟踪，
+        因此采用基于特征的跟踪方法。基于特征的跟踪方法优点是不考虑运动目标是什么，
+        只通过目标物体的一些特征来进行跟踪。由于图像采样时间间隔通常很小，
+        可以认为这些特征在运动形式上是平滑的，因此可以完成目标的整体跟踪过程。
+
+
+        基于特征的跟踪方法要求经过检测出运动目标后，才能在序列帧中对单个或多个目标进行。
+        必须在跟踪模型建立标志\texttt{bLastEyeChecked}为真时，
+        即检出眼鼻并提取相应特征（灰度重心）后，才能进行。在介绍算法之前，先明确几个概念。
+
+        \begin{itemize}
+            \item 原始特征、当前特征和最佳特征
+            \item 特征差距
+            \item 跟踪结果判断方法
+        \end{itemize}
+
+        \subsubsection*{\large \textbf{原始特征、当前特征和最佳特征}}
+
+原始特征(\texttt{fvObject\_org->Vector}): “眨眼检测及眼鼻定位插件”提取的特征。
+
+当前特征(\texttt{fvObject->Vector}): 当前特征可理解为当前帧图像的跟踪体特征，跟踪匹配时以此为标准。
+
+最佳特征(\texttt{theMinFV}): 在新采集到图像中，搜索到最佳匹配点时的跟踪体特征。
+
+        \subsubsection*{\large \textbf{特征差距}}
+
+        特征A的四角重心坐标分别(\texttt{XA0}、\texttt{YA0}）、(\texttt{XA1}、\texttt{YA1}）、(\texttt{XA2}、\texttt{YA2})和(\texttt{XA3}、\texttt{YA3})，特征B的四角重心坐标分别(\texttt{XB0}、\texttt{YB0}）、(\texttt{XB1}、\texttt{YB1}）、(\texttt{XB2}、\texttt{YB2})和(\texttt{XB3}、\texttt{YB3})，则特征A、B的差距nDist由式\eqref{eq:dist}计。显然，差距nDist越小，匹配越佳。
+        \begin{align}\label{eq:dist}
+            n\text{ Dist} = & |X A 0 - X B 0| + |Y A 0 - Y B 0| + |X A 1 - X B 1| + |Y A 1 - Y B 1| \notag \\
+                            & + |X A 2 - X B 2| + |Y A 2 - Y B 2|  + |X A 3 - X B 3| + |Y A 3 - Y B 3|
+        \end{align}
+
+        \subsubsection*{\large \textbf{跟踪结果判断方法}}
+
+        \begin{enumerate}
+            \item 以最佳特征与当前特征的差距nMinDist为判断依据，设置\texttt{GOOD\_TRACE\_DIST}、\texttt{BAD\_TRACE\_DIST}两个阈值。
+            \item 当匹配良好，即nMinDist≤\texttt{GOOD\_TRACE\_DIST}时，判定跟踪有效。
+            \item 当匹配中等，\texttt{OOD\_TRACE\_DIST}<nMinDist≤\texttt{BAD\_TRACE\_DIST}时，认为基本还能跟踪，也有可能丢失跟踪体，因此，记跟踪疑似失败一次。
+            \item 当匹配很差，即nMinDist>\texttt{BAD\_TRACE\_DIST}时，判定丢失跟踪体。
+            \item 当前特征与原始特征的差距nDistFromOrg太大，也判定丢失跟踪体
+        \end{enumerate}
+
+
+        符合下面两种情况，即可判断跟踪失败：
+        \begin{itemize}
+            \item 丢失跟踪体两次及以上。
+            \item 疑似跟踪失败10次及以上。
+        \end{itemize}
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image11.png}
+            \caption{跟踪算法流程图}
+            \label{fig:eye_nose_tracking}
+        \end{figure}
+
+
+        \subsubsection*{\large \textbf{跟踪匹配过程}}
+        如下图，最大框为灰度图
+        片grayBmp，虚框为上一帧跟踪体位置，
+        首先根据运动形式确定搜索范围（跟
+        踪体可能的位置），然后在搜索范围
+        自左向右、先上后下搜索匹配跟踪体，
+        找到一个最佳匹配点，即认为本帧的
+        跟踪体的位置。当然，也有可能跟踪
+        失败，这时需重新建立跟踪特征模型。
+
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.6\textwidth]{./figures/fig/image12.png}
+            \caption{跟踪匹配过程示意图}
+            \label{fig:eye_nose_tracking}
+        \end{figure}
+
+
+        \subsubsection*{\Large \textbf{具体实现过程如下}}
+
+
+        \subsubsection*{\large \textbf{搜索范围确定}}
+
+        根据上帧的跟踪匹配情况，确定该次匹配的搜索区域大小。
+        根据跟踪体速度确定搜索区域的左边边界坐标 Rx，上面边界坐标 Ry
+        初步算出的搜索区域有可能超出脸部范围，因此需要修正，使整个
+        搜索区域在脸部范围内。
+
+        \large \textbf{具体代码实现过程如下}
+        \begin{lstlisting}[caption={搜索范围确定}, label={lst:example}]
+int RW=0,RH=0;
+int W=0,H=0;
+//搜索区域的左边边界坐标Rx,上面边界坐标Ry
+int Rx=0,Ry=0;
+//Tx、Ty 分别跟踪体在上一帧的左边边界坐标、上面边界坐标。
+// spdxObj、spdyObj分别为跟踪体水平方向、垂直方向运动速度，符号表示运动方向
+int Tx=0,Ty=0,spdxObj=0,spdyObj=0;
+//确定左眼搜索区域大小
+W=pBufStruct->pOtherVars->objLefteye.rcObject.width;
+H=pBufStruct->pOtherVars->objLefteye.rcObject.height; 
+RW = pBufStruct->pOtherVars->objLefteye.rcObject.width+2*LefteyeSearchSize;
+RH = pBufStruct->pOtherVars->objLefteye.rcObject.height+2*LefteyeSearchSize;
+//确定搜索区域位置
+Tx=pBufStruct->pOtherVars->objLefteye.rcObject.left;
+Ty=pBufStruct->pOtherVars->objLefteye.rcObject.top;
+spdxObj=pBufStruct->pOtherVars->objLefteye.spdxObj;
+spdyObj=pBufStruct->pOtherVars->objLefteye.spdyObj;
+Rx=Tx-LefteyeSearchSize+spdxObj;
+Ry=Ty-LefteyeSearchSize+spdyObj;
+
+//脸部修正使整个搜索区域在脸部范围内
+//脸部坐标pBufStruct->rcnFace
+aRect facerec;
+facerec.left=pBufStruct->rcnFace.left*2;
+facerec.top=pBufStruct->rcnFace.top*4;
+facerec.width=pBufStruct->rcnFace.width*2;
+facerec.height=pBufStruct->rcnFace.height*4;
+if (Rx <facerec.left) {
+    Rx = facerec.left;
+}
+if (Ry < facerec.top) {
+    Ry = facerec.top;
+}
+if (Rx + RW > facerec.left + facerec.width) {
+    Rx = facerec.left + facerec.width - RW;
+}
+if (Ry + RH > facerec.top + facerec.height) {
+    Ry = facerec.top + facerec.height - RH;
+}
+        \end{lstlisting}
+
+
+        \subsubsection*{\large \textbf{搜索最佳匹配点}}
+        在搜索区域内，自左向右、先上后下移动跟踪体，每移动一个像素，计算跟踪体的特征
+        并计算与当前特征的差距，找到一个最佳匹配点--特征差距最小。记录最佳匹配点的中心位
+        置 ptNew 、最小特征差距及特征值 theMinFV 。最小特征差距直接记录在结构体
+        TRACE\_OBJEC 中的变量 nMinDist。
+
+
+        \begin{lstlisting}[caption={搜索最佳匹配点}, label={lst:example}]
+//2.搜索最佳匹配点
+int nMinDist=0,nDist=0,nDistFromOrg=0;
+POINT ptNew;
+FeatureVector4P* temp = new FeatureVector4P[5];//临时特征向量
+FeatureVector4P* theMinFV = new FeatureVector4P[5];//最小特征向量
+
+//先计算原始特征值
+//计算特征值的函数在前面已经介绍过
+CalEigen(pBufStruct,w,h,Tx,Ty,W,H,temp);
+nDistFromOrg=CalEigenDiff((FeatureVector4P*)&pBufStruct->pOtherVars->objLefteye.fvObject.Vector,temp);
+//在搜索区域内，自左向右、先上后下移动跟踪体，每移动一个像素，计算跟踪体的特征
+for (int i=Rx;i<Rx+RW-W;i++)
+{
+    for (int j=Ry;j<Ry+RH-H;j++)
+    {
+        //计算特征值
+        CalEigen(pBufStruct,w,h,i,j,W,H,temp);
+        //计算特征值差
+        nDist=CalEigenDiff((FeatureVector4P*)&pBufStruct->pOtherVars->objLefteye.fvObject.Vector,temp);
+        if (i==Rx && j==Ry)//赋初值
+        {
+            nMinDist=nDist;
+            ptNew.x=i+W/2;
+            ptNew.y=j+H/2;
+            memcpy(theMinFV,temp,sizeof(FeatureVector4P)*5);
+        }
+        else
+        {
+            if (nDist<nMinDist)
+            {
+                nMinDist=nDist;
+                ptNew.x=i+W/2;
+                ptNew.y=j+H/2;
+                memcpy(theMinFV,temp,sizeof(FeatureVector4P)*5);
+            }
+        }
+    }
+}
+
+//计算特征值差函数
+//参数：fvp1,fvp2分别为特征向量1、2的指针
+DLL_EXP int CalEigenDiff(FeatureVector4P* fvp1, FeatureVector4P* fvp2) {
+	int diff = 0;
+	for (int i = 0; i < 4; ++i) {
+		diff += abs(fvp1->Vector[i].x - fvp2->Vector[i].x);
+		diff += abs(fvp1->Vector[i].y - fvp2->Vector[i].y);
+		diff += abs(fvp1->pNL_LeftTop->Vector[i].x - fvp2->pNL_LeftTop->Vector[i].x);
+		diff += abs(fvp1->pNL_LeftTop->Vector[i].y - fvp2->pNL_LeftTop->Vector[i].y);
+		diff += abs(fvp1->pNL_RightTop->Vector[i].x - fvp2->pNL_RightTop->Vector[i].x);
+		diff += abs(fvp1->pNL_RightTop->Vector[i].y - fvp2->pNL_RightTop->Vector[i].y);
+		diff += abs(fvp1->pNL_LeftBottom->Vector[i].x - fvp2->pNL_LeftBottom->Vector[i].x);
+		diff += abs(fvp1->pNL_LeftBottom->Vector[i].y - fvp2->pNL_LeftBottom->Vector[i].y);
+		diff += abs(fvp1->pNL_RightBottom->Vector[i].x - fvp2->pNL_RightBottom->Vector[i].x);
+		diff += abs(fvp1->pNL_RightBottom->Vector[i].y - fvp2->pNL_RightBottom->Vector[i].y);
+	}
+	return diff;
+}
+
+        \end{lstlisting}
+
+
+
+
+        \subsubsection*{\large \textbf{更新跟踪体位置、运动速度及当前特征}}
+
+
+
+        \begin{itemize}
+            \item 更新跟踪体位置矩形（\texttt{object->rcObject}）到最佳匹配处的位置。
+            % \item 运动速度的更新，由原速度与本帧与上帧运动加权得到，权值与最小特征差距有关，如下式所示。
+        \end{itemize}
+                \begin{align*}
+                & spdxObj = spdxObj * \frac{nMinDist}{nMinDist + 256} + (ptNew.x - ptOld.x) * \frac{256}{nMinDist + 256}, \\
+                & spdyObj = spdyObj * \frac{nMinDist}{nMinDist + 256} + (ptNew.y - ptOld.y) * \frac{256}{nMinDist + 256}
+                \end{align*}
+            
+        \begin{itemize}
+            \item 当前特征更新：
+        \end{itemize}
+            \begin{enumerate}
+                \item 匹配良好，用最佳特征直接替换当前特征。
+                \item 匹配中等，用原始特征中和替换当前特征，如式\eqref{eq:feature_update}所示。
+
+                \begin{equation}\label{eq:feature_update}
+                    fvObject = fvObject * \text{Weight}\% + fvObject\_org * (100 - \text{Weight})\%
+                \end{equation}
+                \item 匹配很差，用原始特征直接替换当前特征。
+                \item 当前特征与距离原始特征太远，用原始特征直接替换当前特征。
+            \end{enumerate}
+        \subsubsection*{\large \textbf{更新跟踪结果}}
+
+        跟踪结果用 nBrokenTimes、bSaveit 和 bBrokenTrace 三个变量表示，分别用来统计疑似
+跟踪失败次数、标记丢失跟踪体和标记跟踪失败。算法根据图 5.17 跟踪算法的流程图执行就可。
+
+        \large \textbf{代码部分较为简单，主要根据公式和流程图进行编写，具体如下：}
+
+        \begin{lstlisting}[caption={更新}, label={lst:example}]
+//1更新跟踪体位置矩形（object->rcObject）到最佳匹配处的位置。
+ptOld.x=pBufStruct->pOtherVars->objNose.rcObject.left+W/2;
+ptOld.y=pBufStruct->pOtherVars->objNose.rcObject.top+H/2;
+pBufStruct->pOtherVars->objNose.rcObject.left=ptNew.x-W/2;
+pBufStruct->pOtherVars->objNose.rcObject.top=ptNew.y-H/2;
+pBufStruct->pOtherVars->objNose.rcObject.width=W;
+pBufStruct->pOtherVars->objNose.rcObject.height=H;
+
+// 	运动速度的更新，由原速度与本帧与上帧运动加权得到，权值与最小特征差距有关，
+pBufStruct->pOtherVars->objNose.spdxObj=(ptNew.x-ptOld.x)*(256/(nMinDist+256))+spdxObj*(nMinDist/(nMinDist+256));
+pBufStruct->pOtherVars->objNose.spdyObj=(ptNew.y-ptOld.y)*(256/(nMinDist+256))+spdyObj*(nMinDist/(nMinDist+256));
+
+// 更新当前特征值。
+if (nMinDist<=GOOD_TRACE_DIST)//判断良好
+{
+    memcpy(pBufStruct->pOtherVars->objNose.fvObject.Vector,theMinFV,sizeof(FeatureVector4P)*5);
+    pBufStruct->pOtherVars->objNose.nBrokenTimes=0;//清除跟踪疑似失败次数
+    pBufStruct->pOtherVars->objNose.bSaveit=false;//清除跟踪丢失标志
+    pBufStruct->pOtherVars->objNose.bBrokenTrace=false;//清除跟踪失败标志
+    NoseSearchSize=5;//搜索区域大小
+}
+else if (nMinDist>GOOD_TRACE_DIST && nMinDist<=BAD_TRACE_DIST)//判断中等
+{	
+    //用原始特征中和替换当前特征
+    neutralization_replacement((FeatureVector4P*)pBufStruct->pOtherVars->objNose.fvObject.Vector,(FeatureVector4P*)pBufStruct->pOtherVars->objNose.fvObject_org.Vector);
+    pBufStruct->pOtherVars->objNose.nBrokenTimes++;//跟踪疑似失败一次
+    pBufStruct->pOtherVars->objNose.bSaveit=false;//清除跟踪丢失标志
+    pBufStruct->pOtherVars->objNose.bBrokenTrace=false;//清除跟踪失败标志
+    NoseSearchSize=10;//搜索区域大小
+}
+else if (nMinDist>BAD_TRACE_DIST)//判断很差
+{
+    //用原始特征替换当前特征
+    memcpy(pBufStruct->pOtherVars->objNose.fvObject.Vector,pBufStruct->pOtherVars->objNose.fvObject_org.Vector,sizeof(FeatureVector4P)*5);
+    NoseSearchSize=15;//搜索区域大小
+    if (pBufStruct->pOtherVars->objNose.bSaveit)//已经丢失过跟踪体
+    {
+        pBufStruct->pOtherVars->objNose.bBrokenTrace=true;//跟踪失败标志
+    }
+    else
+    {
+        pBufStruct->pOtherVars->objNose.bSaveit=true;//丢失跟踪体
+        pBufStruct->pOtherVars->objNose.bBrokenTrace=false;//清除跟踪失败标志
+        pBufStruct->pOtherVars->objNose.nBrokenTimes++;//跟踪疑似失败一次
+    }
+}
+
+if (nDistFromOrg>MAX_DIST_TO_ORG)//距离原始特征太远
+{
+    //用原始特征替换当前特征
+    memcpy(pBufStruct->pOtherVars->objNose.fvObject.Vector,pBufStruct->pOtherVars->objNose.fvObject_org.Vector,sizeof(FeatureVector4P)*5);
+    pBufStruct->pOtherVars->objNose.bSaveit=true;//置丢失跟踪体
+}
+if (pBufStruct->pOtherVars->objNose.nBrokenTimes>=10)
+{
+    pBufStruct->pOtherVars->objNose.bBrokenTrace=true;//跟踪失败
+}
+        \end{lstlisting}
+
+
+
+
+        \subsubsection*{\large \textbf{跟踪结果显示}}
+在视频中，用方框标出跟踪范围；用“十字”标记跟踪体中心；用方框标出跟踪体（左
+眼、右眼和鼻子），可用方框颜色表示跟踪情况：好、中、差。
+
+
+
+
+
+        \subsection{瞌睡判定与报警}
+
+        \subsubsection*{\textrm{I}本插件主要功能是基于眼睛状态，判断人脸是否处于瞌睡状态，并报警。}
+ 
+        \subsubsection*{\large \textbf{瞌睡判断}}
+
+        基于眼睛状态的疲劳瞌睡判定方法主要有以下几种：
+        \begin{itemize}
+            \item \textbf{眼频率}    统计单位时间内眨眼的次数
+            \item \textbf{平均眨眼持续时间}  在疲劳时, 人的眨眼持续时间会显著提高，因此一些疲劳检测的研究中把眨眼持续时间作为判断疲劳的指标。
+            \item \textbf{平均眼睛闭合的速度}  通过计算一段时间内眼睛从最大程度闭眼到睁眼平均所需要的时间，如果这个时间大于某个阈值, 则认为处于疲劳想瞌睡的状态
+            \item \textbf{PERCLOS测量原理}  PERCLOS方法(Percentage of Eyelid Closure Over the Pupil Over Time)是指眼睛闭合时间占某一特定时间的百分比，即是指单位时间内眼睛闭合的时间。大量实验表明，眼睛闭合的时间越长，疲劳感越强，因此PERCLOS方法是疲劳进行评估测定的最好方法之一。
+        \end{itemize}
+
+        本设计使用PERCLOS测量原理，即通过计算单位时间内眼睛闭合的时间，来判断人是否处于瞌睡状态。
+        基本原理是通过检测一段时间内，对每一帧图像中眼睛的特征进行提取分析，辨别出该段时间内眼睛闭合和睁开的帧数，从而计算出PERCLOS值。
+        流程图如下：
+
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}[
+                node distance=2cm and 1.5cm,
+                auto,
+                block/.style={rectangle, draw, fill=blue!20, text width=5em, text centered, rounded corners, minimum height=4em},
+                line/.style={draw, -Latex}
+            ]
+
+                % Nodes
+                \node[block] (start) {开始};
+                \node[block, right=of start, fill=red!20] (step1) {判断是否建立跟踪体};
+                \node[block, right=of step1, fill=green!20] (step2) {将当前帧的眼睛部位重采样为灰度图像};
+                \node[block, right=of step2, fill=orange!20] (step3) {对眼睛部位灰度图像进行特征提取};
+                \node[block, below=of step3, fill=yellow!20] (step4) {计算图像的特征值并存储在序列中};
+                \node[block, left=of step4, fill=olive!20] (step5) {当达到一定帧数时，对序列中的特征值进行二聚类};
+                \node[block, left=of step5, fill=cyan!20] (step6) {根据聚类结果计算PERCLOS值并判断是否报警};
+                \node[block, left=of step6, fill=purple!20] (end) {结束};
+
+                % Arrows
+                \draw[line] (start) -- (step1);
+                \draw[line] [](step1) -- node[midway, above] {已建立}(step2);
+                \draw[line] [](step1) -- node[midway, above] {未建立}(end);
+                \draw[line] (step2) -- (step3);
+                \draw[line] (step3) -- (step4);
+                \draw[line] (step4) -- (step5);
+                \draw[line] (step5) -- (step6);
+                \draw[line] (step6) -- (end);
+
+            \end{tikzpicture}
+            \caption{疲劳检测与报警流程图}
+            \label{fig:flowchart_example}
+        \end{figure}
+
+
+        \subsubsection*{\large \textbf{1.判断跟踪体建立与重采样}}
+
+        \begin{lstlisting}[caption={判断跟踪体建立与重采样}, label={lst:example}]
+	//未建立跟踪体或者跟踪体丢失，则重新初始化
+	if(pBufStruct->bLastEyeChecked==false || pBufStruct->pOtherVars->objLefteye.bBrokenTrace || pBufStruct->pOtherVars->objRighteye.bBrokenTrace)
+	{
+		ShowDebugMessage("未建立跟踪体或者跟踪体丢失\n");
+		//清空队列
+		leftEyeDeviationIndex=0;
+		return;
+	}
+
+	//开始处理当前帧
+	//获取眼睛区域
+	aRect theLeftEyeArea = pBufStruct->pOtherVars->objLefteye.rcObject;
+	aRect theRightEyeArea = pBufStruct->pOtherVars->objRighteye.rcObject;
+	//存储眼睛区域的颜色图像
+	BYTE *LeftEyecolorimg = new BYTE[theLeftEyeArea.width*theLeftEyeArea.height*2];
+	BYTE *RightEyecolorimg = new BYTE[theRightEyeArea.width*theRightEyeArea.height*2];
+	BYTE *LeftEyegray = new BYTE[32*24];
+	BYTE *RightEyegray = new BYTE[32*24];
+	//复制眼睛区域的颜色图像
+	CopyImg(pBufStruct->colorBmp,LeftEyecolorimg,w,h,theLeftEyeArea.left,theLeftEyeArea.top,theLeftEyeArea.width,theLeftEyeArea.height);
+	CopyImg(pBufStruct->colorBmp,RightEyecolorimg,w,h,theRightEyeArea.left,theRightEyeArea.top,theRightEyeArea.width,theRightEyeArea.height);
+	//重采样成灰度图像
+	ReSample(LeftEyecolorimg,theLeftEyeArea.width,theLeftEyeArea.height,32,24,false,true,LeftEyegray);
+	ReSample(RightEyecolorimg,theRightEyeArea.width,theRightEyeArea.height,32,24,false,true,RightEyegray);
+        \end{lstlisting}
+
+        \subsubsection*{\large \textbf{2.特征提取与特征值计算}}
+        本设计使用的特征提取方法是提取眼睛区域的灰度图像的水平灰度直方图。
+
+        经过实验，眼睛睁开与否对图像的影响主要在于眼睛中心的眼白和眼球部分。
+        通过对于睁眼和闭眼状态下的眼睛灰度图像中心区域的水平灰度直方图的对比，可以发现，睁眼时，灰度直方图呈现明显的单峰分布，而闭眼时，灰度直方图呈现较为平坦的分布。
+        因此，我们提取了眼睛中心区域的灰度图像的水平灰度直方图，并计算了其均值和标准差来作为特征值。
+
+        该方法的好处是简单易行，计算复杂度低速度快，且对于眼睛的位置和大小变化具有一定的鲁棒性。
+        在实时性要求较高的疲劳检测系统中，该方法是一种较为合适的特征提取方法。
+
+        \begin{lstlisting}[caption={特征提取}, label={lst:example}]
+//计算灰度图像中心区域的特征值
+DLL_EXP double CalDeviation(BYTE* LeftEyegray){
+	//计算灰度图像中心区域每行的方差
+	double sum;
+	double average;
+	double deviation[4];
+	sum = 0;
+    //计算14行方差
+	for (int i = 0; i < 32; i++) {
+		sum += LeftEyegray[14 * 32 + i];
+	}
+	average = sum / 32;
+	sum = 0;
+	for ( i = 0; i < 32; i++) {
+		sum += (LeftEyegray[14 * 32 + i] - average) * (LeftEyegray[14 * 32 + i] - average);
+	}
+	deviation[0] = sqrt(sum / 32);
+	//计算15行方差
+    //计算16行方差
+    //计算17行方差
+    //同理省略......
+
+	//取最大值
+	double deviation_max = deviation[0];
+	for ( i = 1; i < 4; i++) {
+		if (deviation[i] > deviation_max) {
+			deviation_max = deviation[i];
+		}
+	}
+
+	//归一化到0-10000
+	deviation_max = deviation_max * 10000 / 255;
+	return deviation_max;
+}
+            
+        \end{lstlisting}
+
+        \subsubsection*{\large \textbf{3.二聚类区分睁眼和闭眼帧}}
+
+
+        KMeans算法是一种常用的聚类算法，用于将数据集分成K个簇。二聚类算法是KMeans算法的特例，用于将数据集分成两个簇。本文将介绍KMeans和二聚类算法的基本原理，并讨论如何使用二聚类算法来区分一段时间内的睁眼和闭眼帧数。
+
+        KMeans算法的基本思想是通过迭代优化，将数据点分配到最近的簇中心，并更新簇中心的位置。具体步骤如下：
+
+        二聚类算法是KMeans算法的特例，用于将数据集分成两个簇。其步骤如下：
+
+        \begin{enumerate}
+            \item \textbf{初始化}：选择两个初始簇中心，可以是数据集中的最大值和最小值。
+            \item \textbf{分配数据点}：将每个数据点分配到最近的簇中心。
+            \item \textbf{更新簇中心}：计算每个簇的平均值，并将簇中心更新为该平均值。
+            \item \textbf{重复迭代}：重复步骤2和步骤3，直到簇中心不再变化或达到最大迭代次数。
+        \end{enumerate}
+
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image13.png}
+            \caption{二聚类算法示意图}
+            \label{fig:kmeans_example}
+        \end{figure}
+
+
+        \begin{lstlisting}[caption={kmeans算法}, label={lst:example}]
+// 该函数用于初始化KMeans算法的聚类中心，使用K-means++算法选择初始聚类中心，以提高算法的收敛速度。
+// 参数data是数据集，length是数据集的长度，center1和center2是输出参数，用于存储初始化的两个聚类中心。
+void kmeansPlusPlusInit(double* data, int length, double& center1, double& center2) {
+    // 随机选择第一个聚类中心
+    srand(time(0));
+    center1 = data[rand() % length];
+    // 计算每个数据点到第一个聚类中心的距离的平方
+    std::vector<double> distances(length, 0.0);
+    for (int i = 0; i < length; ++i) {
+        distances[i] = squaredDifference(data[i], center1);
+    }
+    double totalDistance = sum(distances);
+    double randomValue = (rand() / (double)RAND_MAX) * totalDistance;
+    // 根据距离选择第二个聚类中心
+    for ( i = 0; i < length; ++i) {
+        randomValue -= distances[i];
+        if (randomValue <= 0) {
+            center2 = data[i];
+            break;
+        }
+    }
+}
+
+        \subsubsection*{\large \textbf{3.二聚类区分睁眼和闭眼帧}}
+
+
+
+// 二聚类函数
+// 参数：存储灰度值方差的数组，数组长度
+// 返回值：选择聚类结果中deviation值更小的那个结果，并计算其占总数量的比例
+DLL_EXP double TwoCluster(double *deviation, int length) {
+    if (length <= 1) return 0.0;//数据集太小，直接返回0
+    // 标准化数据，该函数将数据标准化到均值为0，标准差为1的分布
+    standardizeData(deviation, length);
+
+    // 使用K-means++选择初始聚类中心
+    double center1, center2;
+    kmeansPlusPlusInit(deviation, length, center1, center2);
+
+    std::vector<int> labels(length, 0);
+    bool changed = true;
+    // 迭代更新聚类中心和分配数据点到最近的聚类中心
+    while (changed) {
+        changed = false;
+
+        // 分配每个点到最近的聚类中心
+        for (int i = 0; i < length; ++i) {
+            // 计算数据点到两个聚类中心的距离的平方
+            double dist1 = squaredDifference(deviation[i], center1);
+            double dist2 = squaredDifference(deviation[i], center2);
+            int newLabel = (dist1 < dist2) ? 0 : 1;
+            // 如果数据点的标签发生变化，则更新标签并标记为已变化
+            if (labels[i] != newLabel) {
+                labels[i] = newLabel;
+                changed = true;
+            }
+        }
+
+        // 如果没有任何变化，提前终止
+        if (!changed) break;
+
+        // 更新聚类中心
+        double sum1 = 0.0, sum2 = 0.0;
+        int count1 = 0, count2 = 0;
+        // 计算每个聚类的和
+        for ( i = 0; i < length; ++i) {
+            if (labels[i] == 0) {
+                sum1 += deviation[i];
+                count1++;
+            } else {
+                sum2 += deviation[i];
+                count2++;
+            }
+        }
+        // 计算新的聚类中心
+        if (count1 > 0) center1 = sum1 / count1;
+        if (count2 > 0) center2 = sum2 / count2;
+    }
+    // 计算两个聚类中心的平均deviation值
+    double avgDeviation1 = center1;
+    double avgDeviation2 = center2;
+    // 选择deviation值更小的那个结果作为聚类结果
+    int selectedLabel = (avgDeviation1 < avgDeviation2) ? 0 : 1;
+    // 计算所选聚类结果的数量
+    int selectedCount = count(labels, selectedLabel);
+    // 计算所选聚类结果占总数量的比例
+    double proportion = static_cast<double>(selectedCount) / length;
+    return proportion;
+}
+
+
+        \end{lstlisting}
+            
+
+        \subsubsection*{\large \textbf{4.疲劳报警与插件主函数实现}}
+        
+        疲劳报警使用弹窗警告和声音报警的方式，当PERCLOS值超过一定阈值时，弹出警告窗口，并播放声音报警。
+
+        \begin{lstlisting}[caption={疲劳报警与插件主函数实现}, label={lst:example}]
+// 播放MP3文件的函数
+void PlayMP3(const char* filename) {
+    // 打开MP3文件
+    mciSendString("open \"", NULL, 0, NULL);
+    mciSendString(filename, NULL, 0, NULL);
+    mciSendString("\" type mpegvideo alias mp3", NULL, 0, NULL);
+    // 播放MP3文件
+    mciSendString("play mp3", NULL, 0, NULL);
+}
+
+DLL_EXP void SleepyAlarm(){
+	// 开始疲劳报警
+	ShowDebugMessage("注意！疲劳报警！\n");
+	ShowDebugMessage("注意！疲劳报警！\n");
+	ShowDebugMessage("注意！疲劳报警！\n");
+	MessageBox(NULL, TEXT("疲劳报警！请注意休息！"), TEXT("疲劳报警"), MB_OK | MB_ICONWARNING);
+	// 播放MP3提示音
+    PlayMP3("alarm.mp3");
+}
+
+\\插件主函数
+
+DLL_EXP void ON_PLUGINRUN(int w,int h,BYTE* pYBits,BYTE* pUBits,BYTE* pVBits,BYTE* pBuffer)
+{
+	AFX_MANAGE_STATE(AfxGetStaticModuleState());//模块状态切换
+	_BUF_STRUCT *pBufStruct = (BUF_STRUCT*)pBuffer;
+
+	//未建立跟踪体或者跟踪体丢失，则重新初始化
+	if(pBufStruct->bLastEyeChecked==false || pBufStruct->pOtherVars->objLefteye.bBrokenTrace || pBufStruct->pOtherVars->objRighteye.bBrokenTrace)
+	{
+		ShowDebugMessage("未建立跟踪体或者跟踪体丢失\n");
+		//清空队列
+		leftEyeDeviationIndex=0;
+		return;
+	}
+
+	//开始处理当前帧
+	// ShowDebugMessage("开始处理当前帧\n");
+	//获取眼睛区域
+	aRect theLeftEyeArea = pBufStruct->pOtherVars->objLefteye.rcObject;
+	aRect theRightEyeArea = pBufStruct->pOtherVars->objRighteye.rcObject;
+	//存储眼睛区域的颜色图像
+	BYTE *LeftEyecolorimg = new BYTE[theLeftEyeArea.width*theLeftEyeArea.height*2];
+	BYTE *RightEyecolorimg = new BYTE[theRightEyeArea.width*theRightEyeArea.height*2];
+	BYTE *LeftEyegray = new BYTE[32*24];
+	BYTE *RightEyegray = new BYTE[32*24];
+	//复制眼睛区域的颜色图像
+	CopyImg(pBufStruct->colorBmp,LeftEyecolorimg,w,h,theLeftEyeArea.left,theLeftEyeArea.top,theLeftEyeArea.width,theLeftEyeArea.height);
+	CopyImg(pBufStruct->colorBmp,RightEyecolorimg,w,h,theRightEyeArea.left,theRightEyeArea.top,theRightEyeArea.width,theRightEyeArea.height);
+	//重采样成灰度图像
+	ReSample(LeftEyecolorimg,theLeftEyeArea.width,theLeftEyeArea.height,32,24,false,true,LeftEyegray);
+	ReSample(RightEyecolorimg,theRightEyeArea.width,theRightEyeArea.height,32,24,false,true,RightEyegray);
+
+	leftEyeDeviation[leftEyeDeviationIndex]=CalDeviation(LeftEyegray);
+	ShowDebugMessage("第%d帧灰度值方差：%f\n", leftEyeDeviationIndex, leftEyeDeviation[leftEyeDeviationIndex]);
+	if (leftEyeDeviationIndex == FrameCount-1) {
+		double blinkRate = TwoCluster(leftEyeDeviation, FrameCount);
+		ShowDebugMessage("眨眼频率：%f\n", blinkRate);
+		if (blinkRate > 0.3) {
+			SleepyAlarm(); // 眨眼频率超过阈值，触发报警
+		}
+	}
+	leftEyeDeviationIndex=(leftEyeDeviationIndex+1)%FrameCount;
+
+
+
+	delete [] LeftEyecolorimg;
+	delete [] RightEyecolorimg;
+	delete [] LeftEyegray;
+	delete [] RightEyegray;
+}
+
+
+\end{lstlisting}
+
+
+\newpage
+\section{实验结果与分析}
+        \subsubsection*{\large \textbf{1.摄像头视频流图片截取、重采样等处理插件}}
+
+        如图，左上角为重采样后的彩色图片，右上角为重采样后的灰度图片。
+    
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image14.png}
+            \caption{降采样彩色图片与降采样灰度图片效果}
+            \label{fig:example}
+        \end{figure}
+
+        \subsubsection*{\large \textbf{2.人脸检测与定位插件}}
+        \large \textbf{肤色建模与二值化后效果}
+
+        如下图，左上角为肤色建模与二值化后的图片效果，可以看到，肤色建模后，
+        人脸区域的肤色部分被提取出来，而大部分背景部分被滤除。
+        但是仍然存在一些噪声，需要进一步处理。
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image15.png}
+            \caption{肤色建模与二值化后效果}
+            \label{fig:example}
+        \end{figure}
+
+        \large \textbf{形态学处理后效果}
+
+        如下图，左上角为形态学处理前后的图片效果对比，可以看到，形态学处理后，
+        大部分噪声被滤除，人脸区域更加清晰。只剩下小块的噪声，不影响后续的人脸定位。
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image16.png}
+            \caption{形态学处理后效果}
+            \label{fig:example}
+        \end{figure}
+
+        \large \textbf{人脸定位效果}
+
+        如下图，图中矩形框为人脸定位效果，可以看到，人脸区域被成功定位，且准确度较高。
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image17.png}
+            \caption{人脸定位效果}
+            \label{fig:example}
+        \end{figure}
+
+
+
+
+
+        \subsubsection*{\large \textbf{3.眨眼检测及眼鼻定位插件}}
+
+        \large \textbf{高斯滤波效果}
+
+        如下图，左上角为高斯滤波前后的图片效果对比，可以看到，高斯滤波后，
+        图片变的钝化，高频噪声被滤除，图像更加平滑。
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image18.png}
+            \caption{高斯滤波效果}
+            \label{fig:example}
+        \end{figure}
+
+        \large \textbf{差分图像效果}
+
+        下图是左右移动过程中截取的图像，左上角为差分图像，
+        可以看出，差分图像体现了移动过程中前后帧图像的差异效果
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image19.png}
+            \caption{差分图像效果}
+            \label{fig:example}
+        \end{figure}
+
+
+
+        \large \textbf{帧差法检测双眼效果}
+
+        下图是帧差法检测双眼效果的一系列连续帧图像，5帧图片是眨眼的过。
+        
+        左上角分别是差分图像，二值化图像，形态学处理后图像和原始灰度图像。
+
+        可以看到，二值化图像存在明显的噪声，这是由于前后帧图像前细微的差异导致的。
+        经过形态学处理后，噪声明显被滤除，眼睛区域更加清晰。
+        在第五帧图像中，可以清除的看到眼睛区域被成功提取出来。
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/frame1.png}
+        \label{fig:frame1}
+    \end{minipage}
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/frame2.png}
+        \label{fig:frame2}
+    \end{minipage}
+    \begin{minipage}{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/frame3.png}
+        \label{fig:frame3}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/frame4.png}
+        \label{fig:frame4}
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/fig/frame5.png}
+        \label{fig:frame5}
+    \end{minipage}
+    \caption{帧差法检测双眼效果}
+    \label{fig:frames}
+\end{figure}
+
+        \large \textbf{眼鼻区域定位效果}
+
+        如图，眼睛与鼻子区域被成功定位，且准确度较高。
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image20.png}
+            \caption{眼鼻区域定位效果}
+            \label{fig:example}
+        \end{figure}
+
+
+        \subsubsection*{\large \textbf{4.眼睛及鼻子跟踪效果}}
+
+        \large \textbf{眼睛及鼻子跟踪效果}
+
+        如图，图中的方框为跟踪效果，可以看到，眼睛及鼻子区域被成功跟踪，且准确度较高。
+        具体的动态跟踪效果在pdf中不便展示，可以参考ppt中的视频展示。
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image21.png}
+            \caption{眼睛及鼻子跟踪效果}
+            \label{fig:example}
+        \end{figure}
+
+        \subsubsection*{\large \textbf{5.瞌睡判定与报警效果}}
+
+        \large \textbf{瞌睡判定与报警效果}
+
+        如下图，当眼睛闭合超过一定时间后，报警效果被触发。
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\textwidth]{./figures/fig/image22.png}
+            \caption{瞌睡判定与报警效果}
+            \label{fig:example}
+        \end{figure}
+
+\newpage
+\section{问题与解决方案}
+
+在本实验过程中，我们遇到了以下几个主要问题，并通过相应的解决方案成功解决了这些问题。
+
+\subsection{Debug困难}
+
+在开发过程中，debug是一个不可避免的环节。然而，由于本系统涉及多个模块和复杂的图像处理算法，debug变得尤为困难。主要问题包括：
+\begin{itemize}
+    \item 无法直观地观察中间结果。
+    \item 经常遇到动态内存管理错误导致的程序崩溃等现象。
+\end{itemize}
+
+为了解决这些问题，我们采取了以下措施：
+\begin{itemize}
+    \item \textbf{日志记录}：在关键步骤和函数中添加详细的日志记录，记录变量值和执行流程，方便定位问题。
+    \item \textbf{可视化工具}：将中间结果可视化，如将图片复制到窗口中显示，方便观察图像处理效果。
+    \item \textbf{单步调试工具}：使用调试器（如gdb）进行单步调试，逐行检查代码执行情况，找出问题所在。
+\end{itemize}
+
+\subsection{内存管理出错和变量管理混乱}
+
+在图像处理过程中，动态内存分配是一个常见的操作。然而，由于内存管理不当，常常导致内存泄漏或程序崩溃。主要问题包括：
+\begin{itemize}
+    \item 内存分配失败。
+    \item 内存泄漏。
+    \item 内存越界访问。
+\end{itemize}
+
+同时变量管理混乱也是一个常见问题，如变量未初始化、结构体复杂等，变量名混乱等。
+
+为了解决这些问题，我们采取了以下措施：
+\begin{itemize}
+    \item \textbf{内存分配检查}：在每次内存分配后，检查返回的指针是否为NULL，如果为NULL，则记录错误日志并退出程序。
+    \item \textbf{内存释放}：在每次内存使用完毕后，及时释放内存，避免内存泄漏。同时，使用工具（如Valgrind）检测内存泄漏情况。
+    \item \textbf{边界检查}：在访问动态分配的内存时，进行边界检查，确保不会越界访问。
+    \item \textbf{变量管理}：合理命名变量，避免变量名混乱，同时使用注释提高代码的可读性和可维护性。
+\end{itemize}
+
+\subsection{疲劳检测方案优化}
+
+在疲劳检测过程中，我们尝试了多种简单的方案，但效果均不佳。主要问题包括：
+\begin{itemize}
+    \item 简单的阈值判断方法对不同光照条件和个体差异的适应性差。
+    \item 复杂的特征提取方法计算量大，实时性差。
+    \item 简单的方法对噪声敏感，容易受到干扰。
+\end{itemize}
+
+最终，我们采用了提取简单但突出的特征，然后用机器学习的kmeans二聚类方法提高眨眼帧的判断准确度，最终实现快速高效的眨眼检测。具体方案如下：
+\begin{itemize}
+    \item \textbf{特征提取}：提取眼睛中心区域的灰度图像的水平灰度直方图，并计算其均值和标准差作为特征值。该方法简单易行，计算复杂度低，且对眼睛的位置和大小变化具有一定的鲁棒性。
+    \item \textbf{二聚类方法}：使用kmeans二聚类方法，将提取的特征值进行聚类，区分睁眼和闭眼帧。通过聚类结果计算PERCLOS值，判断是否处于疲劳状态。该算法对光照条件和个体差异的适应性较好，有较好的鲁棒性，且计算速度快，实时性高。
+    \item \textbf{实时性优化}：在特征提取和聚类过程中，尽量减少计算量，提高算法的实时性，确保系统能够实时检测疲劳状态。
+\end{itemize}
+
+
+\newpage
+\section{总结与展望}
+总结实验的成果，并提出可能的改进方向。
+
+本实验成功设计并实现了一个基于VCC++的防疲劳磕睡检测系统。通过摄像头获取视频流，对图像进行预处理、人脸检测、眼睛定位与跟踪、眨眼检测及疲劳判定，最终实现了对驾驶员或其他需要专注工作的人员的疲劳状态监测。具体成果如下：
+
+\begin{itemize}
+    \item \textbf{图像预处理}：实现了视频流的截取和重采样，生成了降采样彩色图片和灰度图片，减少了计算量，提高了图像处理速度。通过高斯滤波等方法，有效去除了图像中的高频噪声，使得后续处理更加稳定。
+    \item \textbf{人脸检测与定位}：采用肤色建模和形态学处理方法，成功实现了人脸区域的检测与定位，准确度较高。通过光照补偿和连通域标记等技术，进一步提高了人脸检测的鲁棒性和准确性。
+    \item \textbf{眼睛定位与跟踪}：通过帧差法和常识性检验，成功实现了眼睛区域的定位与跟踪，能够在视频中实时跟踪眼睛位置。利用眼球色素校验和位置校验，进一步提高了眼睛定位的准确性。
+    \item \textbf{眼鼻跟踪}：通过连续帧图像的处理，成功实现了眼睛和鼻子区域的跟踪，能够在视频中实时跟踪眼睛和鼻子的位置。通过形态学处理和连通域标记，进一步提高了跟踪的准确性和稳定性。
+    \item \textbf{眨眼检测}：提取了眼睛中心区域的灰度图像的水平灰度直方图，并通过kmeans二聚类方法，提高了眨眼帧的判断准确度，实现了快速高效的眨眼检测。该方法简单易行，计算复杂度低，且对眼睛的位置和大小变化具有一定的鲁棒性。
+    \item \textbf{疲劳判定与报警}：基于PERCLOS测量原理，通过计算单位时间内眼睛闭合的时间，成功实现了疲劳状态的判定，并在检测到疲劳状态时进行报警提示。系统能够实时监测人员的疲劳状态，并在必要时发出警告。
+\end{itemize}
+
+
+尽管本实验取得了一定的成果，但仍存在一些不足之处，未来可以从以下几个方面进行改进：
+
+\begin{itemize}
+    \item \textbf{算法优化}：进一步优化图像处理和特征提取算法，提高准确性。例如，可以尝试使用深度学习方法进行人脸和眼睛检测与跟踪。深度学习方法在处理复杂场景和多样化数据时具有更高的鲁棒性和准确性，可以显著提升系统性能。
+    \item \textbf{多光照条件适应性}：改进算法，使其在不同光照条件下具有更好的适应性，减少光照变化对检测结果的影响。可以考虑引入自适应光照补偿技术，或者使用多光谱成像技术，增强系统在复杂光照环境下的稳定性。
+    \item \textbf{多角度适应性}：增强系统对头部姿态变化的适应性，使其在不同角度下都能准确检测和跟踪眼睛位置。可以通过引入三维人脸建模和姿态估计技术，提升系统在多角度下的检测能力。
+    \item \textbf{多目标跟踪}：扩展系统功能，实现对多个目标的同时检测和跟踪，适用于更多应用场景。例如，在公共交通工具上，可以同时监测多个驾驶员或乘客的疲劳状态，确保整体安全。
+    \item \textbf{用户体验优化}：改进报警提示方式，使其更加人性化，减少误报和漏报，提高用户体验。可以考虑引入多模态反馈机制，如视觉、听觉和触觉反馈，增强用户对系统的接受度和依赖性。
+    \item \textbf{跨平台兼容性}：提升系统的跨平台兼容性，使其能够在不同操作系统和硬件平台上运行。通过优化代码和使用跨平台开发工具，确保系统在各种环境下的稳定性和性能。
+\end{itemize}
+
+
+
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

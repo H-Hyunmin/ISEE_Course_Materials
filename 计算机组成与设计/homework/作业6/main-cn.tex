@@ -1,0 +1,506 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Computer Organization and Design   } % 页眉
+\rhead{3220103462}
+\title{HOMEWORK \#6} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Computer Organization and Design } % 课程信息
+
+\studentinfo{Name: \textit{黄贤敏}  \quad  \quad Student ID: \textit{3220103462}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+\begin{problem}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=1\textwidth]{./figures/image1.png}
+  \label{fig:pro1}
+\end{figure}
+
+\end{problem}
+
+
+
+
+\begin{solution}
+
+
+\subsection*{1. Byte Offset}
+The block size is 16 bytes. Therefore, the number of bits required to address each byte within a block is:
+\[
+\text{Byte Offset size} = \log_2(16) = 4 \text{ bits}.
+\]
+
+\subsection*{2. Index}
+The total cache size is 128 bytes, and the block size is 16 bytes. Thus, the cache has:
+\[
+\frac{\text{Cache Size}}{\text{Block Size}} = \frac{128}{16} = 8 \text{ blocks}.
+\]
+The number of bits needed to index these blocks is:
+\[
+\text{Index size} = \log_2(8) = 3 \text{ bits}.
+\]
+
+\subsection*{3. Tag}
+The total memory address size is 32 bits. The remaining bits are used for the tag:
+\[
+\text{Tag size} = 32 - (\text{Index size} + \text{Byte Offset size}) = 32 - (3 + 4) = 25 \text{ bits}.
+\]
+
+\subsection*{Final Answer}
+\begin{itemize}
+    \item \textbf{Tag size:} 25 bits
+    \item \textbf{Index size:} 3 bits
+    \item \textbf{Byte Offset size:} 4 bits
+\end{itemize}
+
+
+
+\end{solution}
+\newpage
+
+
+
+%------------------------------%
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image2.png}
+    \label{fig:pro1}
+  \end{figure}
+
+
+
+\end{problem}
+
+
+
+\begin{solution}
+
+\begin{enumerate}
+    \item[a)] \textbf{Cache Line Size (in words):}
+    \begin{itemize}
+        \item The offset field is 6 bits, so the cache line size is:
+        \[
+        2^6 = 64 \text{ bytes}.
+        \]
+        \item Assuming each word is 4 bytes, the cache line size in words is:
+        \[
+        \frac{64}{4} = 16 \text{ words}.
+        \]
+    \end{itemize}
+    
+    \item[b)] \textbf{Number of Cache Entries:}
+    \begin{itemize}
+        \item The index field is 7 bits, so the number of cache entries is:
+        \[
+        2^7 = 128.
+        \]
+    \end{itemize}
+    
+    \item[c)] \textbf{Ratio of Total Bits to Data Storage Bits:}
+    \begin{itemize}
+        \item Each cache entry contains:
+        \begin{align*}
+        \text{Data storage bits} & = 64 \times 8 = 512 \text{ bits}, \\
+        \text{Tag bits} & = 19 \text{ bits}, \\
+        \text{Valid bit} & = 1 \text{ bit}.
+        \end{align*}
+        \item Total bits per entry:
+        \[
+        512 + 19 + 1 = 532 \text{ bits}.
+        \]
+        \item Total data storage bits:
+        \[
+        128 \times 512 = 65536 \text{ bits}.
+        \]
+        \item Total cache implementation bits:
+        \[
+        128 \times 532 = 68160 \text{ bits}.
+        \]
+        \item Ratio:
+        \[
+        \text{Ratio} = \frac{68160}{65536} \approx 1.04.
+        \]
+    \end{itemize}
+\end{enumerate}
+
+\end{solution}
+\newpage
+
+
+%------------------------------%
+
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image3.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{problem}
+
+
+
+\begin{solution}
+
+
+\subsection*{(a) 8 Two-Word Blocks Cache}
+
+For the 8 two-word blocks cache:
+\begin{itemize}
+    \item Each block has 2 words (8 bytes), requiring 3 bits for the block offset.
+    \item The cache has 8 blocks, so 3 bits are required for the index.
+    \item The remaining 26 bits are used for the tag.
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Word address & Binary address & Tag & Index & Hit/Miss \\
+\hline
+3   & 00000011 & 00000000000000000000000000 & 000 & Miss \\
+180 & 10110100 & 00000000000000000000000010 & 110 & Miss \\
+43  & 00101011 & 00000000000000000000000000 & 101 & Miss \\
+2   & 00000010 & 00000000000000000000000000 & 000 & Hit \\
+181 & 10110101 & 00000000000000000000000010 & 110 & Hit \\
+88  & 01011000 & 00000000000000000000000001 & 011 & Miss \\
+164 & 10100100 & 00000000000000000000000010 & 100 & Miss \\
+180 & 10110100 & 00000000000000000000000010 & 110 & Hit \\
+89  & 01011001 & 00000000000000000000000001 & 011 & Hit \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection*{(b) 4 Four-Word Blocks Cache}
+
+For the 4 four-word blocks cache:
+\begin{itemize}
+    \item Each block has 4 words (16 bytes), requiring 4 bits for the block offset.
+    \item The cache has 4 blocks, so 2 bits are required for the index.
+    \item The remaining 26 bits are used for the tag.
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Word address & Binary address & Tag & Index & Hit/Miss \\
+\hline
+3   & 00000011        & 00000000000000000000000000      & 00             & Miss \\
+180 & 10110100        & 00000000000000000000000010      & 11             & Miss \\
+43  & 00101011        & 00000000000000000000000000      & 10             & Miss \\
+2   & 00000010        & 00000000000000000000000000      & 00             & Hit  \\
+181 & 10110101        & 00000000000000000000000010      & 11             & Hit  \\
+88  & 01011000        & 00000000000000000000000001      & 01             & Miss \\
+164 & 10100100        & 00000000000000000000000010      & 10             & Miss \\
+180 & 10110100        & 00000000000000000000000010      & 11             & Hit  \\
+89  & 01011001        & 00000000000000000000000001      & 01             & Hit  \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\end{solution}
+\newpage
+
+
+
+
+
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image4.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{problem}
+
+\begin{solution}
+
+For the 4 four-word blocks cache:
+\begin{itemize}
+    \item Each block has 2 words (8 bytes), requiring 3 bits for the block offset.
+    \item The cache is fully associative, so the index is 0 bits.
+    \item The remaining 29 bits are used for the tag.
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Word address & Binary address & Tag  & Hit/Miss \\
+\hline
+1   & 00000001        & 000000000000000000000000000      & Miss \\
+134 & 10000110        & 000000000000000000000010000      & Miss \\
+212 & 11010100        & 000000000000000000000011010      & Miss \\
+1   & 00000001        & 000000000000000000000000000      & Hit  \\
+135 & 10000111        & 000000000000000000000010000      & Hit \\
+213 & 11010101        & 000000000000000000000011010      & Hit  \\
+162 & 10100010        & 000000000000000000000010100      & Miss \\
+161 & 10100001        & 000000000000000000000010100      & Hit  \\
+2   & 00000010        & 000000000000000000000000000      & Hit \\
+44  & 00101100        & 000000000000000000000000101      & Miss \\
+41  & 00101001        & 000000000000000000000000101      & Hit  \\
+221 & 11011001        & 000000000000000000000011001      & Hit \\
+\hline
+\end{tabular}
+\end{center}
+
+By LRU replacement policy, the cache process is as follows:
+1 miss; 
+134 miss;
+212 miss;
+1 hit;
+135 hit;
+213 hit;
+162 miss;
+161 hit;
+2 hit;
+44 miss and replace 134;
+41 hit;
+221 hit.
+
+so the miss rate is 5/12 = 0.4167
+
+\end{solution}
+
+\newpage
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image5.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{problem}
+
+\begin{solution}
+  
+
+\subsection*{(a) Cache block size}
+
+From the sequence 1,the block size is either 32 or 64 bytes to make the hit rate =0.5
+
+From the sequence 2, we can make sure that the block size is 64 bytes. If the block size is 32 bytes, the address
+63 will miss and the hit rate will not be 5/8
+
+\subsection*{(b) Cache associative}
+if Cache is 4KB, the number of blocks is 64, if Cache is 8KB, the number of blocks is 128.
+
+no matter the cache size is 4KB or 8KB, the 8192 address will map to the same set as 0 address, as well as 
+16384 address and 32768 address. 
+
+According to the sequence 3, the 32768 address, 1024 address, 3072 address must be miss
+and the 129 address must be hit.Considering the hit rate is 2/6, 0 address and 8192 address only one of them can be hit.
+
+\begin{itemize}
+  \item if the cache is 1-way or 2way set associative, the 0 address and 8192 address will both be miss.
+  \item if the cache is 8-way set associative, the 0 address and 8192 address will both be hit.
+  \item thus the cache size is 4-way set associative.
+\end{itemize}
+
+\subsection*{(c) Cache size}
+now we know the cache is 4-way set associative, the block size is 64 bytes.
+
+if the cache size is 4KB,the total number of blocks is 64, index size is 0-15,every set has 4 blocks.
+
+the address 1024 will map to the same set as 0 address. At this case, no matter the Cache replacement policy is LRU or FIFO, 
+the Sequence 3 will not be 1/3 hit rate. So the cache size is 8KB.
+
+\subsection*{(d) Cache replacement policy}
+
+now we know the cache is 4-way set associative, the block size is 64 bytes. the cache size is 8KB.
+If the cache replacement policy is FIFO, the sequence 3 will be 1/6 hit rate, which is not consistent with the question.
+If the cache replacement policy is LRU, the sequence 1,2,3 will be 1/2, 5/8, 2/6 hit rate, which is consistent with the question.
+
+\subsection*{(e) Final Answer}
+
+the cache block size is 64 bytes, the cache is 4-way set associative, the cache size is 8KB, the cache replacement policy is LRU.
+
+\end{solution}
+
+\newpage
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image6.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{problem}
+\newpage
+\begin{solution} \quad
+
+
+  \begin{enumerate}
+    \item[a] 32Bytes
+    \item[b] index size = 6bits, number of blocks$ = 2^6 * 4 = 256$
+    \item[c] tag size = 32 - 6 - 5 = 21bits. total data capacity = 256 * 32 * 4 = 32786Bytes,
+     total capacity = $256 * (21+1+32*8)*4$=284,672bits=35,584Bytes
+    \item[d] 4-way set associative
+    \item[e] the cache don't have dirty bits, so the write policy is write-through
+    \item[f] total valid bits = 256 * 4 = 1024bits
+    \item[g] total number of tag bits = 256 * 21 * 4 = 21,504bits
+  \end{enumerate}
+
+\end{solution}
+
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image7.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{problem}
+\newpage
+\begin{solution}
+  
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Word address & Binary address  \\
+\hline
+7   & 00000000000000000000000000000111 \\
+215 & 00000000000000000000000011010111 \\
+175 & 00000000000000000000000010101111 \\
+215 & 00000000000000000000000011010111 \\
+7   & 00000000000000000000000000000111 \\
+84  & 00000000000000000000000001010100 \\
+65  & 00000000000000000000000001000001 \\
+174 & 00000000000000000000000010101110 \\
+64  & 00000000000000000000000001000000 \\
+105 & 00000000000000000000000001101001 \\
+85  & 00000000000000000000000001010101 \\
+215 & 00000000000000000000000011010111 \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+  \item for C1,the cache has 1-word blocks, so the bit offset is 2, 
+  the cache has 8 entries, so the index is 3, the remaining 27 bits are used for the tag.
+  the cache process is as follows: MMMHHMMHHMHM,5hits,7misses
+  \item for C2,the cache has 2-word blocks, so the bit offset is 3,
+  the cache has 4 entries, so the index is 2, the remaining 27 bits are used for the tag.
+  the cache process is as follows: MMMHHMMHHMHM,5hits,7misses
+  \item for C3,the cache has 4-word blocks, so the bit offset is 4,
+  the cache has 2 entries, so the index is 1, the remaining 27 bits are used for the tag.
+  the cache process is as follows: MMMHMMMMMMHM,2hits,10misses
+\end{itemize}
+
+In term of miss rate, the cache C1 and C2 have the same miss rate, 7/12=0.5833 and the cache C3 has a miss rate of 10/12=0.8333
+so C1,and C2 are the best.
+
+If the miss stall time is 25cycles, and C1 has an access time of 2 cycles, C2 takes 3 cycles, and C3 takes 5cycles, which is the best cache design?
+
+\begin{itemize}
+  \item C1: 7 misses * 25 cycles + 5 hits * 2 cycles = 175 + 10 = 185 cycles
+  \item C2: 7 misses * 25 cycles + 5 hits * 3 cycles = 175 + 15 = 190 cycles
+  \item C3: 10 misses * 25 cycles + 2 hits * 5 cycles = 250 + 10 = 260 cycles
+\end{itemize}
+  so the best cache design is C1.
+
+
+
+
+
+\end{solution}
+
+
+
+
+
+
+\end{document}
+
+

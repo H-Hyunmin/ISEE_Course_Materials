@@ -1,0 +1,426 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Computer Organization and Design   } % 页眉
+\rhead{3220103462}
+\title{HOMEWORK \#7} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Computer Organization and Design } % 课程信息
+
+\studentinfo{Name: \textit{黄贤敏}  \quad  \quad Student ID: \textit{3220103462}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+\begin{problem}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{./figures/image1.png}
+  \label{fig:pro1}
+\end{figure}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{./figures/image1_2.png}
+  \label{fig:pro1}
+\end{figure}
+\end{problem}
+
+
+
+
+\begin{solution}
+
+\subsection*{a)}
+
+the tag of the address stream in the table is 0,7,3,3,1,1,2
+
+\begin{itemize}
+  \item address 4095 with tag 0： hit in the page table, change TLB 
+  \item address 31272 with tag 7： hit in TLB
+  \item address 15789 with tag 3： hit in TLB
+  \item address 15000 with tag 3： hit in TLB
+  \item address 7192 with tag 1： page fault, change page table, change TLB
+  \item address 4096 with tag 1： hit in TLB
+  \item address 8912 with tag 2： page fault, change page table, change TLB
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{TLB}
+\begin{tabular}{|c|c|c|}
+\hline
+Valid & Tag & Physical Page Number \\ \hline
+1 & 1 & 13 \\ \hline
+1 & 7 & 4 \\ \hline
+1 & 3 & 6 \\ \hline
+1 & 2 & 14 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Page Table}
+\begin{tabular}{|c|c|}
+\hline
+Valid & Physical page or in disk \\ \hline
+1 & 5 \\ \hline
+1 & 13 \\ \hline
+1 & 14 \\ \hline
+1 & 6 \\ \hline
+1 & 9 \\ \hline
+1 & 11 \\ \hline
+0 & Disk \\ \hline
+1 & 4 \\ \hline
+0 & Disk \\ \hline
+0 & Disk \\ \hline
+1 & 3 \\ \hline
+1 & 12 \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection*{b)}
+
+use 16 KiB pages instead of 4 KiB pages.
+
+the tag of the address stream in the table is 0,1,0,0,0,0,0
+
+\begin{itemize}
+  \item address 4095 with tag 0： hit in the page table, change TLB 
+  \item address 31272 with tag 1： page fault, change page table, change TLB
+  \item address 15789 with tag 0： hit in TLB
+  \item address 15000 with tag 0： hit in TLB
+  \item address 7192 with tag 0： hit in TLB
+  \item address 4096 with tag 0： hit in TLB
+  \item address 8912 with tag 0： hit in TLB
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{TLB}
+\begin{tabular}{|c|c|c|}
+\hline
+Valid & Tag & Physical Page Number \\ \hline
+1 & 1 & 13 \\ \hline
+1 & 7 & 4 \\ \hline
+1 & 3 & 6 \\ \hline
+1 & 0 & 5 \\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Page Table}
+\begin{tabular}{|c|c|}
+\hline
+Valid & Physical page or in disk \\ \hline
+1 & 5 \\ \hline
+1 & 13 \\ \hline
+0 & disk \\ \hline
+1 & 6 \\ \hline
+1 & 9 \\ \hline
+1 & 11 \\ \hline
+0 & Disk \\ \hline
+1 & 4 \\ \hline
+0 & Disk \\ \hline
+0 & Disk \\ \hline
+1 & 3 \\ \hline
+1 & 12 \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection*{Advantages of a Larger Page Size}
+\begin{itemize}
+  \item \textbf{Reduced Page Table Size:} With larger pages, the number of pages needed to cover the same amount of memory is reduced, which in turn reduces the size of the page table.
+  \item \textbf{Improved TLB Efficiency:} Larger pages mean fewer entries are needed in the Translation Lookaside Buffer (TLB), which can improve TLB hit rates and overall memory access performance.
+  \item \textbf{Reduced I/O Overhead:} Larger pages can reduce the frequency of page faults and the associated I/O operations, as more data is brought into memory with each page.
+\end{itemize}
+
+\subsection*{Disadvantages of a Larger Page Size}
+\begin{itemize}
+  \item \textbf{Increased Internal Fragmentation:} Larger pages can lead to more wasted memory within each page, as not all memory allocated within a page may be used.
+  \item \textbf{Higher Memory Overhead for Small Processes:} Small processes may not fully utilize the larger pages, leading to inefficient use of memory.
+  \item \textbf{Longer Page Transfer Times:} Larger pages take more time to transfer between disk and memory, which can increase the latency of page faults.
+\end{itemize}
+
+
+
+
+
+\subsection*{c)}
+for 2-way set associative cache, 
+the index of the address stream in the table is 0,1,1,1,1,1,0
+the tag of the address stream in the table is   0,3,1,1,0,0,1
+
+\begin{table}[H]
+\centering
+\caption{TLB}
+\begin{tabular}{|c|c|c|}
+\hline
+Valid & Tag & Physical Page Number \\ \hline
+1 & 0 & 5 \\ \hline
+1 & 2 & 14 \\ \hline
+1 & 1 & 13 \\ \hline
+1 & 7 & 4 \\ \hline
+\end{tabular}
+\end{table}
+
+
+for direct-mapped cache,
+the index of the address stream in the table is 0,3,3,3,1,1,2
+the tag of the address stream in the table is   0,1,0,0,0,0,0
+
+
+\begin{table}[H]
+\centering
+\caption{TLB}
+\begin{tabular}{|c|c|c|}
+\hline
+Valid & Tag & Physical Page Number \\ \hline
+1 & 0 & 5 \\ \hline
+1 & 1 & 13 \\ \hline
+1 & 2 & 14 \\ \hline
+1 & 3 & 6 \\ \hline
+\end{tabular}
+\end{table}
+
+\subsection*{Importance of Having a TLB to High Performance}
+\begin{itemize}
+  \item \textbf{Reduced Memory Access Time:} The Translation Lookaside Buffer (TLB) is a cache that stores recent translations of virtual memory to physical memory addresses. By having a TLB, the system can quickly translate virtual addresses to physical addresses without having to access the page table in memory, significantly reducing memory access time.
+  \item \textbf{Improved CPU Efficiency:} With a TLB, the CPU can spend less time on address translation and more time on executing instructions, leading to better overall performance and efficiency.
+  \item \textbf{Higher TLB Hit Rates:} A well-designed TLB can achieve high hit rates, meaning that most memory accesses can be translated quickly. This is crucial for maintaining high performance, especially in systems with large and complex memory hierarchies.
+\end{itemize}
+
+\subsection*{Handling Virtual Memory Accesses Without a TLB}
+\begin{itemize}
+  \item \textbf{Increased Memory Access Latency:} Without a TLB, every virtual memory access would require a lookup in the page table, which is stored in main memory. This would significantly increase the latency of memory accesses, as accessing main memory is much slower than accessing a TLB.
+  \item \textbf{Higher CPU Overhead:} The CPU would need to spend more time performing address translations, which would reduce the time available for executing instructions and decrease overall system performance.
+  \item \textbf{More Frequent Page Table Accesses:} Without the TLB, the page table would need to be accessed for every memory operation, leading to increased memory traffic and potential bottlenecks in the memory subsystem.
+\end{itemize}
+
+
+\subsection*{d)}
+
+
+Each application uses half of the virtual memory, i.e., 
+\[
+\text{Memory used per application} = \frac{2^{32}}{2} = 2^{31} \, \text{bytes}.
+\]
+
+The number of pages required per application is:
+\[
+\text{Pages per application} = \frac{2^{31}}{2^{12}} = 2^{19} \, \text{pages}.
+\]
+
+The page table size for one application is:
+\[
+\text{Page table size (1 application)} = 2^{19} \times 8 \, \text{bytes} = 2^{22} \, \text{bytes}=4 \, \text{MiB}.
+\]
+
+\textbf{Final Answer:} The total page table size is \(\mathbf{20 \, \text{MiB}}\).
+
+
+
+\subsection*{e)}
+
+1. \textbf{Number of Pages:}
+   \begin{itemize}
+     \item Virtual address space = 2\textsuperscript{32} bytes
+     \item Page size = 2\textsuperscript{12} bytes
+     \item Number of pages = \(\frac{2^{32}}{2^{12}} = 2^{20}\) pages
+   \end{itemize}
+
+2. \textbf{Memory Utilization:}
+   \begin{itemize}
+     \item Each application utilizes half of the memory available.
+     \item Therefore, each application uses \( \frac{2^{32}}{2} = 2^{31} \) bytes of memory.
+     \item Number of pages used by each application = \(\frac{2^{31}}{2^{12}} = 2^{19}\) pages
+   \end{itemize}
+
+3. \textbf{Two-Level Page Table:}
+   \begin{itemize}
+     \item Each level-1 page table entry points to a level-2 page table.
+     \item Number of level-1 entries = 256
+     \item Each level-1 entry size = 6 bytes
+     \item Number of level-2 entries = \(2^{11}\) entries
+     \item Each level-2 entry size = 8 bytes
+   \end{itemize}
+
+4. \textbf{Page Table Size for One Application:}
+   \begin{itemize}
+     \item Level-1 page table size = 256 \(\times\) 6 bytes = 1536 bytes
+     \item Level-2 page table size = \(2^{19} \times 8\) bytes = \(2^{22}\) bytes 
+     \item Total page table size for one application =  1536 bytes + \(2^{22}\) bytes = 4,097.5 KB
+   \end{itemize}
+
+5.\textbf{Minimum and Maximum Memory Required:}
+   if all the applications are not shell memory, then the maximum memory required is 5*4,097.5 KB=20,487.5 KB
+
+   if all the applications are shell same memory, then the minimum memory required is 4,097.5 KB
+
+\subsection*{f)}
+
+for a 16  KiB direct-mapped cache, assuming 2 words per block, the cache size is 16 KiB, the block size is 8 bytes, and the number of blocks is 16 KiB / 8 bytes = 2024 blocks.
+
+the cache offset is 3 bits, the cache index is 11 bits. but the page offset bits is 12 bits.
+ 11bits+3bits=14bits > 12bits,
+ 
+ so it is impossible to designer such a cache because the cache index + cache offset is greater than the page offset, which may lead to address translation errors.
+
+\textbf{Increasing Data Size of the Cache:}
+\begin{itemize}
+  \item \textbf{Set-Associative Cache:} One way to increase the data size of the cache while maintaining the virtually indexed, physically tagged configuration is to use a set-associative cache. For example, a 2-way set-associative cache would halve the number of index bits required.
+  \item \textbf{Larger Page Size:} Another approach is to increase the page size, which would increase the number of page offset bits, allowing for a larger cache size.
+\end{itemize}
+\end{solution}
+\newpage
+
+
+
+%------------------------------%
+\begin{problem}
+  \quad
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image2.png}
+    \label{fig:pro1}
+  \end{figure}
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{./figures/image2_2.png}
+    \label{fig:pro1}
+  \end{figure}
+
+\end{problem}
+
+
+
+\begin{solution}
+
+  \subsection*{a)}
+\textbf{Size of page map entry in bits:}
+\begin{itemize}
+  \item \textbf{Physical Address Size:} 36 bits
+  \item \textbf{page size:} 64 KiB ($2^{16}$ bytes)
+  \item \textbf{page offset bits:} 16 bits
+  \item thus, the size of the page map entry = 36 - 16 + 2 = 22 bits
+\end{itemize}
+
+\textbf{Number of entries in the page map:}
+\begin{itemize}
+  \item \textbf{Virtual Address Size:} 40 bits
+  \item \textbf{Page Size:} 64 KiB ($2^{16}$ bytes)
+  \item \textbf{Number of Entries:} $\frac{2^{40}}{2^{16}} = 2^{24}$ entries
+\end{itemize}
+
+  \subsection*{b)}
+\textbf{Number of entries in the new page map:}
+\begin{itemize}
+  \item \textbf{Virtual Address Size:} 40 bits
+  \item \textbf{Page Size:} 16 KiB ($2^{14}$ bytes)
+  \item \textbf{Number of Entries:} $\frac{2^{40}}{2^{14}} = 2^{26}$ entries
+  \item thus, the ratio of the number of entries in the new page map to the old page map is $\frac{2^{26}}{2^{24}} = 4$
+\end{itemize}
+
+  \subsection*{c)}
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Virtual Addr} & \textbf{PPN (in hex)} & \textbf{PhysAddr (in Hex)} & \textbf{TLB Miss? (Y/N)} & \textbf{Page Fault? (Y/N)} \\
+\hline
+0x06004 & 0xBE7A & 0xBE7A6004  & N & N \\
+0x30286 & 0x8 & 0x80286 & Y & N \\
+0x68030 & 0x70 & 0x708030 & Y & N \\
+0x4BEEF & - & - & Y & Y \\
+\hline
+\end{tabular}
+
+
+\end{solution}
+\newpage
+
+
+
+\end{document}
+
+

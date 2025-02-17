@@ -1,0 +1,621 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    basicstyle=\small\ttfamily % 设置代码块的基本字体样式
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+%\begin{abstract}
+%
+%在此填写摘要内容
+%
+%\end{abstract}
+
+\thispagestyle{empty} % 首页不显示页码
+\newpage
+\begin{abstract}
+随着现代通信、雷达、医疗成像和生物探测等领域的迅速发展，太赫兹波在多个领域展现出广泛的应用潜力。氮化镓（GaN）作为一种具有优异电学和热学性能的宽禁带半导体，已成为高频和高功率应用的理想材料。本设计报告提出了一种基于GaN材料的耿氏二极管振荡器设计方案，旨在开发一款工作频率超过2 GHz的GaN耿氏二极管，采用简化结构来提升频率稳定性和功率输出。
+
+GaN耿氏二极管利用负微分迁移率效应（即耿氏效应），通过优化材料和结构设计，克服传统GaAs耿氏二极管在高频和高功率应用中的局限性。与传统的GaAs材料相比，GaN材料具有更宽的禁带结构、更高的电子迁移率和更强的热稳定性，能够在更高频率和功率下稳定工作，从而推动太赫兹源技术的发展。
+
+然而，GaN材料的缺陷问题和制造工艺仍然是该领域发展的瓶颈。本文通过对GaN耿氏二极管的工作原理、性能优化以及实际应用前景的深入分析，
+创新性的提出了新的耿氏管结构并提出优化设计方案，旨在提升其工作频率、功率输出以及系统稳定性，为未来太赫兹波段的应用提供创新的解决方案。
+\end{abstract}
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+
+% \keywords{}
+
+\section{设计背景}
+
+随着现代通信、雷达、医疗成像和生物探测等领域的迅速发展，太赫兹（THz）波作为一种位于微波和红外波段之间的电磁波，已被广泛研究并应用于多个领域。太赫兹波的频率范围为0.1 THz至10 THz，在电磁波谱中尚属于未完全开发的“空白区”，具有独特的物理特性，如低能量、高穿透力和敏感的反射特性，这使其在航空航天、生物医学、反恐检查、质量控制、无线通信和安全监控等领域具有巨大的应用潜力。
+
+然而，传统的基于光学的方法生成太赫兹源大多具有宽带脉冲辐射、成本高、效率低等缺点。因此，研究人员逐渐将目光转向电子学方法，以开发更高效、更稳定且可持续的太赫兹信号源。负阻器件，如耿氏二极管（Gunn Diode）、共振隧穿二极管（RTD）和崩越二极管（IMPATT Diode），已被广泛应用于太赫兹频段的信号源中，成为目前最主流的解决方案。
+
+\subsection*{耿氏二极管的优势与挑战}
+
+耿氏二极管作为一种基于“负阻效应”（Negative Differential Resistance, NDR）的半导体器件，因其具有高频稳定性、低噪声、低功耗和较长使用寿命等显著优势，被广泛应用于微波和高频振荡器中。与其他负阻器件相比，耿氏二极管在工作频率、输出功率、噪声水平及电源电压等方面具有独特优势，这使得其在太赫兹波段的应用具有极大潜力。
+
+传统上，耿氏二极管主要基于III-V族半导体材料，如砷化镓（GaAs）和磷化铟（InP）。这些材料在性能上已达到较高的成熟度，但由于其材料特性的限制，这些器件在高频、高功率应用中的表现尚有不足。例如，GaAs耿氏二极管的工作频率和功率输出能力受到其能带结构的制约，无法满足现代高频通信和雷达系统对频率和功率的需求。
+
+为了突破这些限制，氮化镓（GaN）作为一种宽禁带半导体材料，成为研究者们的新兴选择。GaN材料不仅具有比GaAs更宽的能带结构，且在电场下的电子迁移率和饱和速度都更高，使得GaN材料能够支持更高的工作频率和输出功率。此外，GaN材料具有较好的热稳定性和较高的击穿电场，使其能够在更高功率下稳定工作，尤其适用于高功率密度、高频率的太赫兹源。
+
+\subsection*{GaN耿氏二极管的研究现状}
+
+目前，GaN耿氏二极管的研究已成为国际上的重要课题。GaN作为一种宽禁带半导体，具有出色的负阻特性，能够支持比GaAs更高的工作频率和更强的功率输出。研究表明，基于GaN的耿氏二极管能够实现高达740~760 GHz的负阻振荡频率，其品质因数是GaAs的50至100倍，而其最高输出功率密度可以达到10$^{5}$ W/cm$^2$，这比GaAs高出两个数量级。这一性能的提升使得GaN耿氏二极管成为下一代太赫兹波源的重要候选器件。
+
+尽管GaN耿氏二极管在理论上具备显著的性能优势，但在实际应用中，GaN材料的缺陷问题，如位错缺陷和热管理问题，仍然是其发展的瓶颈。特别是由于GaN材料本身的物理特性，其器件加工和集成技术尚未达到成熟的阶段，目前GaN耿氏二极管的实际制造仍面临许多挑战。尤其是在高频、大功率和稳定性方面的工程化应用，仍需要进一步的优化设计与实验验证。
+
+\subsection*{GaN耿氏二极管在太赫兹领域的应用前景}
+
+GaN耿氏二极管作为一种高效能的太赫兹源，在多个领域展现出巨大的应用潜力。例如，在军事雷达系统中，太赫兹波具有较强的穿透力，可以在恶劣环境中实现精确探测。在无线通信中，太赫兹波能够提供更高的数据传输速率和更宽的带宽，满足未来5G甚至6G网络的需求。在生物医学领域，太赫兹波能够用于无创成像和早期疾病的检测，具有较大的市场需求。
+
+随着GaN技术的不断进步，GaN耿氏二极管的应用前景也愈加广阔。为此，本文提出了一种基于GaN材料的优化设计方案，旨在突破现有技术的局限，提升器件的工作频率、功率输出和稳定性，从而推动GaN耿氏二极管在太赫兹波段的应用发展。
+
+\subsection*{创新设计与目标}
+
+本设计报告的目标是开发一款工作频率超过2GHz的GaN耿氏二极管振荡器，采用不含PN结、无LC电路的简化结构，以降低制造复杂度和成本，同时保持较高的频率稳定性和输出功率。通过优化结构设计和材料选择，力求实现更高的频率响应和更低的噪声水平，为未来的太赫兹应用提供创新的解决方案。
+
+\section{GaN材料介绍}
+
+氮化镓（GaN）作为一种第三代宽禁带半导体材料，在近年来的半导体技术中引起了广泛关注。与传统的硅（Si）和砷化镓（GaAs）等半导体材料相比，GaN在高功率、高频率、以及高温和恶劣环境下的性能上具有显著的优势。GaN的禁带宽度达到3.4 eV，这使其在极端条件下表现出卓越的稳定性，尤其适用于高频和高功率应用，如射频（RF）功率放大器、激光器、以及高温和高电压设备等。
+
+GaN材料的崛起主要得益于其在电子和光电领域的独特优势。首先，GaN具有非常高的热导率，使得基于GaN的器件能够更有效地散热，从而提高功率密度和器件的长期稳定性。此外，GaN的临界击穿电场强度较高，达到3.3 MV/cm，相比于Si和GaAs，GaN能够承受更高的电压，适合用于大功率、高电压的应用。
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image2.png}
+\caption{GaN结构能带结构示意图\cite{suzuki1995first}}
+\label{fig:GaN_ band}
+\end{figure}
+
+表~\ref{tab:GaN_parameters}列出了不同半导体材料的基本物理参数，GaN在这些指标上表现出较为显著的优势，尤其是在高频、大功率和高温等应用场景中，具有独特的竞争力。
+
+\begin{table}[h]
+\centering
+\caption{不同半导体材料的物理参数对比\cite{1019000519.nh}}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+参数 & Si & GaAs & 4H-SiC & GaN \\
+\hline
+禁带宽度 (eV) & 1.12 & 1.42 & 3.25 & 3.45 \\
+电子饱和速度 ($10^7$ cm/s) & 1.0 & 2.0 & 2.0 & 2.7 \\
+电子迁移率 (cm$^2$/Vs) & 1400 & 8500 & 1020 & 1000 \\
+相对介电常数& 11.4& 13.1& 9.7& 8.9\\
+击穿场强 (MV/cm) & 0.3 & 0.4 & 3.0 & 3.3 \\
+热导率 (W/cm$\cdot$K) & 1.5 & 0.5 & 4.9 & 2.0 \\
+Baliga优值 (高频) & 1 & 11 & 73 & 180 \\
+Baliga优值 (低频) & 1 & 16 & 600 & 1450 \\
+\hline
+\end{tabular}
+\label{tab:GaN_parameters}
+\end{table}
+
+\subsection{GaN材料的突出特点}
+
+GaN的优异性能使其在多个领域中成为不可或缺的材料，尤其在高频和高功率应用中，GaN展现出了巨大的潜力。其主要优势包括：
+
+\begin{enumerate}
+  \item \textbf{宽禁带宽度：} GaN的禁带宽度为3.4 eV，能够有效抑制热激发的载流子，极大提高了在高温环境下的稳定性，使其特别适用于高温和高功率设备。
+  \item \textbf{高载流子饱和速度：} GaN的电子饱和漂移速度为2.7$\times 10^7$ cm/s，比硅和砷化镓的速度高出许多，这使得GaN器件在保持较好的功率特性的同时，能够在高频和微波频段工作。
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image1.png}
+\caption{GaN电子特性与电场关系图\cite{kolnik1995electronic}}
+\label{fig:GaN electron}
+\end{figure}
+
+  \item \textbf{高热导率：} GaN的热导率为2.0 W/cm$\cdot$K，虽然低于SiC的4.9 W/cm$\cdot$K，但仍显著高于GaAs的0.5 W/cm$\cdot$K。这一特点使得GaN器件能够在更小的面积内传输更大的功率，从而提升了器件的功率密度和可靠性。
+  \item \textbf{高击穿场强：} GaN的临界击穿电场强度为3.3 MV/cm，远高于Si和GaAs的击穿电场强度。这使得GaN器件在同等尺寸下能够承受更大的电压和电流，从而提升了器件的功率处理能力。
+  \item \textbf{较小的介电常数：} GaN的相对介电常数为8.9，相比于Si和GaAs较小，因此GaN器件的PN结电容较小，使得其更适用于高频应用。
+\end{enumerate}
+
+\subsection{GaN材料的应用前景}
+
+GaN材料的广泛应用已经开始渗透到多个高科技领域，特别是在通信、能源、国防等重要行业。GaN材料凭借其高功率、高频率、以及耐高温和高电压等特点，已经在诸如无线通信、卫星通信、雷达技术、电动汽车、以及光电子领域中展现出巨大的应用潜力。
+
+在无线通信领域，GaN材料被广泛用于高频功率放大器（PA）中，尤其是5G及未来6G通信系统中的基站设备。GaN的高频特性和大功率承载能力使其能够满足高速、大流量的通信需求。在雷达和卫星通信领域，GaN同样被用于制造高功率、高效率的微波放大器，适用于航空航天及军事领域。
+
+在光电子领域，GaN材料在蓝光LED、激光二极管（LD）、以及紫外光传感器等方面的应用也在不断扩展。GaN基光电器件不仅具有较高的光转换效率，而且由于其较大的禁带宽度，能够实现从紫外到蓝光的全光谱发光，广泛应用于显示、照明及激光治疗等领域。
+
+综上所述，GaN作为一种第三代宽禁带半导体材料，其在高功率、高频率以及高温和恶劣环境下的优异性能，使其成为现代电子器件中不可或缺的关键材料。随着GaN制造技术的不断进步，其在未来的高科技领域中的应用将更加广泛，成为推动半导体技术发展的重要力量。
+\newpage
+
+\section{耿氏二极管原理介绍}
+\subsection{耿氏效应}
+
+耿氏效应(Gunn effect)是 1963 年由耿氏(J B Gunn)发现的一种效应[10]。
+耿氏效应的现象：在耿氏二极管的两端加电压，当电压到达阈值时，其
+电流会降低。耿氏效应现象是由如 GaAs,InP 这样的半导体能带结构特殊性
+造成的,如图\ref{fig:Gunn_effect}所示。在这些半导体中，导带中存在多个能谷。
+在中心[000]处存在最低能谷，称作中心能谷
+(Γ-valley)，大量的电子处于这个能谷中；在[111]方向存在次能谷，称为卫星
+能谷(Satellite L-valley)
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image3.png}
+\caption{具有负微分迁移特性的电子漂移速度与电场关系曲线\cite{kroemer1964theory}} 
+\label{fig:Gunn_effect}
+\end{figure}
+
+当给像 \textit{GaN} 这样导带具备双能谷的半导体两端施加电压时，低能谷高迁移率的电子在电场的作用下向高能谷转移，称为转移电子效应（耿氏效应）。转移电子效应的结果是产生了负微分电阻（NDR）。规定低能谷的电子迁移率和电子密度分别为 $\mu_1$ 和 $n_1$，高能谷的电子迁移率和电子密度分别为 $\mu_2$ 和 $n_2$。半导体电流密度为：
+
+\begin{equation}
+J = q(\mu_1 n_1 + \mu_2 n_2)\varepsilon = q n v 
+\end{equation}
+
+其中 $v$ 为平均漂移速度：
+
+\begin{equation}
+v = \left(\frac{\mu_1 n_1 + \mu_2 n_2}{n_1 + n_2}\right)\varepsilon \approx \frac{\mu_1 \varepsilon}{1 + \left(\frac{n_2}{n_1}\right)} 
+\end{equation}
+
+高低能谷之间的电子数目比为：
+
+\begin{equation}
+\frac{n_2}{n_1} = \exp\left(\frac{-\Delta E}{k T_e}\right) 
+\end{equation}
+
+得到速度-电场关系为：
+
+\begin{equation}
+v = \mu_1 \varepsilon \left[1 + \exp\left(-\frac{\Delta E}{k T_e}\right)\right]^{-1} 
+\label{eq:mu2}
+\end{equation}
+
+\begin{equation}
+\mu_2 < \mu_1 
+\end{equation}
+
+根据\ref{eq:mu2}式可知，刚加上电场时，由低能谷转移到高能谷的电子很少，此时总的电子密度大约等于低能谷电子密度，电流主要取决于低能谷电子。随着电场的增加，电流增加。当电场继续增大时，高能谷的电子密度远远大于低能谷，高能谷的电子密度起主要作用，又因其迁移率小于低能谷电子的迁移率，所以总电流降低，出现负微分电阻。
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image4.png}
+\caption{电子能谷转移示意图\cite{1014319533.nh}} 
+\label{fig:image4}
+\end{figure}
+
+\subsection{GaN耿氏二极管工作机制}
+
+GaN耿氏二极管的工作原理主要依赖于GaN材料的负微分迁移率特性，也称为耿氏效应。当施加偏置电压时，该二极管的电流呈现负阻特性。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image5.png}
+\caption{畴形成过程示意图\cite{1019000519.nh}} 
+\label{fig:image5}
+\end{figure}
+
+在GaN耿氏二极管中，由于工艺因素，材料中掺杂不均、缺陷和噪声等可能引发局部的不稳定性，产生瞬态空间电荷。电子和耗尽区形成偶极子，偶极子在电场作用下加速发展。随着偏置电压的增大，偶极子产生的内部电场使得电场逐渐增大，电流表现为负阻特性。这个过程导致偶极子的扩展与电流脉冲的产生。
+
+具体地，偶极子内部的电子速度低于外部的电子，这种速度差导致尾随电子加速，进一步增加过剩电子区的浓度；同时，偶极子前端的电子迅速离开，耗尽区加剧。随着电场的变化，偶极子逐渐发展为成熟的畴，并最终从阴极向阳极移动，在阳极消失并释放出电流脉冲。这一过程不断循环，产生持续的耿氏振荡。如图\ref{fig:image5}所示，畴的形成、电子浓度和电场分布的变化随着时间的推移发生显著变化。
+
+在$t_2$时刻，畴在阴极开始形成，并在经过$T$时间后渡越到阳极，最终在$t_1$时刻消失。此时的峰值电流$J_p$表达式为：
+
+\begin{equation}
+J_p = q n_0 v_p 
+\end{equation}
+
+畴形成时间直接决定了电流脉冲的宽度，振荡频率与畴的传播时间$T$成反比。畴达到阳极后，器件内部的电场将自动调整，新的畴将在阴极处重新成核。
+
+\subsection{GaN耿氏二极管的振荡条件}
+
+从理论上分析具有负微分迁移率的GaN耿氏二极管时，可以忽略扩散效应和载流子的复合效应。器件的电流连续性方程可表示为：
+
+\begin{equation}
+\frac{\partial n}{\partial t} + \frac{1}{q} \cdot \frac{\partial J}{\partial x} = 0 
+\end{equation}
+
+其中，$J = qnv(E)$为电流密度。
+
+假设掺杂浓度$n_0$完全离化，样品中的电子浓度为：
+
+\begin{equation}
+n = n_0 + n_1(x, t)
+\end{equation}
+
+其中$n_1(x, t)$表示非平衡电荷，代表相对于平衡浓度$n_0$的局部浓度波动，且其数值远小于$n_0$。将$J$和$n$代入方程，可得：
+
+\begin{equation}
+\frac{\partial n_1}{\partial t} + v \cdot \frac{\partial n_1}{\partial x} + n_0 \cdot \frac{\partial v}{\partial x} = 0 
+\end{equation}
+
+对$v$的偏微分项进行展开，得到：
+
+\begin{equation}
+\frac{\partial v(E)}{\partial x} = \frac{\partial v}{\partial E} \cdot \frac{\partial E}{\partial x} 
+\end{equation}
+
+根据泊松方程，电场梯度为：
+
+\begin{equation}
+\frac{\partial E}{\partial x} = \frac{q}{\varepsilon} (n - n_0) = \frac{qn_1}{\varepsilon} 
+\end{equation}
+
+经过代换，得到以下方程：
+
+\begin{equation}
+\frac{\partial n_1}{\partial t} + v \cdot \frac{\partial n_1}{\partial x} + \frac{n_1}{\tau} = 0 
+\end{equation}
+
+其中，$\tau$为介质弛豫时间，定义为：
+\begin{equation}
+\tau =  \frac{\varepsilon}{q\mu_{\text{ndr}} N} 
+\end{equation}
+其中 $\mu_{\text{ndr}}$ 称为负微分迁移率，对于氮化镓材料，它的值约为 $50 \, \text{cm}^2/(\text{V} \cdot \text{s})$；相对比砷化镓的 $\mu_{\text{ndr}}$ 为 $2500 \, \text{cm}^2/(\text{V} \cdot \text{s})$。空间电荷的生长可用以下方程表述：
+
+\begin{equation}
+\Delta Q = \Delta Q(0) \exp\left(-\frac{t}{\tau}\right)
+\end{equation}
+
+
+其中 $\Delta Q(0)$ 表示在 $t=0$ 时刻空间电荷中电荷量大小，$\tau$ 的大小表征了空间电荷生长。的快慢，而高场畴（偶极畴）实际形成的时间约为 $3\tau$。对于转移电子器件，高场畴在体内渡越的时间一定要大于等于其形成的时间，否则就不能形成稳定的耿氏振荡。因此，需满足 $t \geq 3\tau$，即：
+
+\begin{equation}
+\frac{L}{v_{\text{PEAK}}} \geq \frac{3\varepsilon}{q\mu_{\text{ndr}} N} \quad
+\end{equation}
+
+所以：
+
+\begin{equation}
+(NL) \geq (NL)_0 \equiv \frac{3\varepsilon v_{\text{PEAK}}}{q\mu_{\text{ndr}}} \quad 
+\end{equation}
+
+其中 $(NL)_0$ 是形成耿氏振荡的 $(NL)$ 临界值，被称为耿氏转移电子器件的设计标准。
+
+2) 耿氏二极管（转移电子器件）在畴渡越时间模式下产生的振荡频率 $f$ 约为：
+
+\begin{equation}
+f = \frac{v_{\text{sat}}}{L} \quad 
+\end{equation}
+
+要想得到更高的频率就要减小 $L$，因为有标准 $(NL)_0$ 的限制，$L$ 减小，$N$ 必然要增大，当 $N$ 超过临界掺杂浓度 $N_{\text{crit}}$ 时，就会在有源区阳极附近形成静止畴，寄生静止畴的产生将会导致器件输出功率下降和器件过早地被击穿。为了避免形成静止畴，半导体材料的掺杂浓度应小于临界掺杂浓度 $N_{\text{crit}}$，临界掺杂浓度由下式给出：
+
+\begin{equation}
+N_{\text{crit}} = \frac{\varepsilon \times E_{\text{TH}}}{q} 
+\end{equation}
+
+从上面的表述中可以得到下表：
+
+\begin{table}[h]
+\centering
+\caption{氮化镓和砷化镓材料的参数 $(NL)_0$ 和 $N_{\text{crit}}$}
+\begin{tabular}{|c|c|c|}
+\hline
+ & GaN & GaAs \\
+\hline
+$(NL)_0 / \text{cm}^{-2}$ & $8.2 \times 10^{12}$ & $1 \times 10^{10}$ \\
+\hline
+$N_{\text{crit}} / \text{cm}^{-3}$ & $4.3 \times 10^{18}$ & $3.4 \times 10^{15}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+从上表中可以看出氮化镓材料由于具有很高的临界电场，因此氮化镓材料具有很高的临界掺杂浓度 $N_{\text{crit}}$。同时由于氮化镓材料的载流子具有很高的峰值速度，并且其的负微分迁移率比较低，所以氮化镓材料相比砷化镓材料具有更高的 $(NL)_0$ 
+
+
+\newpage
+\section{GaN耿氏二极管设计}
+
+\subsection{GaN耿氏二极管结构设计}
+
+目前，GaN耿氏二极管的设计有多种结构，下面先介绍几种常见的结构，在此基础上，
+我们提出了一种新的设计方案，旨在提高器件的工作频率和稳定性。
+
+\subsubsection{现有GaN耿氏二极管结构介绍}
+\subsubsection*{1. 传统GaN耿氏二极管结构}
+
+传统的GaN耿氏二极管结构一共由 5 层构成，分别为：N+
+ SiC 或 sapphire 衬底，AlN 缓冲层(图中未画出），N+
+ GaN
+接触层，N-
+ GaN 载流子渡越层（有源区），N+
+ GaN 接触层。N+
+ SiC 或 sapphire 衬
+底主要起到器件的支撑作用，为器件提供一个支撑载体。AlN 为缓冲层，用于缓
+冲 GaN 与 N+
+ SiC 或 sapphire 衬底之间的晶格失配。N+
+ GaN 接触层主要用于提供
+一个很好的欧姆接触，减小器件的接触电阻。N-
+ GaN 载流子渡越层为耿氏器件的
+有源区。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image6.png}
+\caption{传统GaN耿氏二极管结构示意图} 
+\label{fig:image5}
+\end{figure}
+图中的GaN有源区一般分为 3 层，中间为掺杂较低的传输区域，两边是
+掺杂较高的区域。形成 n+n–n+结构，如下图所示：
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{figures/fig/image7.png}
+\caption{GaN有源区结构\cite{XXYD201302031}}
+\label{fig:image5}
+
+\end{figure}
+
+
+\subsubsection*{2. 带 Notch 层的GaN耿氏二极管结构}
+
+耿氏二极管的结构对耿氏二极管的频率和功率有着强烈的影响，其输出
+频率由耿氏畴从阴极到阳极的传输时间而定。阴极注入的电子大部分位于 Γ
+能谷中，需要获得足够的能量而跃迁到 L 能谷，这过程对于畴的形成产生了
+延迟，电子在低能谷向高能谷跃迁的时间内，从阳极到阴极经过的距离称作
+耿氏管“死区”。由于“死区”的存在，畴渡越的长度缩短，即畴渡越的时
+间缩短了，因此导致输出功率降低。“死区”对输出的高频耿氏管影响很大，
+减少“死区”长度和适当的渡越区长度，能有效提高耿氏器件的频率
+和功率。
+
+GaN Notch 层能够促进偶极畴的形成，减小“死区”长度，因此可以减薄渡越层
+长度 L，提高耿氏振荡频率。Notch 层的掺杂浓度一般为~1016 cm-3 量级，即可以
+采用低掺杂也可以采用非故意掺杂的背景载流子浓度来实现。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image8.png}
+\caption{带 Notch 层的GaN耿氏二极管结构} 
+\label{fig:image5}
+\end{figure}
+
+
+\subsubsection*{3.加入 AlGaN 势垒层的GaN耿氏二极管结构}
+在 AlGaN/GaN 耿氏二极管中，当电子
+受到外界驱动从阴极出发时，由于 AlGaN 势垒层的
+存在，电子只有积累足够的能量才可以摆脱量子阱
+的束缚，高能电子一旦注射进有源区中，耿氏畴立
+即成核并且成熟，随即形成稳定的振荡。
+
+
+AlGaN/GaN 结构通过在
+耿氏二极管中引入了量子阱。在外部电场的驱动下，电子获得高能量后摆脱了量
+子阱的束缚并且迅速完成能谷间的散射，这增强了
+器件工作稳定性。
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image9.png}
+\caption{加入 AlGaN 势垒层的GaN耿氏二极管结构} 
+\label{fig:image5}
+\end{figure}
+
+\subsubsection{结合Notch 层和 AlGaN 层的GaN耿氏二极管结构}
+
+在前面已有的基础上，我们提出了一种新的GaN耿氏二极管结构，结合了Notch 层和 AlGaN 层的设计思想。
+该结构同时具有Notch 层的优点，能够减小“死区”长度，提高耿氏振荡频率，以及AlGaN 势垒层的优点，增强器件的稳定性和可靠性。
+可以有效提高器件的工作频率和稳定性\cite{ZDWB201505001365}。其结构如下图所示：
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/fig/image10.png}
+\caption{结合Notch 层和 AlGaN 层的GaN耿氏二极管结构} 
+\label{fig:image5}
+\end{figure}
+
+\subsection{GaN耿氏二极管参数设计}
+
+氮化镓材料的基本材料参数如下表所示：
+\begin{table}[h]
+\centering
+\caption{氮化镓材料的基本材料参数\cite{1011075648.nh}}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+材料 & $E_{\text{th}}$ (KV/cm) & $V_{\text{sat}}$ (cm/s) & $V_{\text{peak}}$ (cm/s) & $\mu$ (V/cm\textsuperscript{2}s) & $\mu_{\text{NDR}}$ (V/cm\textsuperscript{2}s) & $f_{\text{NDR}}$ (GHz) \\ \hline
+氮化镓 & 150 & $2 \times 10^7$ & $2.5 \sim 3.0 \times 10^7$ & 280 & 50 & 750 \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsubsection*{1.N-GaN 渡越区的设计\cite{1011075648.nh}}
+
+
+\begin{enumerate}
+    \item 公式 $N \times L > \frac{3\varepsilon V_{\text{peak}}}{q\mu_{\text{NDR}}}$ 是渡越区掺杂浓度和长度的下限，这个下限包含了另一个表达式 $N \times L > \frac{3\varepsilon V_{\text{sat}}}{q\mu_{\text{NDR}}}$ 的范围。经计算，针对 GaN 材料的数值范围为：
+    \begin{equation}
+    N \times L > 5.3 \sim 8.2 \times 10^{12} \, \text{cm}^{-2} 
+    \end{equation}
+    取值范围是由于采用了不同的参数测试或模拟结果所致。
+    
+    \item 公式 $f_{\text{NDR}} = \frac{V_{\text{sat}}}{L}$ 为耿氏二极管在渡越模式下的耿氏振荡频率，显而易见，1um 的渡越长度可以产生约为 200GHz 的频率；若要提高频率，则必须减小 $L$，根据上面的公式，则要提高掺杂浓度 $N$。
+    
+    \item 公式 $N_{\text{crit}} < \frac{\varepsilon \times E_{\text{th}}^2}{q}$，给出了为不想产生静态畴渡越区掺杂浓度的上限，另一种估算公式为 $N_{\text{crit}} < \frac{\varepsilon V_{\text{sat}}^2}{q D \mu_{\text{NDR}}}$。经计算，针对氮化镓材料的数值范围为：
+
+\begin{equation}
+N_{\text{crit}} < 2.8 \sim 4.3 \times 10^{18} \, \text{cm}^{-3}
+\end{equation}
+
+    \item 公式 $V_{\text{bias}} = E \times v_{\text{sat}} / f_{\text{NDR}}$ 为二极管两端的偏压，由直流偏置和交流信号组成，即 $V_{\text{bias}} = V_{\text{DC}} + V_{\text{RF}}$，公式 $I = V_{\text{bias}} / Z$ 为流经二极管的电流，其中 $Z$ 为振荡电路的总阻抗，因此最大的偏压和最大的电流分别为 $V_{\text{max}} = E_{\text{BR}} \times v_{\text{sat}} / f_{\text{NDR}}$ 和 $I_{\text{max}} = V_{\text{max}} / Z$；由公式 $P_{\text{max}} f^2 Z = (E_{\text{BR}} \times v_{\text{sat}})^2$ 为在阻抗 $Z$ 条件下的最大输出功率和工作频率的关系，在 200GHz 到 300GHz 的频率下可以达到 $\sim 10^5 \, \text{W}$。
+\end{enumerate}
+
+\subsubsection*{2.Notch 层的设计}
+Notch 层的掺杂浓度一般为~1016 cm-3 量级，即可以
+采用低掺杂也可以采用非故意掺杂的背景载流子浓度来实现。
+参考文献，Notch 层的厚度一般可选为 0.2um。
+
+
+\subsubsection*{3.N-GaN 渡越区的设计}
+参考文献，AlGaN 势垒层可选为100 nm\cite{ZDWB201505001365}
+
+
+\subsection{GaN耿氏二极管设计}
+
+本设计选定工作频率为 500GHz，根据上述设计原则，设计了一款工作频率为 500GHz 的GaN耿氏二极管。具体设计参数确定过程如下：
+
+\begin{itemize}
+  \item 根据$f = \frac{V_{\text{sat}}}{L}$，$V_{\text{sat}}=2 \times 10^7 cm / s$，$f=500GHz$，得到$L=0.4um$。
+  \item 要符合$N \times L > 5.3 \sim 8.2 \times 10^{12} \, \text{cm}^{-2}$，取$L=0.4um$，可取$N=3 \times 10^{17} \, \text{cm}^{-3}$,符合要求
+  \item 于是n-GaN 有源区设计为：掺杂浓度取$3 \times 10^{17} \, \text{cm}^{-3}$，厚度取$0.4um$。
+  \item 两个n+ GaN 接触层的掺杂浓度均取$2 \times 10^{18} \, \text{cm}^{-3}$，厚度取$0.5um$\cite{cn104022222b}。
+  \item Notch 层的掺杂浓度取$5 \times 10^{16} \, \text{cm}^{-3}$，厚度取$0.2um$。
+  \item AlGaN 势垒层的厚度取$0.1um$,。Al 的浓度取由下向上线性递增，从$0\%$到$15\%$\cite{cn104022222b}。
+  \item AlN 缓冲层厚度取$50nm$。 衬底选择N+ SiC，厚度取$300um$。
+\end{itemize}
+
+综上，最后设计的GaN耿氏二极管各层参数如下表所示：
+
+
+\begin{table}[h]
+\centering
+\caption{GaN耿氏二极管参数列表}
+\begin{tabular}{|l|l|}
+\hline
+器件各主要部分结构名称 & 具体数值 \\ \hline
+阴极N+GaN层掺杂浓度 & $2 \times 10^{18} \, \text{cm}^{-3}$ \\ \hline
+阴极N+GaN层厚度 & 0.5$\mu$m \\ \hline
+Notch层掺杂浓度 & $5 \times 10^{16} \, \text{cm}^{-3}$ \\ \hline
+Notch层长度 & 0.2$\mu$m \\ \hline
+有源区N-GaN层掺杂浓度 & $3 \times 10^{17} \, \text{cm}^{-3}$ \\ \hline
+有源区N-GaN层长度 & 0.4$\mu$m \\ \hline
+阳极N+GaN层掺杂浓度 & $2 \times 10^{18} \, \text{cm}^{-3}$ \\ \hline
+阳极N+GaN层厚度 & 0.5$\mu$m \\ \hline
+AlGaN势垒层厚度 & 0.1$\mu$m \\ \hline
+AlGaN势垒层掺杂浓度 & 由下向上线性递增，从$0\%$到$15\%$ \\ \hline
+AlN缓冲层厚度 & 50nm \\ \hline
+N+SiC衬底厚度 & 300$\mu$m \\ \hline
+\end{tabular}
+\end{table}
+
+
+\newpage
+\section{设计评估}
+
+
+\subsection{设计特色}
+
+本设计基于GaN材料的耿氏二极管采用了简化的结构，去除了传统设计中的PN结和LC电路。这样的设计不仅有效降低了制造的复杂度和成本，而且通过优化设计，保持了较高的频率稳定性和输出功率。
+相较于传统的GaAs材料，GaN耿氏二极管由于其优异的电场特性和较高的迁移率，能够支持更高的工作频率和输出功率。
+因此，这种设计具有极大的应用潜力，尤其是在高频、高功率的太赫兹源领域。
+此外，本设计还结合了Notch层和AlGaN势垒层的设计思想，进一步提高了器件的工作频率和在高频段的稳定性。
+\subsubsection*{相对优势与可行性}
+
+\begin{enumerate}
+    \item \textbf{高工作频率：} 与基于GaAs的耿氏二极管相比，GaN材料具有更宽的禁带宽度（3.4 eV），支持的工作频率明显提高。在实验中，GaN耿氏二极管的负阻振荡频率可高达740~760 GHz，远超GaAs的限制。
+    \item \textbf{较高的功率输出：} GaN的高热导率和高击穿电场使得该器件在高功率条件下能够稳定工作，其输出功率密度可达到10$^{5}$ W/cm$^2$，是GaAs的两倍以上。
+    \item \textbf{低噪声和长寿命：} GaN材料本身的高电子迁移率和较低的热稳定性，使得器件在工作时具有较低的噪声水平和较长的使用寿命，适合在极端环境中使用。
+    \item \textbf{简化的结构设计：} 去除了PN结和LC电路，使得该设计在制造和集成时更加简便，能够降低整体的生产成本并提升可靠性。
+    \item \textbf{创新性结构优化：} 通过结合Notch层和AlGaN势垒层的设计思想，进一步提高了器件的工作频率和稳定性，为高频段的应用提供了更加可靠的解决方案。
+\end{enumerate}
+
+在以上优势的支持下，GaN耿氏二极管的设计不仅在理论上具备显著的性能优势，且在实际应用中具有较强的可行性，特别是在未来的高频通信、雷达系统以及医疗成像等领域。
+
+\subsubsection*{设计创新}
+
+本设计的创新点在于：
+\begin{enumerate}
+    \item \textbf{结构简化：} 采用不含PN结和LC电路的结构，使得设计在保留高频率和功率输出的同时，减少了制造复杂性和成本。
+    \item \textbf{材料创新：} 采用GaN作为材料，突破了传统GaAs材料的限制，显著提升了工作频率、输出功率和稳定性。
+    \item \textbf{优化设计：} 结合Notch层和AlGaN势垒层的设计思想，进一步提高了器件的工作频率和稳定性，为高频段的应用提供了更加可靠的解决方案。
+\end{enumerate}
+
+这些创新使得GaN耿氏二极管在众多应用领域中具备竞争力，尤其是在未来对高频、高功率和稳定性的需求不断增加的背景下，具有广阔的应用前景。
+\subsection{设计评估}
+
+\subsubsection*{设计考虑}
+
+GaN耿氏二极管的设计需要综合考虑材料特性、电学性能、热管理以及高频工作条件等多个因素。首先，GaN材料的高击穿电场和较宽的禁带宽度使得器件可以在更高的工作频率和功率条件下稳定工作。其次，在结构上去除传统设计中的PN结和LC电路，不仅简化了器件的整体结构，还能够减少工艺上的复杂度和成本。此外，优化设计中的Notch层和AlGaN势垒层可以有效提高频率响应和器件稳定性，避免在高频工作条件下出现性能衰减或不稳定。
+
+\subsubsection*{结构与工艺}
+
+此外，在器件制造过程中，还需要考虑以下几点：
+\begin{enumerate}
+    \item \textbf{材料选择：} 选择高质量的GaN基板和AlGaN材料，以确保器件的高性能和稳定性。
+    \item \textbf{外延生长：} 采用分子束外延（MBE）或金属有机化学气相沉积（MOCVD）技术，精确控制AlGaN势垒层和Notch层的厚度和成分。
+    \item \textbf{微加工工艺：} 采用电子束光刻和干法刻蚀技术，确保器件的几何尺寸精确，减少加工误差。
+    \item \textbf{热管理：} 设计合理的热沉和散热结构，确保器件在高功率条件下的热稳定性。
+\end{enumerate}
+
+
+\subsubsection*{工程与优化考虑}
+
+在工程实施过程中，除了确保设计参数符合要求外，还需要考虑器件的可制造性和长期稳定性。例如，GaN材料的热管理问题尤为重要，因为在高功率条件下，器件的热升高可能会导致性能衰退。因此，在设计过程中充分考虑热沉设计和散热结构，以确保器件在高功率运行时不会过热。
+
+另外，器件的集成度和封装形式也是关键考虑因素之一。通过选择合适的封装技术，可以有效提高器件的散热性能和抗环境干扰能力，确保器件在恶劣环境下的可靠性。在优化过程中，分析了不同参数对器件性能的影响，以确保最终设计达到最优平衡。
+
+总之，本设计不仅具有显著的性能优势，还考虑到了工程实现中的复杂性和实际可行性。通过结构和工艺的优化，本设计在高频、高功率应用领域中具有广泛的应用前景。
+
+\subsection{生产安全防护与社会环境因素评估}
+
+在GaN Gunn二极管的设计与生产过程中，充分考虑生产安全、防护措施以及社会与环境影响是至关重要的，这不仅有助于确保生产过程的安全性，还能保证产品的可持续性和环境友好性。
+
+\subsubsection*{生产安全防护}
+
+GaN材料的高电子性能和热导性使其在高频应用中具备明显的优势，但GaN的制造过程中通常需要高温和高压环境，这要求生产设施必须配置严格的安全防护措施。首先，生产环境必须严格控制温度和压力，以避免工艺失控或设备故障引发事故。例如，采用高温处理时，炉体、加热元件和相关管道必须配备高温保护材料，并实时监控系统进行预警。同时，操作人员应接受专业培训，掌握高温、高压环境下的安全操作规范。其次，GaN材料的半导体加工过程涉及到一些危险化学品，如有毒气体和腐蚀性物质。因此，必须加强对有害气体的排放管理，配备高效的通风系统，并确保化学品的存储与处置符合环境保护标准。
+
+\subsubsection*{社会与环境因素}
+
+GaN Gunn二极管的生产不仅应考虑技术和经济效益，还需要评估其社会和环境影响。首先，GaN材料的生产过程能源消耗较高，尤其是在高温退火和清洗过程中。因此，优化生产工艺、提高能源利用效率是降低环境影响的关键措施。通过采用节能设备和优化流程，能够显著减少能源消耗和二氧化碳排放。此外，GaN材料的生产过程中可能会产生一些废水、废气和固体废弃物，这要求厂商严格遵守环境保护法规，采取有效的废物回收和处理措施，以减少污染。
+
+社会影响方面，GaN Gunn二极管的应用有望推动通信、雷达、卫星和军事等领域的技术进步，带来显著的经济效益。然而，随着技术的进步，可能会对就业市场产生一定影响，尤其是传统半导体产业中的一些工种可能会面临转型或淘汰的风险。因此，产业转型过程中应采取合理的就业安置和培训措施，缓解社会压力。
+
+综上所述，GaN Gunn二极管的生产设计和制造过程中，需综合考虑生产安全、防护措施、能源消耗、废物管理以及社会就业等多方面因素，以确保其符合现代工业和社会的可持续发展要求。
+
+
+\newpage
+\section{总结}
+
+本设计报告提出了一种基于GaN材料的耿氏二极管振荡器设计方案，旨在开发一款工作频率超过500 GHz的GaN耿氏二极管。通过对GaN材料的优异特性进行深入分析，并结合Notch层和AlGaN势垒层的设计思想，优化了器件的结构和参数，显著提升了其工作频率、功率输出和系统稳定性。
+
+具体而言，本设计在以下几个方面取得了创新和突破：
+\begin{enumerate}
+    \item \textbf{结构简化：} 采用不含PN结和LC电路的简化结构，降低了制造复杂性和成本，同时保持了较高的频率稳定性和输出功率。
+    \item \textbf{材料创新：} 采用GaN作为材料，突破了传统GaAs材料的限制，显著提升了工作频率、输出功率和稳定性。
+    \item \textbf{优化设计：} 结合Notch层和AlGaN势垒层的设计思想，进一步提高了器件的工作频率和稳定性，为高频段的应用提供了更加可靠的解决方案。
+\end{enumerate}
+
+在设计过程中，综合考虑了材料特性、电学性能、热管理以及高频工作条件等多个因素，确保了器件在高功率、高频率条件下的稳定工作。此外，通过合理的热沉设计和散热结构，解决了高功率运行时的热管理问题，确保了器件的长期稳定性和可靠性。
+
+本设计不仅在理论上具备显著的性能优势，且在实际应用中具有较强的可行性，特别是在未来的高频通信、雷达系统以及医疗成像等领域，具有广阔的应用前景。通过对生产安全防护和社会环境因素的综合评估，确保了设计方案的可持续性和环境友好性。
+
+综上所述，本设计报告为GaN耿氏二极管在太赫兹波段的应用提供了创新的解决方案，具有重要的理论意义和实际应用价值。
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+\newpage
+\bibliographystyle{ieeetr}
+\bibliography{reference}
+
+
+\end{document}
