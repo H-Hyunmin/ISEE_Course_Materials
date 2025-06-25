@@ -1,0 +1,427 @@
+classdef fp < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure              matlab.ui.Figure
+        Panel                 matlab.ui.container.Panel
+        Phi2EditField         matlab.ui.control.NumericEditField
+        EditField_4Label      matlab.ui.control.Label
+        Theta2EditField       matlab.ui.control.NumericEditField
+        EditField_3Label      matlab.ui.control.Label
+        d2EditField           matlab.ui.control.NumericEditField
+        dnmEditField_2Label   matlab.ui.control.Label
+        n2EditField           matlab.ui.control.NumericEditField
+        nEditField_2Label     matlab.ui.control.Label
+        r2EditField           matlab.ui.control.NumericEditField
+        rEditField_2Label     matlab.ui.control.Label
+        A2EditField           matlab.ui.control.NumericEditField
+        AEditField_2Label     matlab.ui.control.Label
+        Phi1EditField         matlab.ui.control.NumericEditField
+        Label_5               matlab.ui.control.Label
+        Theta1EditField       matlab.ui.control.NumericEditField
+        Label_4               matlab.ui.control.Label
+        d1EditField           matlab.ui.control.NumericEditField
+        dnmEditFieldLabel     matlab.ui.control.Label
+        n1EditField           matlab.ui.control.NumericEditField
+        nEditFieldLabel       matlab.ui.control.Label
+        r1EditField           matlab.ui.control.NumericEditField
+        rEditFieldLabel       matlab.ui.control.Label
+        A1EditField           matlab.ui.control.NumericEditField
+        AEditFieldLabel       matlab.ui.control.Label
+        LengthStepEditField   matlab.ui.control.NumericEditField
+        nmEditField_3Label    matlab.ui.control.Label
+        LengthUpperEditField  matlab.ui.control.NumericEditField
+        Label_2               matlab.ui.control.Label
+        LengthLowerEditField  matlab.ui.control.NumericEditField
+        Label                 matlab.ui.control.Label
+        Label_6               matlab.ui.control.Label
+        Label_3               matlab.ui.control.Label
+        ShowCurveButton       matlab.ui.control.Button
+        SaveImageButton       matlab.ui.control.Button
+        CalculateButton       matlab.ui.control.Button
+        ImagePanel            matlab.ui.container.Panel
+        UIAxes                matlab.ui.control.UIAxes
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Button pushed function: CalculateButton
+        function Calculate(app, event)
+            % 从第一组编辑字段中读取参数
+            A1 = app.A1EditField.Value;          % 吸收损耗
+            r1 = app.r1EditField.Value;          % 反射率
+            n1 = app.n1EditField.Value;          % 介质折射率
+            d1 = app.d1EditField.Value;          % 谐振腔厚度（单位：纳米）
+            theta1 = app.Theta1EditField.Value;  % 入射角（单位：度）
+            phi1 = app.Phi1EditField.Value;      % 相位偏移（单位：弧度）
+
+            % 从第二组编辑字段中读取参数
+            A2 = app.A2EditField.Value;          % 吸收损耗
+            r2 = app.r2EditField.Value;          % 反射率
+            n2 = app.n2EditField.Value;          % 介质折射率
+            d2 = app.d2EditField.Value;          % 谐振腔厚度（单位：纳米）
+            theta2 = app.Theta2EditField.Value;  % 入射角（单位：度）
+            phi2 = app.Phi2EditField.Value;      % 相位偏移（单位：弧度）
+
+            % 从波长范围和步长字段中读取参数
+            lambda_min = app.LengthLowerEditField.Value; % 波长范围下界
+            lambda_max = app.LengthUpperEditField.Value; % 波长范围上界
+            step = app.LengthStepEditField.Value;        % 波长步长
+
+            % 检查参数有效性
+            if lambda_min >= lambda_max || step <= 0
+                uialert(app.UIFigure, '波长范围或步长设置不正确！', '参数错误');
+                return;
+            end
+
+            if A1 < 0 || A1 > 1 || A2 < 0 || A2 > 1
+                uialert(app.UIFigure, '吸收损耗必须在0到1之间！', '参数错误');
+                return;
+            end
+
+            if r1 < 0 || r1 > 1 || r2 < 0 || r2 > 1
+                uialert(app.UIFigure, '反射率必须在0到1之间！', '参数错误');
+                return;
+            end
+
+            if d1 <= 0 || d2 <= 0
+                uialert(app.UIFigure, '谐振腔厚度必须大于0！', '参数错误');
+                return;
+            end
+
+            if n1 < 1 || n2 < 1
+                uialert(app.UIFigure, '介质折射率必须大于等于1！', '参数错误');
+                return;
+            end
+
+            if theta1 < 0 || theta1 > 90 || theta2 < 0 || theta2 > 90
+                uialert(app.UIFigure, '入射角必须在0到90度之间！', '参数错误');
+                return;
+            end
+
+
+
+
+            % 波长范围
+            lambda_range = lambda_min:step:lambda_max;
+
+            % 初始化透射率数组
+            T_values1 = zeros(size(lambda_range));
+            T_values2 = zeros(size(lambda_range));
+
+            % 将角度转换为弧度
+            theta1_rad = deg2rad(theta1);
+            theta2_rad = deg2rad(theta2);
+
+            % 计算第一组参数的透射率
+            for i = 1:length(lambda_range)
+                lambda = lambda_range(i);
+                % 公式中的光程部分
+                optical_path1 = n1 * d1 * cos(theta1_rad);
+                % 计算相位差
+                phase_difference1 = (2 * pi / lambda) * optical_path1 - phi1;
+                % 计算透射率 T
+                denominator1 = 1 + (4 * r1 / (1 - r1)^2) * sin(phase_difference1)^2;
+                T_values1(i) = (1 - (A1 / (1 - r1)))^2 * (1 / denominator1);
+            end
+
+            % 计算第二组参数的透射率
+            for i = 1:length(lambda_range)
+                lambda = lambda_range(i);
+                % 公式中的光程部分
+                optical_path2 = n2 * d2 * cos(theta2_rad);
+                % 计算相位差
+                phase_difference2 = (2 * pi / lambda) * optical_path2 - phi2;
+                % 计算透射率 T
+                denominator2 = 1 + (4 * r2 / (1 - r2)^2) * sin(phase_difference2)^2;
+                T_values2(i) = (1 - (A2 / (1 - r2)))^2 * (1 / denominator2);
+            end
+
+            % 在 UIAxes 上绘制两条曲线
+            plot(app.UIAxes, lambda_range, T_values1, 'b-', 'LineWidth', 1.5); % 第一条曲线（蓝色）
+            hold(app.UIAxes, 'on');
+            plot(app.UIAxes, lambda_range, T_values2, 'r-', 'LineWidth', 1.5); % 第二条曲线（红色）
+            hold(app.UIAxes, 'off');
+
+            % 设置图表属性
+            xlabel(app.UIAxes, '波长 (nm)');
+            ylabel(app.UIAxes, '透射率 T');
+            title(app.UIAxes, 'FP谐振器透射率随波长的变化');
+            legend(app.UIAxes, {'曲线1', '曲线2'}, 'Location', 'best');
+            grid(app.UIAxes, 'on');
+        end
+        % Button pushed function: SaveImageButton
+        function SaveImage(app, event)
+            % 弹出保存文件对话框，选择保存路径和文件名
+            [file, path] = uiputfile({'*.png'; '*.jpg'; '*.tif'; '*.pdf'}, '保存图像');
+            
+            % 如果用户取消保存操作，则直接返回
+            if isequal(file, 0) || isequal(path, 0)
+                return;
+            end
+            
+            % 构造完整的文件路径
+            fullFileName = fullfile(path, file);
+            
+            % 创建一个新的不可见的图形窗口
+            fig = figure('Visible', 'off');
+            
+            % 复制 UIAxes 的内容到新图形窗口
+            ax = copyobj(app.UIAxes, fig);
+            set(ax, 'Units', 'normalized', 'Position', [0.13, 0.11, 0.775, 0.815]); % 调整轴的位置
+            
+            % 保存图像到指定路径
+            saveas(fig, fullFileName);
+            
+            % 关闭临时图形窗口
+            close(fig);
+            
+            % 弹出提示框，通知用户保存成功
+            uialert(app.UIFigure, '图像已成功保存！', '保存成功');
+        end
+
+        % Button pushed function: ShowCurveButton
+        function ShowCurve(app, event)
+
+            
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 1191 937];
+            app.UIFigure.Name = 'MATLAB App';
+
+            % Create ImagePanel
+            app.ImagePanel = uipanel(app.UIFigure);
+            app.ImagePanel.Position = [1 276 1190 662];
+
+            % Create UIAxes
+            app.UIAxes = uiaxes(app.ImagePanel);
+            title(app.UIAxes, 'Title')
+            xlabel(app.UIAxes, 'X')
+            ylabel(app.UIAxes, 'Y')
+            zlabel(app.UIAxes, 'Z')
+            app.UIAxes.Position = [9 9 1172 643];
+
+            % Create Panel
+            app.Panel = uipanel(app.UIFigure);
+            app.Panel.Position = [1 1 1190 276];
+
+            % Create CalculateButton
+            app.CalculateButton = uibutton(app.Panel, 'push');
+            app.CalculateButton.ButtonPushedFcn = createCallbackFcn(app, @Calculate, true);
+            app.CalculateButton.Position = [861 9 100 23];
+            app.CalculateButton.Text = '计算';
+
+            % Create SaveImageButton
+            app.SaveImageButton = uibutton(app.Panel, 'push');
+            app.SaveImageButton.ButtonPushedFcn = createCallbackFcn(app, @SaveImage, true);
+            app.SaveImageButton.Position = [960 9 100 23];
+            app.SaveImageButton.Text = '保存图像';
+
+            % Create ShowCurveButton
+            app.ShowCurveButton = uibutton(app.Panel, 'push');
+            app.ShowCurveButton.ButtonPushedFcn = createCallbackFcn(app, @ShowCurve, true);
+            app.ShowCurveButton.Position = [1059 9 100 23];
+            app.ShowCurveButton.Text = '显示/关闭曲线2';
+
+            % Create Label_3
+            app.Label_3 = uilabel(app.Panel);
+            app.Label_3.FontSize = 16;
+            app.Label_3.Position = [25 209 110 47];
+            app.Label_3.Text = '曲线1参数设置';
+
+            % Create Label_6
+            app.Label_6 = uilabel(app.Panel);
+            app.Label_6.FontSize = 16;
+            app.Label_6.Position = [25 114 110 47];
+            app.Label_6.Text = '曲线2参数设置';
+
+            % Create Label
+            app.Label = uilabel(app.Panel);
+            app.Label.HorizontalAlignment = 'right';
+            app.Label.Position = [25 10 102 22];
+            app.Label.Text = '波长范围下界(nm)';
+
+            % Create LengthLowerEditField
+            app.LengthLowerEditField = uieditfield(app.Panel, 'numeric');
+            app.LengthLowerEditField.Position = [142 10 100 22];
+
+            % Create Label_2
+            app.Label_2 = uilabel(app.Panel);
+            app.Label_2.HorizontalAlignment = 'right';
+            app.Label_2.Position = [263 10 102 22];
+            app.Label_2.Text = '波长范围上界(nm)';
+
+            % Create LengthUpperEditField
+            app.LengthUpperEditField = uieditfield(app.Panel, 'numeric');
+            app.LengthUpperEditField.Position = [380 10 100 22];
+
+            % Create nmEditField_3Label
+            app.nmEditField_3Label = uilabel(app.Panel);
+            app.nmEditField_3Label.HorizontalAlignment = 'right';
+            app.nmEditField_3Label.Position = [502 10 78 22];
+            app.nmEditField_3Label.Text = '计算步长(nm)';
+
+            % Create LengthStepEditField
+            app.LengthStepEditField = uieditfield(app.Panel, 'numeric');
+            app.LengthStepEditField.Position = [595 10 100 22];
+
+            % Create AEditFieldLabel
+            app.AEditFieldLabel = uilabel(app.Panel);
+            app.AEditFieldLabel.HorizontalAlignment = 'right';
+            app.AEditFieldLabel.Position = [25 178 61 22];
+            app.AEditFieldLabel.Text = '吸收损耗A';
+
+            % Create A1EditField
+            app.A1EditField = uieditfield(app.Panel, 'numeric');
+            app.A1EditField.Position = [95 177 53 23];
+
+            % Create rEditFieldLabel
+            app.rEditFieldLabel = uilabel(app.Panel);
+            app.rEditFieldLabel.HorizontalAlignment = 'right';
+            app.rEditFieldLabel.Position = [208 178 45 22];
+            app.rEditFieldLabel.Text = '反射率r';
+
+            % Create r1EditField
+            app.r1EditField = uieditfield(app.Panel, 'numeric');
+            app.r1EditField.Position = [268 178 52 22];
+
+            % Create nEditFieldLabel
+            app.nEditFieldLabel = uilabel(app.Panel);
+            app.nEditFieldLabel.HorizontalAlignment = 'right';
+            app.nEditFieldLabel.Position = [381 178 72 22];
+            app.nEditFieldLabel.Text = '介质折射率n';
+
+            % Create n1EditField
+            app.n1EditField = uieditfield(app.Panel, 'numeric');
+            app.n1EditField.Position = [468 178 60 22];
+
+            % Create dnmEditFieldLabel
+            app.dnmEditFieldLabel = uilabel(app.Panel);
+            app.dnmEditFieldLabel.HorizontalAlignment = 'right';
+            app.dnmEditFieldLabel.Position = [588 178 96 22];
+            app.dnmEditFieldLabel.Text = '谐振腔厚度d(nm)';
+
+            % Create d1EditField
+            app.d1EditField = uieditfield(app.Panel, 'numeric');
+            app.d1EditField.Position = [699 178 53 22];
+
+            % Create Label_4
+            app.Label_4 = uilabel(app.Panel);
+            app.Label_4.HorizontalAlignment = 'right';
+            app.Label_4.Position = [809 178 60 22];
+            app.Label_4.Text = '入射角θ(°)';
+
+            % Create Theta1EditField
+            app.Theta1EditField = uieditfield(app.Panel, 'numeric');
+            app.Theta1EditField.Position = [885 178 55 22];
+
+            % Create Label_5
+            app.Label_5 = uilabel(app.Panel);
+            app.Label_5.HorizontalAlignment = 'right';
+            app.Label_5.Position = [968 178 93 22];
+            app.Label_5.Text = '相位偏移φ(弧度)';
+
+            % Create Phi1EditField
+            app.Phi1EditField = uieditfield(app.Panel, 'numeric');
+            app.Phi1EditField.Position = [1076 178 68 22];
+
+            % Create AEditField_2Label
+            app.AEditField_2Label = uilabel(app.Panel);
+            app.AEditField_2Label.HorizontalAlignment = 'right';
+            app.AEditField_2Label.Position = [25 74 61 22];
+            app.AEditField_2Label.Text = '吸收损耗A';
+
+            % Create A2EditField
+            app.A2EditField = uieditfield(app.Panel, 'numeric');
+            app.A2EditField.Position = [95 73 53 23];
+
+            % Create rEditField_2Label
+            app.rEditField_2Label = uilabel(app.Panel);
+            app.rEditField_2Label.HorizontalAlignment = 'right';
+            app.rEditField_2Label.Position = [208 74 45 22];
+            app.rEditField_2Label.Text = '反射率r';
+
+            % Create r2EditField
+            app.r2EditField = uieditfield(app.Panel, 'numeric');
+            app.r2EditField.Position = [268 74 52 22];
+
+            % Create nEditField_2Label
+            app.nEditField_2Label = uilabel(app.Panel);
+            app.nEditField_2Label.HorizontalAlignment = 'right';
+            app.nEditField_2Label.Position = [381 74 72 22];
+            app.nEditField_2Label.Text = '介质折射率n';
+
+            % Create n2EditField
+            app.n2EditField = uieditfield(app.Panel, 'numeric');
+            app.n2EditField.Position = [468 74 60 22];
+
+            % Create dnmEditField_2Label
+            app.dnmEditField_2Label = uilabel(app.Panel);
+            app.dnmEditField_2Label.HorizontalAlignment = 'right';
+            app.dnmEditField_2Label.Position = [588 74 96 22];
+            app.dnmEditField_2Label.Text = '谐振腔厚度d(nm)';
+
+            % Create d2EditField
+            app.d2EditField = uieditfield(app.Panel, 'numeric');
+            app.d2EditField.Position = [699 74 53 22];
+
+            % Create EditField_3Label
+            app.EditField_3Label = uilabel(app.Panel);
+            app.EditField_3Label.HorizontalAlignment = 'right';
+            app.EditField_3Label.Position = [809 74 60 22];
+            app.EditField_3Label.Text = '入射角θ(°)';
+
+            % Create Theta2EditField
+            app.Theta2EditField = uieditfield(app.Panel, 'numeric');
+            app.Theta2EditField.Position = [885 74 55 22];
+
+            % Create EditField_4Label
+            app.EditField_4Label = uilabel(app.Panel);
+            app.EditField_4Label.HorizontalAlignment = 'right';
+            app.EditField_4Label.Position = [968 74 93 22];
+            app.EditField_4Label.Text = '相位偏移φ(弧度)';
+
+            % Create Phi2EditField
+            app.Phi2EditField = uieditfield(app.Panel, 'numeric');
+            app.Phi2EditField.Position = [1076 74 68 22];
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = fp
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end

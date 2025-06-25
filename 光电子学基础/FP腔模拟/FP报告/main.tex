@@ -1,0 +1,405 @@
+%!TeX program = xelatex
+\documentclass[12pt,hyperref,a4paper,UTF8]{ctexart}
+\usepackage{zjureport}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    lineskip=1pt, %行号与代码之间的距离
+    basicstyle=\ttfamily\small,%代码字体
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+
+%%-------------------------------正文开始---------------------------%%
+\begin{document}
+
+%%-----------------------封面--------------------%%
+\cover
+
+%%------------------摘要-------------%%
+
+
+\thispagestyle{empty} % 首页不显示页码
+
+%%--------------------------目录页------------------------%%
+\newpage
+\tableofcontents
+
+%%------------------------正文页从这里开始-------------------%
+\newpage
+
+%%可选择这里也放一个标题
+%\begin{center}
+%    \title{ \Huge \textbf{{标题}}}
+%\end{center}
+
+\section{FP谐振腔简介}
+
+\textbf{法布里-珀罗（FP）谐振腔}是一种由两块平行反射镜组成的光学谐振腔，广泛应用于光谱学、激光器和光学滤波器等领域。其基本工作原理是基于光在腔内的多次反射和干涉效应。
+
+\subsection*{工作原理}
+当光射入 FP 谐振腔时，会在两块反射镜之间多次反射。每次反射都会产生相位变化，这些反射光之间的干涉决定了腔的透射特性。当光程差满足特定条件时，腔内光会形成稳定的驻波，从而增强光的透射。
+
+\subsection*{透射公式}
+FP 谐振腔的透射率 \( T \) 可以用以下公式描述：
+\begin{equation}
+T = \left(1 - \frac{A}{1 - r}\right)^2 \cdot \frac{1}{1 + \frac{4r}{(1 - r)^2} \sin^2\left(\frac{2\pi}{\lambda} n d \cos\theta - \varphi\right)}
+\label{eq:transmission}
+\end{equation}
+其中：
+\begin{itemize}
+    \item \( A \)：吸收损耗
+    \item \( r \)：$r=\sqrt{r_1r_2}$，其中 \( r_1 \) 和 \( r_2 \) 分别是两块反射镜的反射率
+    \item \( \lambda \)：光的波长
+    \item \( n \)：介质折射率
+    \item \( d \)：介质厚度
+    \item \( \theta \)：入射角
+    \item \( \varphi \)：相位偏移
+\end{itemize}
+
+
+相位部分 \(\frac{2\pi}{\lambda} n d \cos\theta - \varphi\) 决定了干涉条件。当相位差满足条件时，腔内光形成驻波，透射率达到最大值。
+
+\textbf{FP谐振腔}的透射特性使其在光学系统中具有重要的应用价值，特别是在需要高精度光谱分析的场景中。
+
+\newpage
+
+\section{FP谐振腔仿真程序介绍}
+
+本实验设计的FP谐振腔仿真程序主要用于模拟FP谐振腔的透射特性。程序使用MATLAB编写，程序GUI界面如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/fig/image1.png}
+    \caption{FP谐振腔仿真程序界面}
+    \label{fig:gui}
+\end{figure}
+程序界面分为上下两个面板，上面板用于显示仿真结果，下面板由于设置参数和按钮交互。用户可以通过输入不同的参数来观察FP谐振腔的透射特性。
+
+程序提供了两组参数输入框，可以进行两组不同参数的仿真，并显示在同一张图上，便于对比。
+
+程序提供了仿真的波长范围和步长的设置，用户可以根据需要调整波长范围和步长，以获得更精细的透射特性曲线。
+
+程序共包括三个按钮，分别其功能为：
+\begin{itemize}
+    \item \textbf{计算}：点击根据当前的参数进行FP谐振腔的透射特性仿真，并在上面板显示仿真结果
+    \item \textbf{保存图像}：点击后保存当前图像
+    \item \textbf{显示/关闭曲线2}：点击后显示或关闭第二组参数的仿真曲线
+\end{itemize}
+程序的绘制效果如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/fig/image2.png}
+    \caption{FP谐振腔仿真程序绘制效果}
+    \label{fig:gui}
+\end{figure}
+程序的保存功能如下：
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/fig/image3.png}
+    \caption{FP谐振腔仿真程序保存效果}
+    \label{fig:gui}
+\end{figure}
+
+此外，仿真程序还对输入参数进行了有效性检查，确保用户输入的参数在合理范围内。程序会弹出提示帮助用户正确输入参数。
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/fig/image4.png}
+    \caption{FP谐振腔仿真程序参数检查}
+    \label{fig:gui}
+\end{figure}
+
+
+\newpage
+\section{matlab代码原理介绍}
+
+\subsection{GUI界面设计}
+GUI界面设计使用了MATLAB的App设计工具，主要包括以下几个部分：
+\begin{itemize}
+    \item \textbf{Panel}：用于分隔不同功能区域的面板
+    \item \textbf{UIAxes}：用于显示仿真结果的坐标区
+    \item \textbf{Edit Text}：用于输入参数的文本框
+    \item \textbf{Push Button}：用于触发计算和保存图像的按钮
+\end{itemize}
+
+设计时，直接使用MATLAB的App设计工具选择需要的组件，拖拽到设计区域中，然后设置组件的属性，如名称、大小、位置等。
+设计完成后，MATLAB会自动生成相应的app类，app类的构造和析构函数，app中包括的组件对应的属性以及各个属性的初始化代码等。
+
+本程序的GUI设计主要包括两个面板，上面板用于显示仿真结果，下面板用于设置参数和按钮交互。整体的设计效果如下图所示：
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/fig/image5.png}
+    \caption{FP谐振腔仿真程序设计效果}
+    \label{fig:gui}
+\end{figure}
+
+
+\newpage
+
+初步设计完成后，matlab自动生成的初始代码结构如下：
+共包括了以下几个部分：
+\begin{itemize}
+    \item \textbf{Properties}：用于定义app的属性，包括组件的属性和其他需要保存的变量
+    \item \textbf{Callbacks}：用于处理组件事件的回调函数，如按钮点击、文本框输入等
+    \item \textbf{Component initialization}：用于初始化组件的函数，包括创建组件、设置属性等
+    \item \textbf{App creation and deletion}：用于创建和删除app的函数，包括注册app、删除组件等
+\end{itemize}
+
+\begin{lstlisting}[language=matlab]
+classdef fp < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure              matlab.ui.Figure
+        Panel                 matlab.ui.container.Panel
+        Phi2EditField         matlab.ui.control.NumericEditField
+        EditField_4Label      matlab.ui.control.Label
+        ······ % 省略部分代码
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+        ······ % 省略部分代码
+
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 1191 937];
+            app.UIFigure.Name = 'MATLAB App';
+            ······ % 省略部分代码
+
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = fp
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end
+\end{lstlisting}
+
+篇幅原因，省略了部分代码，完整代码见源码。
+
+\newpage
+
+\subsection{按钮回调函数设计}
+在App设计工具中，给三个交换按钮添加回调函数，App设计工具会自动生成回调函数的框架代码。我们只需要在框架中添加具体的实现代码即可。
+
+\subsubsection*{计算按钮回调函数}
+计算按钮的回调函数主要用于获取用户输入的参数，进行FP谐振腔的透射特性仿真，并在UIAxes中绘制仿真结果。具体实现如下：
+\begin{lstlisting}[language=matlab]
+function Calculate(app, event)
+    % 从第一组编辑字段中读取参数
+    A1 = app.A1EditField.Value;          % 吸收损耗
+    r1 = app.r1EditField.Value;          % 反射率
+    n1 = app.n1EditField.Value;          % 介质折射率
+    d1 = app.d1EditField.Value;          % 谐振腔厚度（单位：纳米）
+    theta1 = app.Theta1EditField.Value;  % 入射角（单位：度）
+    phi1 = app.Phi1EditField.Value;      % 相位偏移（单位：弧度）
+
+    % 从第二组编辑字段中读取参数
+    A2 = app.A2EditField.Value;          % 吸收损耗
+    r2 = app.r2EditField.Value;          % 反射率
+    n2 = app.n2EditField.Value;          % 介质折射率
+    d2 = app.d2EditField.Value;          % 谐振腔厚度（单位：纳米）
+    theta2 = app.Theta2EditField.Value;  % 入射角（单位：度）
+    phi2 = app.Phi2EditField.Value;      % 相位偏移（单位：弧度）
+
+    % 从波长范围和步长字段中读取参数
+    lambda_min = app.LengthLowerEditField.Value; % 波长范围下界
+    lambda_max = app.LengthUpperEditField.Value; % 波长范围上界
+    step = app.LengthStepEditField.Value;        % 波长步长
+
+    % 检查参数有效性
+    if lambda_min >= lambda_max || step <= 0 || lambda_min<0 || lambda_max<0
+        uialert(app.UIFigure, '波长范围或步长设置不正确！波长和步长应都大于零,波长上界大于下界。', '参数错误');
+        return;
+    end
+
+    if A1 < 0 || A1 > 1 || A2 < 0 || A2 > 1
+        uialert(app.UIFigure, '吸收损耗必须在0到1之间！', '参数错误');
+        return;
+    end
+
+    if r1 < 0 || r1 > 1 || r2 < 0 || r2 > 1
+        uialert(app.UIFigure, '反射率必须在0到1之间！', '参数错误');
+        return;
+    end
+
+    if d1 <= 0 || d2 <= 0
+        uialert(app.UIFigure, '谐振腔厚度必须大于0！', '参数错误');
+        return;
+    end
+
+    if n1 < 1 || n2 < 1
+        uialert(app.UIFigure, '介质折射率必须大于等于1！', '参数错误');
+        return;
+    end
+
+    if theta1 < 0 || theta1 > 90 || theta2 < 0 || theta2 > 90
+        uialert(app.UIFigure, '入射角须设置在0到90度之间！', '参数错误');
+        return;
+    end
+
+    % 波长范围
+    lambda_range = lambda_min:step:lambda_max;
+
+    % 初始化透射率数组
+    T_values1 = zeros(size(lambda_range));
+    T_values2 = zeros(size(lambda_range));
+
+    % 将角度转换为弧度
+    theta1_rad = deg2rad(theta1);
+    theta2_rad = deg2rad(theta2);
+
+    % 计算第一组参数的透射率
+    for i = 1:length(lambda_range)
+        lambda = lambda_range(i);
+        % 公式中的光程部分
+        optical_path1 = n1 * d1 * cos(theta1_rad);
+        % 计算相位差
+        phase_difference1 = (2 * pi / lambda) * optical_path1 - phi1;
+        % 计算透射率 T
+        denominator1 = 1 + (4 * r1 / (1 - r1)^2) * sin(phase_difference1)^2;
+        T_values1(i) = (1 - (A1 / (1 - r1)))^2 * (1 / denominator1);
+    end
+
+    % 计算第二组参数的透射率
+    for i = 1:length(lambda_range)
+        lambda = lambda_range(i);
+        % 公式中的光程部分
+        optical_path2 = n2 * d2 * cos(theta2_rad);
+        % 计算相位差
+        phase_difference2 = (2 * pi / lambda) * optical_path2 - phi2;
+        % 计算透射率 T
+        denominator2 = 1 + (4 * r2 / (1 - r2)^2) * sin(phase_difference2)^2;
+        T_values2(i) = (1 - (A2 / (1 - r2)))^2 * (1 / denominator2);
+    end
+
+    % 在 UIAxes 上绘制两条曲线
+    plot(app.UIAxes, lambda_range, T_values1, 'b-', 'LineWidth', 1.5); % 第一条曲线（蓝色）
+    hold(app.UIAxes, 'on');
+    plot(app.UIAxes, lambda_range, T_values2, 'r-', 'LineWidth', 1.5); % 第二条曲线（红色）
+    hold(app.UIAxes, 'off');
+
+    % 设置图表属性
+    xlabel(app.UIAxes, '波长 (nm)');
+    ylabel(app.UIAxes, '透射率 T');
+    title(app.UIAxes, 'FP谐振器透射率随波长的变化');
+    legend(app.UIAxes, {'曲线1', '曲线2'}, 'Location', 'best');
+    grid(app.UIAxes, 'on');
+end
+
+\end{lstlisting}
+\textbf{代码原理介绍：}首先从各个EditField的Value属性中获取用户输入的参数;
+然后对参数进行有效性检查，确保用户输入的参数在合理范围内。
+接着根据用户输入的波长范围和步长生成波长范围数组，并初始化透射率数组。
+然后在for循环中使用公式\ref{eq:transmission}计算每组参数在不同波长下的透射率。
+最后在UIAxes上绘制两条曲线，分别表示两组参数的透射特性。
+
+
+\subsubsection*{保存图像按钮回调函数}
+保存图像按钮的回调函数主要用于将当前绘制的图像保存为PNG格式的文件。具体实现如下：
+\begin{lstlisting}[language=matlab]
+    % Button pushed function: SaveImageButton
+    function SaveImage(app, event)
+        % 弹出保存文件对话框，选择保存路径和文件名
+        [file, path] = uiputfile({'*.png'; '*.jpg'; '*.tif'; '*.pdf'}, '保存图像');
+        
+        % 如果用户取消保存操作，则直接返回
+        if isequal(file, 0) || isequal(path, 0)
+            return;
+        end
+        
+        % 构造完整的文件路径
+        fullFileName = fullfile(path, file);
+        % 创建一个新的不可见的图形窗口
+        fig = figure('Visible', 'off');
+        % 复制 UIAxes 的内容到新图形窗口
+        ax = copyobj(app.UIAxes, fig);
+        set(ax, 'Units', 'normalized', 'Position', [0.13, 0.11, 0.775, 0.815]); % 调整轴的位置
+        % 保存图像到指定路径
+        saveas(fig, fullFileName);
+        % 关闭临时图形窗口
+        close(fig);
+        
+        % 弹出提示框，通知用户保存成功
+        uialert(app.UIFigure, '图像已成功保存！', '保存成功');
+    end
+\end{lstlisting}
+\textbf{代码原理介绍：}使用uiputfile函数弹出保存文件对话框，用户可以选择保存路径和文件名。
+如果用户取消保存操作，则直接返回。
+如果用户选择了保存路径和文件名，则构造完整的文件路径。
+然后创建一个新的图形窗口，复制UIAxes的内容到新图形窗口，并对图像做一些调整。
+最后使用saveas函数将图像保存到指定路径，并关闭临时图形窗口，弹出提示框通知用户保存成功。
+
+\subsubsection*{显示/关闭曲线2按钮回调函数}
+显示/关闭曲线2按钮的回调函数主要用于控制第二组参数的仿真曲线的显示和隐藏。具体实现如下：
+\begin{lstlisting}[language=matlab]
+    % Button pushed function: ShowCurveButton
+    function ShowCurve(app, event)
+        % 获取当前 UIAxes 中的所有图形对象
+        lines = app.UIAxes.Children;
+    
+        % 遍历图形对象，找到曲线2（根据曲线2是红色的设置）
+        for i = 1:length(lines)
+            if isequal(lines(i).Color, [1, 0, 0]) % 红色曲线
+                % 切换曲线的可见性
+                if strcmp(lines(i).Visible, 'on')
+                    lines(i).Visible = 'off'; % 隐藏曲线2
+                else
+                    lines(i).Visible = 'on';  % 显示曲线2
+                end
+                break;
+            end
+        end
+    end
+\end{lstlisting}
+
+\textbf{代码原理介绍：}首先获取当前UIAxes中的所有图形对象，遍历图形对象，
+找到设置为红色的曲线2。然后切换曲线2的可见性。
+
+
+
+%%----------- 参考文献 -------------------%%
+%在reference.bib文件中填写参考文献，此处自动生成
+
+
+
+
+\end{document}

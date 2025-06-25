@@ -1,0 +1,352 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Artificial Intelligence   } % 页眉
+\rhead{}
+\title{HOMEWORK \#4} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Artificial Intelligence } % 课程信息
+
+\studentinfo{Name: \textit{}  \quad  \quad Student ID: \textit{}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+\begin{problem}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{figures/image1.png}
+\caption*{figure 14.2}
+\end{figure}
+Consider the Bayesian network in Figure 14.2.
+
+1. If no evidence is observed, are Burglary and Earthquake independent? Prove this fromthe numerical semantics and from the topological semantics.
+
+2. If we observe Alarm = true, are Burglary and Earthquake independent? Justify youranswer by calculating whether the probabilities involved satisfy the definition of con-ditional independence.
+
+
+\end{problem}
+
+
+\begin{solution}
+  \quad
+
+  \textbf{q1.} Burglary and Earthquake are independent.
+
+  \text{Prove from the numerical semantics:}
+  According to the Bayesian network, we can calculate the joint probability of Burglary and Earthquake.
+\[
+\Sigma_a P(B, E, A) = \Sigma_a P(B)P(E)P(A|B,E) \\
+\]
+we can get
+\[
+P(B, E) = P(B)P(E) \\
+\]
+Thus, Burglary and Earthquake are independent.
+
+  \text{Prove from the topological semantics:}
+  The topological semantics of a Bayesian network is that the nodes are independent if there is no path between them. In this case, there is no path between Burglary and Earthquake, so they are independent.
+
+  \textbf{q2.} Burglary and Earthquake are not independent.
+
+  \text{Justification:}
+  We can calculate the conditional probability of Burglary and Earthquake given Alarm = true.
+\begin{align*}
+P(B, E | a) &= \alpha P(a | B, E) P(B, E) \\
+&= \alpha 
+\begin{cases} 
+.95 \times 0.001 \times 0.002 & \text{if } B = b \text{ and } E = e \\
+.94 \times 0.001 \times 0.998 & \text{if } B = b \text{ and } E = \neg e \\
+.29 \times 0.999 \times 0.002 & \text{if } B = \neg b \text{ and } E = e \\
+.001 \times 0.999 \times 0.998 & \text{if } B = \neg b \text{ and } E = \neg e 
+\end{cases} \\
+&= \alpha 
+\begin{cases} 
+0.0008 & \text{if } B = b \text{ and } E = e \\
+0.3728 & \text{if } B = b \text{ and } E = \neg e \\
+0.2303 & \text{if } B = \neg b \text{ and } E = e \\
+0.3962 & \text{if } B = \neg b \text{ and } E = \neg e 
+\end{cases}
+\end{align*}
+We check the conditional independence of Burglary and Earthquake given Alarm = true by calculating the conditional probabilities:
+\[
+P(b|a)=0.0008+0.3728=0.3736
+\]
+\[
+P(e|a)=0.0008+0.2303=0.2311
+\]
+\[
+P(b,e|a)=0.0008 \neq P(b|a)P(e|a)
+\]
+Thus, Burglary and Earthquake are not independent given Alarm = true.
+
+
+\end{solution}
+%------------------------------%
+\newpage
+
+\begin{problem}
+ A professor wants to know if students are getting enough sleep. Each day, the professor observes whether the students sleep in class, and whether they have red eyes. The professor has the following domain theory:
+\begin{itemize}
+    \item The prior probability of getting enough sleep, with no observations, is 0.7.
+    \item The probability of getting enough sleep on night $t$ is 0.8 given that the student got enough sleep the previous night, and 0.3 if not.
+    \item The probability of having red eyes is 0.2 if the student got enough sleep, and 0.7 if not.
+    \item The probability of sleeping in class is 0.1 if the student got enough sleep, and 0.3 if not.
+\end{itemize}
+Formulate this information as a dynamic Bayesian network that the professor could use to filter or predict from a sequence of observations. Then reformulate it as a hidden Markov model that has only a single observation variable. Give the complete probability tables for the model.
+
+\end{problem}
+
+
+
+
+\begin{solution}
+\quad
+
+\textbf{Dynamic Bayesian Network:}
+
+We define the following variables:
+\begin{itemize}
+    \item $S_t$: the state of the student at time $t$ ($\lnot s_t$: not enough sleep, $s_t$: enough sleep)
+    \item $R_t$: the observation of red eyes at time $t$ ($\lnot r_t$: no red eyes, $r_t$: red eyes)
+    \item $C_t$: the observation of sleeping in class at time $t$ ($\lnot c_t$: not sleeping, $c_t$: sleeping)
+\end{itemize}
+The CPTs for the variables are as follows:
+\begin{itemize}
+    \item $P(s_0) = 0.7$
+    \item $P(s_{t+1} | s_{t}) = 0.8$
+    \item $P(s_{t+1} | \lnot s_{t}) = 0.3$
+    \item $P(r_t | s_t) = 0.2$
+    \item $P(r_t | \lnot s_t) = 0.7$
+    \item $P(c_t | s_t) = 0.1$
+    \item $P(c_t | \lnot s_t) = 0.3$
+\end{itemize}
+
+The DBN is shown in the figure below. 
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{figures/image2.png}
+\caption{Dynamic Bayesian Network}
+\end{figure}
+
+\textbf{Hidden Markov Model:}
+To reformulate the dynamic Bayesian network as a hidden Markov model, we can simplify the model by only considering one observation variable. In this case, we can choose to combine the observations of red eyes and sleeping in class into a single observation variable. We can define the observation variable as follows:
+
+\begin{itemize}
+    \item $S_t$: the state of the student at time $t$ ($\lnot s_t$: not enough sleep, $s_t$: enough sleep)
+    \item $O_t$: the observation at time $t$ ($\lnot r_t \land \lnot c_t$: no red eyes and not sleeping, $r_t \land \lnot c_t$: red eyes and not sleeping, $\lnot r_t \land c_t$: no red eyes and sleeping, $r_t \land c_t$: red eyes and sleeping)
+\end{itemize}
+The CPTs for the variables are as follows:
+
+\begin{itemize}
+    \item $P(s_0) = 0.7$
+    \item $P(s_{t+1} | s_{t}) = 0.8$
+    \item $P(s_{t+1} | \lnot s_{t}) = 0.3$
+    \item $P(\lnot r_t \land \lnot c_t | s_t) = 0.8*0.9 = 0.72$
+    \item $P(r_t \land \lnot c_t | s_t) = 0.2*0.9 = 0.18$
+    \item $P(\lnot r_t \land c_t | s_t) = 0.8*0.1 = 0.08$
+    \item $P(r_t \land c_t | s_t) = 0.2*0.1 = 0.02$
+    \item $P(\lnot r_t \land \lnot c_t | \lnot s_t) = 0.3*0.7 = 0.21$
+    \item $P(r_t \land \lnot c_t | \lnot s_t) = 0.7*0.7 = 0.49$
+    \item $P(\lnot r_t \land c_t | \lnot s_t) = 0.3*0.3 = 0.09$
+    \item $P(r_t \land c_t | \lnot s_t) = 0.7*0.3 = 0.21$
+\end{itemize}
+
+The HMM is shown in the figure below.
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{figures/image3.png}
+\caption{Hidden Markov Model}
+\end{figure}
+
+\end{solution}
+
+
+
+
+
+\newpage
+
+\begin{problem}
+
+For the DBN specified in Problem2 and for the evidence values
+\begin{align*}
+e_1 &= \text{not red eyes, not sleeping in class} \\
+e_2 &= \text{red eyes, not sleeping in class} \\
+e_3 &= \text{red eyes, sleeping in class}
+\end{align*}
+perform the following computations:
+
+1. State estimation: Compute $P(\text{EnoughSleep}_t | e_{1:t})$ for each of $t = 1, 2, 3$.
+
+2. Smoothing: Compute $P(\text{EnoughSleep}_t | e_{1:3})$ for each of $t = 1, 2, 3$.
+
+3. Compare the filtered and smoothed probabilities for $t = 1$ and $t = 2$.
+
+
+
+\end{problem}
+
+\begin{solution}
+  \quad
+
+\textbf{q1.} 
+\begin{align*}
+P(S_0) &= \langle 0.7, 0.3 \rangle \\
+P(S_1) &= \Sigma_{s_0} P(S_1 | s_0) P(s_0) \\
+&= \langle 0.8, 0.2 \rangle 0.7 + \langle 0.3, 0.7 \rangle 0.3 \\
+&= \langle 0.65, 0.35 \rangle \\
+P(S_1 | e_1) &= \alpha P(e_1 | S_1) P(S_1) \\
+&= \alpha \langle 0.8 \times 0.9, 0.3 \times 0.7 \rangle \langle 0.65, 0.35 \rangle \\
+&= \alpha \langle 0.72, 0.21 \rangle \langle 0.65, 0.35 \rangle \\
+&= \langle 0.8643, 0.1357 \rangle \\
+P(S_2 | e_1) &= \Sigma_{s_1} P(S_2 | s_1) P(s_1 | e_1) \\
+&= \langle 0.7321, 0.2679 \rangle \\
+P(S_2 | e_{1:2}) &= \alpha P(e_2 | S_2) P(S_2 | e_1) \\
+&= \langle 0.5010, 0.4990 \rangle \\
+P(S_3 | e_{1:2}) &= \Sigma_{s_2} P(S_3 | s_2) P(s_2 | e_{1:2}) \\
+&= \langle 0.5505, 0.4495 \rangle \\
+P(S_3 | e_{1:3}) &= \alpha P(e_3 | S_3) P(S_3 | e_{1:2}) \\
+&= \langle 0.1045, 0.8955 \rangle
+\end{align*}
+
+\textbf{q2.}
+\begin{align*}
+P(e_3 | S_3) &= \langle 0.2 \times 0.1, 0.7 \times 0.3 \rangle \\
+&= \langle 0.02, 0.21 \rangle \\
+P(e_3 | S_2) &= \Sigma_{s_3} P(e_3 | s_3) P(s_3 | S_2) \\
+&= \langle 0.02 \times 0.8 + 0.21 \times 0.2, 0.02 \times 0.3 + 0.21 \times 0.7 \rangle \\
+&= \langle 0.0588, 0.153 \rangle \\
+P(e_{2:3} | S_1) &= \Sigma_{s_2} P(e_2 | s_2) P(e_3 | s_2) P(s_2 | S_1) \\
+&= \langle 0.0233, 0.0556 \rangle
+\end{align*}
+Then we can calculate the smoothed probabilities:
+\begin{align*}
+P(S_1 | e_{1:3}) &= \alpha P(S_1 | e_1) P(e_{2:3} | S_1) \\
+&= \langle 0.7277, 0.2723 \rangle \\
+P(S_2 | e_{1:3}) &= \alpha P(S_2 | e_{1:2}) P(e_3 | S_1) \\
+&= \langle 0.2757, 0.7243 \rangle \\
+P(S_3 | e_{1:3}) &= \langle 0.1045, 0.8955 \rangle
+\end{align*}
+
+\textbf{q3.}
+For $t = 1$ and $t = 2$, we compare the filtered and smoothed probabilities:
+
+\begin{itemize}
+    \item \textbf{At $t = 1$:}
+    \begin{align*}
+        P(S_1 | e_1) & = \langle 0.8643, 0.1357 \rangle \quad \text{(Filtered probability)} \\
+        P(S_1 | e_{1:3}) & = \langle 0.7277, 0.2723 \rangle \quad \text{(Smoothed probability)}
+    \end{align*}
+    The smoothed probability $P(S_1 | e_{1:3})$ incorporates evidence from $e_2$ and $e_3$, leading to a lower probability for $S_1 = \text{enough sleep}$ (from $0.8643$ to $0.7277$) and a higher probability for $S_1 = \text{not enough sleep}$ (from $0.1357$ to $0.2723$).
+
+    \item \textbf{At $t = 2$:}
+    \begin{align*}
+        P(S_2 | e_{1:2}) & = \langle 0.5010, 0.4990 \rangle \quad \text{(Filtered probability)} \\
+        P(S_2 | e_{1:3}) & = \langle 0.2757, 0.7243 \rangle \quad \text{(Smoothed probability)}
+    \end{align*}
+    The smoothed probability $P(S_2 | e_{1:3})$ adjusts the estimate based on $e_3$, significantly lowering the probability for $S_2 = \text{enough sleep}$ (from $0.5010$ to $0.2757$) and increasing the probability for $S_2 = \text{not enough sleep}$ (from $0.4990$ to $0.7243$).
+\end{itemize}
+
+\textbf{Conclusion:}  
+Smoothed probabilities provide a more accurate estimate of the state by incorporating the entire sequence of evidence ($e_{1:3}$). For both $t = 1$ and $t = 2$, the smoothed probabilities differ significantly from the filtered probabilities, demonstrating the impact of future evidence on earlier state estimates.
+\end{solution}
+%------------------------------%
+
+
+\newpage
+
+
+
+
+
+
+
+
+%------------------------------%
+\end{document}
+

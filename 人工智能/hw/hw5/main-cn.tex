@@ -1,0 +1,326 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Artificial Intelligence   } % 页眉
+\rhead{}
+\title{HOMEWORK \#5} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Artificial Intelligence } % 课程信息
+
+\studentinfo{Name: \textit{}  \quad  \quad Student ID: \textit{}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+\begin{problem}
+Consider $N$ data points $(x_j, y_j)$, 
+where the $y_j$s are generated from the $x_j$s according to the 
+linear Gaussian model in Equation (20.5). Find the values of $\theta_1$, 
+$\theta_2$, and $\sigma$ that maximize the conditional log likelihood of the data.
+
+
+\end{problem}
+
+
+\begin{solution}
+\quad
+according to the linear Gaussian model
+
+\begin{equation*}
+P(y \mid x) = \frac{1}{\sqrt{2\pi}\sigma} \mathrm{e}^{-\frac{(y - (\theta_1 x + \theta_2))^2}{2\sigma^2}}
+\end{equation*}
+
+We have
+\begin{equation*}
+L = \Sigma_{j=1}^{N} \log \frac{1}{\sqrt{2\pi}\sigma} \mathrm{e}^{-\frac{(y - (\theta_1 x + \theta_2))^2}{2\sigma^2}}=-N(\log \sigma + \log \sqrt{2\pi}) - \Sigma_j \frac{(y_j - (\theta_1 x_j + \theta_2))^2}{2\sigma^2}
+\end{equation*}
+
+Taking the derivative with respect to $\theta_1$, $\theta_2$, $\sigma$ and setting them to zero, we get
+\begin{align*}
+\frac{\partial L}{\partial \theta_1} &= -\Sigma_j \frac{x_j(y_j - (\theta_1 x_j + \theta_2))}{\sigma^2} = 0 \\
+\frac{\partial L}{\partial \theta_2} &= -\Sigma_j \frac{(y_j - (\theta_1 x_j + \theta_2))}{\sigma^2} = 0 \\
+\frac{\partial L}{\partial \sigma} &= -\frac{m}{\sigma} + \Sigma_j \frac{(y_j - (\theta_1 x_j + \theta_2))^2}{\sigma^3} = 0
+\end{align*}
+
+and the solutions can be computed as
+\begin{align*}
+\theta_1 &= \frac{m \left( \Sigma_j x_j y_j \right) - \left( \Sigma_j y_j \right) \left( \Sigma_j x_j \right)}{m \left( \Sigma_j x_j^2 \right) - \left( \Sigma_j x_j \right)^2} \\
+\theta_2 &= \frac{1}{m} \Sigma_j (y_j - \theta_1 x_j) \\
+\sigma^2 &= \frac{1}{m} \Sigma_j (y_j - (\theta_1 x_j + \theta_2))^2
+\end{align*}
+
+
+\end{solution}
+%------------------------------%
+\newpage
+
+\begin{problem}
+Consider a single Boolean random variable $Y$ (the ``classification''). Let the prior probability $P(Y=true)$ be $\pi$. Let's try to find $\pi$, given a training set $D = (y_1, \ldots, y_N)$ with $N$ independent samples of $Y$. Furthermore, suppose $p$ of the $N$ are positive and $n$ of the $N$ are negative.
+
+\begin{enumerate}
+    \item Write down an expression for the likelihood of $D$ (i.e., the probability of seeing this particular sequence of examples, given a fixed value of $\pi$) in terms of $\pi$, $p$, and $n$.
+    \item By differentiating the log likelihood $L$, find the value of $\pi$ that maximizes the likelihood.
+    \item Now suppose we add in $k$ Boolean random variables $X_1, X_2, \ldots, X_k$ (the ``attributes'') that describe each sample, and suppose we assume that the attributes are conditionally independent of each other given the goal $Y$. Draw the Bayes net corresponding to this assumption.
+    \item Write down the likelihood for the data including the attributes, using the following additional notation:
+    \begin{itemize}
+        \item $\alpha_i$ is $P(X_i=true|Y=true)$.
+        \item $\beta_i$ is $P(X_i=true|Y=false)$.
+        \item $p_i^+$ is the count of samples for which $X_i=true$ and $Y=true$.
+        \item $n_i^+$ is the count of samples for which $X_i=false$ and $Y=true$.
+        \item $p_i^-$ is the count of samples for which $X_i=true$ and $Y=false$.
+        \item $n_i^-$ is the count of samples for which $X_i=false$ and $Y=false$.
+    \end{itemize}
+    [Hint: consider first the probability of seeing a single example with specified values for $X_1, X_2, \ldots, X_k$ and $Y$.]
+    \item By differentiating the log likelihood $L$, find the values of $\alpha_i$ and $\beta_i$ (in terms of the various counts) that maximize the likelihood and say in words what these values represent.
+\end{enumerate}
+
+
+
+\end{problem}
+
+
+
+
+\begin{solution}
+\quad
+
+\textbf{(a)} 
+    The likelihood of $D$ is $\pi^p (1-\pi)^n$.
+
+\textbf{(b)} 
+    Take the derivative of the log likelihood $L=\log(\pi^p (1-\pi)^n)$ with respect to $\pi$ and set it to zero:
+\begin{align*}
+    \frac{\partial L}{\partial \pi} &= \frac{p}{\pi} - \frac{n}{1-\pi} = 0 \\
+    \Rightarrow \pi &= \frac{p}{p+n}
+\end{align*}
+\newpage
+\textbf{(c)} 
+    The Bayes net corresponding to the assumption is as follows:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/image1.png}
+    \caption{Bayes net for the attributes}
+\end{figure} 
+
+\textbf{(d)}The likelihood for the data including the attributes is:
+
+\begin{align*}
+    L&=\Pi_i\pi^{p_i^+}\alpha_i^{p_i^+} \pi^{n_i^+}(1-\alpha_i)^{n_i^+} (1-\pi)^{p_i^-}\beta_i^{p_i^-} (1-\pi)^{n_i^-}(1-\beta_i)^{n_i^-} \\
+     &=\pi^p (1-\pi)^n \Pi_i \alpha_i^{p_i^+} (1-\alpha_i)^{n_i^+} \beta_i^{p_i^-} (1-\beta_i)^{n_i^-}
+\end{align*}
+
+\textbf{(e)} 
+\begin{equation*}
+L = p \log \pi + n \log (1-\pi) + \Sigma_i p_i^+ \log \alpha_i + n_i^+ \log (1-\alpha_i) + p_i^- \log \beta_i + n_i^- \log (1-\beta_i).
+\end{equation*}
+Take the derivative of the log likelihood $L$ with respect to $\alpha_i$ and $\beta_i$ and set it to zero:
+\begin{align*}
+\frac{\partial L}{\partial \alpha_i} &= \frac{p_i^+}{\alpha_i} - \frac{n_i^+}{1-\alpha_i} = 0 \quad \text{and} \quad \frac{\partial L}{\partial \beta_i} = \frac{p_i^-}{\beta_i} - \frac{n_i^-}{1-\beta_i} = 0
+\end{align*}
+giving $\alpha_i = p_i^+ / (p_i^+ + n_i^+)$ and $\beta_i = p_i^- / (p_i^- + n_i^-)$.
+
+The values of $\alpha_i$ represent the fraction of cases where Xi is true given Y is true, and the values of $\beta_i$ represent the fraction of cases where Xi is true given Y is false.
+
+\end{solution}
+
+
+
+
+
+\newpage
+
+\begin{problem}
+
+Consider the following data set comprised of three binary input attributes ($A_1$, $A_2$, and $A_3$) and one binary output: Use the algorithm in Figure 18.5 (page 702) to learn a decision tree for these data. Show the computations made to determine the attribute to split at each node.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        Example & $A_1$ & $A_2$ & $A_3$ & Output $y$ \\
+        \midrule
+        $x_1$ & 1 & 0 & 0 & 0 \\
+        $x_2$ & 1 & 0 & 1 & 0 \\
+        $x_3$ & 0 & 1 & 0 & 0 \\
+        $x_4$ & 1 & 1 & 1 & 1 \\
+        $x_5$ & 1 & 1 & 0 & 1 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\end{problem}
+
+
+\begin{solution}
+    \quad
+
+first we calculate the information gain of each attribute
+\begin{align*}
+    G(A_1) &= B(\frac{2}{5}) - ( \frac{1}{5} B(0)+\frac{4}{5} B(\frac{2}{4})) \simeq 0.971-0.800 \\
+    G(A_2) &= B(\frac{2}{5}) - ( \frac{3}{5} B(0)+\frac{2}{5} B(\frac{2}{3})) \simeq 0.971-0.551 \\
+    G(A_3) &= B(\frac{2}{5}) - ( \frac{2}{5} B(\frac{1}{2})+\frac{3}{5} B(\frac{1}{3})) \simeq 0.971-0.951 \\
+\end{align*}
+Thus,we first split on $A_2$. For $A_2=0$,it classfiy Y=0.For $A_2=1$ , we have remain $(x_3,x_4,x_5)$ to classfiy.
+We calculate the information gain of $A_1$ and $A_3$.
+\begin{align*}
+    G(A_1) &= B(\frac{2}{3}) - ( \frac{1}{3} B(0)+\frac{2}{3} B(\frac{2}{2})) \simeq 0.918-0.000 \\
+    G(A_3) &= B(\frac{2}{3}) - ( \frac{1}{3} B(1)+\frac{2}{3} B(\frac{1}{2})) \simeq 0.918-0.667 \\
+\end{align*}
+Thus, we split on $A_1$ for $A_1=0$, it classfiy Y=0.For $A_1=1$, it classfiy Y=1.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{figures/image2.png}
+    \caption{the decision tree}
+\end{figure} 
+
+
+\end{solution}
+%------------------------------%
+
+
+\begin{problem}
+Suppose you had a neural network with linear activation functions. That is, for each unit the output is some constant $c$ times the weighted sum of the inputs.
+
+\begin{enumerate}[label=\alph*.]
+    \item Assume that the network has one hidden layer. For a given assignment to the weights $\mathbf{w}$, write down equations for the value of the units in the output layer as a function of $\mathbf{w}$ and the input layer $\mathbf{x}$, without any explicit mention of the output of the hidden layer. Show that there is a network with no hidden units that computes the same function.
+    \item Repeat the calculation in part (a), but this time do it for a network with any number of hidden layers.
+    \item Suppose a network with one hidden layer and linear activation functions has $n$ input and output nodes and $h$ hidden nodes. What effect does the transformation in part (a) to a network with no hidden layers have on the total number of weights? Discuss in particular the case $h \ll n$.
+\end{enumerate}
+
+\end{problem}
+
+\begin{solution}
+    \quad
+
+\textbf{(a)}
+    Assume the Input is $I_k$, the output of the hidden layer is $H_j$, and the output of the output layer is $O_i$.
+    the weights are $w_{k,j}$ and $w_{j,i}$, respectively.
+
+    Assume the activation function for the hidden layer is $f_j(x) = a_j x + b_j$ and the activation function for the output layer is $g_i(x) = c_i x + d_i$.
+
+    we can calculate the output of the hidden layer as:
+\begin{align*}
+    H_j &= f_j(\Sigma_k w_{k,j} I_k) = a_j (\Sigma_k w_{k,j} I_k) + b_j 
+\end{align*}
+
+    and the output of the output layer as:
+\begin{align*}
+    O_i &= g_i(\Sigma_j w_{j,i} H_j) = c_i (\Sigma_j w_{j,i} H_j) + d_i \\
+        &= c_i (\Sigma_j w_{j,i} (a_j (\Sigma_k w_{k,j} I_k) + b_j)) + d_i \\
+        &= c_i (\Sigma_j w_{j,i} a_j (\Sigma_k w_{k,j} I_k)) + c_i (\Sigma_j w_{j,i} b_j) + d_i \\
+        &= c_i (\Sigma_k (\Sigma_j w_{j,i} a_j w_{k,j}) I_k) + c_i (\Sigma_j w_{j,i} b_j) + d_i
+\end{align*}
+
+    we can see that the output of the output layer is a linear function of the input layer. Thus,we can compute the same function using a network with no hidden units with the following weights:
+\begin{align*}
+    w_{k,i} = \Sigma_j w_{j,i} a_j w_{k,j} \\
+    g_i(x) = c_i x + c_i(\Sigma_j w_{j,i} b_j) + d_i
+\end{align*}
+
+\textbf{(b)}
+    The calculation in part (a) can be extended to a network with any number of hidden layers. 
+
+    For example, consider a network with n layers, we assume the output of (n-2)th hidden layers is $H_k^{n-2}$, the output of (n-1)th hidden layer is $H_j^{n-1}$, and the output of the output layer is $O_i$.
+    Then, we can use the same method in (a) to calculate the output of the output layer. As (a) shows, we can join (n-2)th hidden layer and (n-1)th hidden layer into a single layer. Then the network can be simplified to a network with (n-1) layers.
+
+    Finally, according to the induction principle, we can conclude that the network with any number of hidden layers can be simplified to a network with no hidden layers.
+
+\textbf{(c)}
+    The number of weights in the original network is $n \cdot h + h \cdot n = 2nh$.
+
+    The number of weights in the new network is $n \cdot n = n^2$.
+
+    Thus, if $h \ll n$, the number of weights in the new network is much larger than that in the original network. 
+    In this case, we can conclude that the transformation from a network with one hidden layer to a network with no hidden layers increases the number of weights significantly.
+
+\end{solution}
+
+
+
+%------------------------------%
+\end{document}
+

@@ -1,0 +1,370 @@
+% !TEX program = xelatex
+% Homework template
+
+\documentclass[cn,12pt]{homework}
+% en is for English language
+% cn is for Chinese language
+
+%----- text fonts -----
+% \usepackage{newtxtext}
+% \setmainfont{Times New Roman}
+
+%----- math font -----
+\usepackage{newtxmath}
+\usepackage{mathptmx}
+\usepackage{mathpazo}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amsmath}
+
+\pagestyle{fancy}
+\lstset{
+    %backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
+    rulesepcolor= \color{gray}, %代码块边框颜色
+    breaklines=true,  %代码过长则换行
+    numbers=left, %行号在左侧显示
+    numberstyle= \small,%行号字体
+    keywordstyle= \color{blue},%关键字颜色
+    commentstyle=\color{gray}, %注释颜色
+    frame=shadowbox%用方框框住代码块
+    }
+
+%----- custom theorem -----
+\newtheorem{innercustomgeneric}{\customgenericname}
+\providecommand{\customgenericname}{}
+\newcommand{\newcustomtheorem}[2]{%
+  \newenvironment{#1}[1]
+  {%
+   \renewcommand\customgenericname{#2}%
+   \renewcommand\theinnercustomgeneric{##1}%
+   \innercustomgeneric
+  }
+  {\endinnercustomgeneric}
+}
+
+\newcustomtheorem{ntheorem}{定理}
+\newcustomtheorem{nlemma}{引理}
+
+%----- list style -----
+\setlist{nolistsep}
+
+% differential operator
+\newcommand{\dif}{\mathop{}\!\mathrm{d}}
+
+% new command
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\bA}{\boldsymbol{A}}
+\newcommand{\ii}{\mathrm{i}\,}
+\newcommand{\dx}[1][x]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%----------------------------------------------------
+%	HOMEWORK INFORMATION
+%----------------------------------------------------
+
+\lhead{\itshape Artificial Intelligence   } % 页眉
+\rhead{}
+\title{HOMEWORK \#2} % 作业名字
+
+\date{Date: \today} % 日期
+
+\institute{ZHEJIANG UNIVERSITY\quad COLLEGE OF INFORMATION SCIENCE AND ELECTRONICS ENGINEERING} % 学院或学校
+
+\courseinfo{Artificial Intelligence } % 课程信息
+
+\studentinfo{Name: \textit{}  \quad  \quad Student ID: \textit{}  \quad \\ Major: \textit{Electronic Science and Technology}} % 学生信息
+
+
+\begin{document}
+
+\maketitle
+
+%----------------------------------------------------
+%	作业内容
+%----------------------------------------------------
+
+%\section*{作业题目}
+
+%------------------------------%
+%------------------------------%
+\begin{problem}
+
+AC-3 puts back on the queue \textit{every} arc $(X_k, X_i)$ whenever \textit{any} value is deleted from the domain of $X_i$, even if each value of $X_k$ is consistent with several remaining values of $X_i$. Suppose that, for every arc $(X_k, X_i)$, we keep track of the number of remaining values of $X_i$ that are consistent with each value of $X_k$. Explain how to update these numbers efficiently and hence show that arc consistency can be enforced in total time $O(n^2d^2)$.
+\end{problem}
+
+
+\begin{solution}
+  \quad
+
+  To efficiently update the number of remaining values of \(X_i\) that are consistent with each value of \(X_k\), we can use the following approach:
+
+  \textbf{Step 1: Initialization}
+
+  For every arc \((X_k, X_i)\), initialize a data structure to store the count of remaining values of \(X_i\) that are consistent with each value of \(X_k\). This can be done by iterating through all pairs of values in the domains of \(X_k\) and \(X_i\) and checking their consistency. The time complexity for this initialization is \(O(n^2d^2)\), where \(n\) is the number of variables and \(d\) is the maximum domain size.
+
+  \textbf{Step 2: Propagation}
+
+  When a value is removed from the domain of \(X_i\), update the counts for all arcs \((X_k, X_i)\) where \(X_k\) is a neighbor of \(X_i\). Specifically:
+  For each value \(v_k \in \text{Domain}(X_k)\), decrement the count of consistent values in \(X_i\) if the removed value from \(X_i\) was consistent with \(v_k\).
+  If the count for \(v_k\) becomes zero, remove \(v_k\) from the domain of \(X_k\) and propagate this change to the neighbors of \(X_k\).
+
+  \textbf{Step 3: Efficiency}
+
+  To ensure efficiency, maintain a queue of arcs to be processed. Each time a value is removed from a domain, add the affected arcs to the queue. Process each arc in the queue by updating the counts and propagating changes as necessary.
+
+  \textbf{Time Complexity Analysis:}
+  
+  Each arc \((X_k, X_i)\) is processed at most \(d\) times, as each value in the domain of \(X_i\) can be removed at most once.
+  For each arc processing, we iterate over at most \(d\) values in the domain of \(X_k\), leading to a complexity of \(O(d)\) per arc processing.
+  Since there are \(O(n^2)\) arcs and each arc is processed \(O(d)\) times, the total time complexity is \(O(n^2d^2)\).
+
+  
+\end{solution}
+%------------------------------%
+\newpage
+
+\begin{problem}
+
+
+Consider the problem of placing $k$ knights on an $n \times n$ chessboard such that no two knights are attacking each other, where $k$ is given and $k \leq n^2$.
+
+\begin{enumerate}
+    \item[a.] Choose a CSP formulation. In your formulation, what are the variables?
+    \item[b.] What are the possible values of each variable?
+    \item[c.] What sets of variables are constrained, and how?
+    \item[d.] Now consider the problem of putting as many knights as possible on the board without any attacks. Explain how to solve this with local search by defining appropriate \textsc{Actions} and \textsc{Result} functions and a sensible objective function.
+\end{enumerate}
+
+
+
+
+\end{problem}
+
+\begin{solution}
+\quad2
+
+\textbf{a. Variables:}  
+The variables in the CSP formulation are the positions of the knights on the chessboard. Let \(X_1, X_2, \dots, X_k\) represent the positions of the \(k\) knights, where each variable \(X_i\) corresponds to the position of the \(i\)-th knight.
+
+\textbf{b. Possible Values:}  
+The possible values for each variable \(X_i\) are the coordinates of the cells on the \(n \times n\) chessboard. Specifically, the domain of each variable is:
+\[
+\text{Domain}(X_i) = \{(r, c) \mid 1 \leq r, c \leq n\}
+\]
+where \(r\) and \(c\) represent the row and column indices of the chessboard.
+
+\textbf{c. Constraints:}  
+The constraints ensure that no two knights attack each other. A knight attacks another knight if it can move to its position in one legal knight move. For any two variables \(X_i = (r_i, c_i)\) and \(X_j = (r_j, c_j)\), the constraint is:
+\[
+\lvert r_i - r_j \rvert = 2 \land \lvert c_i - c_j \rvert = 1 \quad \text{or} \quad \lvert r_i - r_j \rvert = 1 \land \lvert c_i - c_j \rvert = 2
+\]
+Besides, we also need to ensure that all knights are placed on different cells:
+\[
+r_i \neq r_j \land c_i \neq c_j 
+\]
+This constraint must hold for all pairs of knights \(i\) and \(j\) (\(i \neq j\)).
+
+\textbf{d. Local Search for Maximum Knights:}  
+
+ \textbf{Actions:}  
+  An action involves adding a knight to an empty cell, removing a knight from a cell, or moving a knight from one cell to another.
+
+ \textbf{Result:}  
+  The result of an action is a new configuration of knights on the chessboard.
+
+ \textbf{Objective Function:}  
+  The objective function is to maximize the number of knights placed on the board while satisfying the constraints. Let \(N\) be the number of knights on the board, and let \(C\) be the number of constraint violations. The objective function can be defined as:
+  \[
+  f = N - \lambda C
+  \]
+  where \(\lambda\) is a penalty factor for constraint violations.
+
+ \textbf{Algorithm:}  
+  Use a hill-climbing or simulated annealing algorithm to iteratively improve the configuration:
+  1. Start with an empty board or a random valid configuration.
+  2. At each step, choose an action that improves the objective function.
+  3. If no improving action exists, terminate the search.
+
+
+\end{solution}
+
+
+
+
+
+\newpage
+
+\begin{problem}
+
+Consider the following sentence:
+\[
+\left[ (Food \Rightarrow Party) \lor (Drinks \Rightarrow Party) \right] \Rightarrow \left[ (Food \land Drinks) \Rightarrow Party \right].
+\]
+\begin{enumerate}
+    \item[a.] Determine, using enumeration, whether this sentence is valid, satisfiable (but not valid), or unsatisfiable.
+    \item[b.] Convert the left-hand and right-hand sides of the main implication into CNF, showing each step, and explain how the results confirm your answer to (a).
+    \item[c.] Prove your answer to (a) using resolution.
+\end{enumerate}
+
+
+\end{problem}
+
+\begin{solution}
+  \quad
+\textbf{a. :}  
+
+We evaluate all possible truth assignments for \(F\), \(D\), and \(P\). The truth table is as follows:
+
+\[
+\begin{array}{|c|c|c|c|c|c|c|}
+\hline
+F & D & P & F \Rightarrow P & D \Rightarrow P & (F \Rightarrow P) \lor (D \Rightarrow P) & (F \land D) \Rightarrow P \\
+\hline
+T & T & T & T & T & T & T \\
+T & T & F & F & F & F & F \\
+T & F & T & T & T & T & T \\
+T & F & F & F & T & T & T \\
+F & T & T & T & T & T & T \\
+F & T & F & T & F & T & T \\
+F & F & T & T & T & T & T \\
+F & F & F & T & T & T & T \\
+\hline
+\end{array}
+\]
+
+From the table, the sentence evaluates to true for all possible truth assignments. Therefore, the sentence is \textbf{valid}.
+
+\textbf{b. Conversion to CNF:}  
+We convert both the left-hand side (LHS) and right-hand side (RHS) of the main implication into Conjunctive Normal Form (CNF).
+
+1. Left-hand side (LHS): 
+\[
+(F \Rightarrow P) \lor (D \Rightarrow P)
+\]
+Using the equivalence \(A \Rightarrow B \equiv \neg A \lor B\), we rewrite:
+\[
+(\neg F \lor P) \lor (\neg D \lor P)
+\]
+\[
+(\neg F \lor P \lor \neg D \lor P)
+\]
+\[
+(\neg F \lor \neg D \lor P)
+\]
+
+
+
+
+2. **Right-hand side (RHS):**  
+\[
+(F \land D) \Rightarrow P
+\]
+Using the equivalence \(A \Rightarrow B \equiv \neg A \lor B\), we rewrite:
+\[
+\neg (F \land D) \lor P
+\]
+Using De Morgan's laws:
+\[
+(\neg F \lor \neg D) \lor P
+\]
+Distribute the disjunction:
+\[
+\neg F \lor \neg D \lor P
+\]
+
+The CNF for the entire sentence is:
+\[
+(\neg F \lor \neg D \lor P) \Rightarrow (\neg F \lor \neg D \lor P)
+\]
+
+\textbf{c. Proof Using Resolution:}  
+To prove the validity of the sentence using resolution, we negate the sentence and show that it leads to a contradiction.
+
+1. Negate the sentence:
+\[
+\neg \left( \left[ (F \Rightarrow P) \lor (D \Rightarrow P) \right] \Rightarrow \left[ (F \land D) \Rightarrow P \right] \right)
+\]
+This is equivalent to:
+\[
+\left[ (F \Rightarrow P) \lor (D \Rightarrow P) \right] \land \neg \left[ (F \land D) \Rightarrow P \right]
+\]
+
+2. Simplify each part:
+
+\((F \Rightarrow P) \lor (D \Rightarrow P)\) becomes \(\neg F \lor \neg D \lor P\).
+
+
+\(\neg \left[ (F \land D) \Rightarrow P \right]\) becomes \((F \land D) \land \neg P\).
+
+3. Combine into CNF:
+\[
+(\neg F \lor \neg D \lor P) \land (F \land D \land \neg P)
+\]
+
+from the CNF, we can see that the sentence is unvalid, because there is no way to satisfy both \((\neg F \lor \neg D \lor P)\) and \((F \land D \land \neg P)\) simultaneously.
+
+Thus the original sentence is valid.
+\end{solution}
+%------------------------------%
+
+
+\newpage
+
+
+
+
+\begin{problem}
+\quad
+
+Prove each of the following assertions:
+\begin{enumerate}
+    \item[(a)] $\alpha$ is valid if and only if $True \models \alpha$.
+    \item[(b)] For any $\alpha$, $False \models \alpha$.
+    \item[(c)] $\alpha \models \beta$ if and only if the sentence $(\alpha \Rightarrow \beta)$ is valid.
+    \item[(d)] $\alpha \equiv \beta$ if and only if the sentence $(\alpha \Leftrightarrow \beta)$ is valid.
+    \item[(e)] $\alpha \models \beta$ if and only if the sentence $(\alpha \land \neg \beta)$ is unsatisfiable.
+\end{enumerate}
+
+\end{problem}
+
+
+\begin{solution}
+  
+\textbf{(a) $\alpha$ is valid if and only if $True \models \alpha$:}  
+A sentence $\alpha$ is valid if it is true under all possible interpretations. The statement $True \models \alpha$ means that $\alpha$ is true in every model where $True$ is true (which is all models). Therefore, $\alpha$ is valid if and only if $True \models \alpha$.
+
+\textbf{(b) For any $\alpha$, $False \models \alpha$:}  
+The statement $False \models \alpha$ means that $\alpha$ is true in every model where $False$ is true. Since $False$ is never true in any model, the condition is vacuously satisfied. Thus, for any $\alpha$, $False \models \alpha$.
+
+\textbf{(c) $\alpha \models \beta$ if and only if the sentence $(\alpha \Rightarrow \beta)$ is valid:}  
+The statement $\alpha \models \beta$ means that in every model where $\alpha$ is true, $\beta$ is also true. The sentence $(\alpha \Rightarrow \beta)$ is valid if it is true in all models. By the definition of implication, $(\alpha \Rightarrow \beta)$ is true whenever $\alpha$ is false or $\beta$ is true. This is equivalent to saying that $\alpha \models \beta$. Therefore, $\alpha \models \beta$ if and only if $(\alpha \Rightarrow \beta)$ is valid.
+
+\textbf{(d) $\alpha \equiv \beta$ if and only if the sentence $(\alpha \Leftrightarrow \beta)$ is valid:}  
+The statement $\alpha \equiv \beta$ means that $\alpha$ and $\beta$ have the same truth value in every model. The sentence $(\alpha \Leftrightarrow \beta)$ is valid if it is true in all models. By the definition of equivalence, $(\alpha \Leftrightarrow \beta)$ is true if $\alpha$ and $\beta$ have the same truth value. Therefore, $\alpha \equiv \beta$ if and only if $(\alpha \Leftrightarrow \beta)$ is valid.
+
+\textbf{(e) $\alpha \models \beta$ if and only if the sentence $(\alpha \land \neg \beta)$ is unsatisfiable:}  
+The statement $\alpha \models \beta$ means that in every model where $\alpha$ is true, $\beta$ is also true. The sentence $(\alpha \land \neg \beta)$ is unsatisfiable if there is no model where $\alpha$ is true and $\beta$ is false. This is equivalent to saying that $\alpha \models \beta$. Therefore, $\alpha \models \beta$ if and only if $(\alpha \land \neg \beta)$ is unsatisfiable.
+\end{solution}
+
+
+
+
+
+
+
+
+
+
+
+%------------------------------%
+\end{document}
+
